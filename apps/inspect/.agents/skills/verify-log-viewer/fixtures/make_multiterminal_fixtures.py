@@ -567,8 +567,9 @@ def build_log(fx: Fixture) -> EvalLog:
         close_finished_spans(math.inf)
     events.append(span_end(sample_end - 0.05, solvers_span, None))
 
-    # store: casts with viewer header fields
-    store: dict[str, Any] = {}
+    # store: casts with viewer header fields, plus one non-cast key that the
+    # Info tab's Store card keeps
+    store: dict[str, Any] = {"webapp:ticket": "WEB-1432"}
     for t in fx.terminals.values():
         t.header["ir_session"] = t.session
         if multiagent:
