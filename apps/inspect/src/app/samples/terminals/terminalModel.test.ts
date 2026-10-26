@@ -1,0 +1,379 @@
+import { describe, expect, it } from "vitest";
+
+import { testToolEvent } from "@tsmono/inspect-common/testing";
+
+import type { StoreCast } from "./asciicast";
+import {
+  allocateRows,
+  buildTerminalSample,
+  focusAt,
+  idleGapAt,
+  kSharedIdleLimit,
+  lastCommandAt,
+  localTime,
+  playbackToReal,
+  realToPlayback,
+  rowStates,
+} from "./terminalModel";
+
+const kOrigin = 1_792_950_894;
+
+const makeCast = (
+  session: string,
+  startOffset: number,
+  events: [number, "o" | "m", string][],
+  header: Record<string, unknown> = {}
+): StoreCast => ({
+  key: `asciinema:terminal-${session}`,
+  name: `terminal-${session}`,
+  cast: [
+    JSON.stringify({
+      version: 2,
+      width: 160,
+      height: 40,
+      timestamp: kOrigin + startOffset,
+      ...header,
+    }),
+    ...events.map((event) => JSON.stringify(event)),
+  ].join("\n"),
+});
+
+const send = (
+  session: string,
+  time: number,
+  command: string
+): [number, "o" | "m", string][] => [
+  [time, "m", `send ${session}: '${command}\\n'`],
+  [time + 0.5, "o", `$ ${command}\r\n`],
+];
+
+const toolAt = (offset: number, session: string, action: string, id: string) =>
+  testToolEvent({
+    id,
+    uuid: `ev-${id}`,
+    function: "terminal",
+    arguments: { session, action },
+    timestamp: new Date((kOrigin + offset) * 1000).toISOString(),
+  });
+
+// main opens at 0 and runs to 100; tests opens at 10 and runs to 60.
+const twoSessions = [
+  makeCast("main", 0, [
+    [0, "m", "open main"],
+    ...send("main", 1, "git status"),
+    ...send("main", 70, "npm run build"),
+    [100, "o", "done\r\n"],
+  ]),
+  makeCast("tests", 10, [
+    [0, "m", "open tests"],
+    ...send("tests", 5, "npx vitest --watch"),
+    [50, "o", "ok\r\n"],
+  ]),
+];
+
+describe("buildTerminalSample", () => {
+  it("places sessions on one real-time axis from their header timestamps", () => {
+    const sample = buildTerminalSample(twoSessions);
+    expect(sample.origin).toBe(kOrigin);
+    expect(sample.duration).toBe(100);
+    expect(
+      sample.sessions.map(({ name, start, end }) => ({ name, start, end }))
+    ).toEqual([
+      { name: "main", start: 0, end: 100 },
+      { name: "tests", start: 10, end: 60 },
+    ]);
+  });
+
+  it("puts each command just after its echo, in real time", () => {
+    const sample = buildTerminalSample(twoSessions);
+    expect(
+      sample.commands.map(({ command, sentAt, at }) => ({
+        command,
+        sentAt,
+        at,
+      }))
+    ).toEqual([
+      { command: "git status\n", sentAt: 1, at: 1.51 },
+      { command: "npx vitest --watch\n", sentAt: 15, at: 15.51 },
+      { command: "npm run build\n", sentAt: 70, at: 70.51 },
+    ]);
+  });
+
+  it("joins markers to terminal tool calls by session, action and time", () => {
+    const sample = buildTerminalSample(twoSessions, [
+      toolAt(14, "tests", "send", "call-b"),
+      toolAt(1.2, "main", "send", "call-a"),
+      toolAt(10.1, "tests", "open", "call-open"),
+      // Too far from any main send to join.
+      toolAt(40, "main", "send", "call-far"),
+    ]);
+    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
+      "call-a",
+      "call-b",
+      undefined,
+    ]);
+    expect(sample.commands[0]?.eventUuid).toBe("ev-call-a");
+    expect(
+      sample.activities.map(({ action, sessionKey, toolCallId }) => ({
+        action,
+        sessionKey,
+        toolCallId,
+      }))
+    ).toEqual([
+      {
+        action: "open",
+        sessionKey: "asciinema:terminal-main",
+        toolCallId: undefined,
+      },
+      {
+        action: "open",
+        sessionKey: "asciinema:terminal-tests",
+        toolCallId: "call-open",
+      },
+    ]);
+  });
+
+  it("groups sessions by their agent span, flat when casts lack one", () => {
+    expect(
+      buildTerminalSample(twoSessions).agents.map(({ id, name }) => ({
+        id,
+        name,
+      }))
+    ).toEqual([{ id: "", name: "agent" }]);
+
+    const multi = buildTerminalSample([
+      makeCast("main", 0, send("main", 1, "ls"), {
+        ir_agent_span_id: "span-main",
+        ir_agent: "main",
+      }),
+      makeCast("tests", 10, send("tests", 1, "npm test"), {
+        ir_agent_span_id: "span-runner",
+        ir_agent: "test-runner",
+      }),
+    ]);
+    expect(
+      multi.agents.map(({ id, name, sessions, commands }) => ({
+        id,
+        name,
+        sessions: sessions.map((session) => session.name),
+        commands: commands.length,
+      }))
+    ).toEqual([
+      { id: "span-main", name: "main", sessions: ["main"], commands: 1 },
+      {
+        id: "span-runner",
+        name: "test-runner",
+        sessions: ["tests"],
+        commands: 1,
+      },
+    ]);
+  });
+
+  it("names a session by ir_session, then its markers, then its key", () => {
+    const sample = buildTerminalSample([
+      makeCast("a", 0, [[0, "m", "open web"]], { ir_session: "server" }),
+      makeCast("b", 0, [[0, "m", "open worker"]]),
+      makeCast("c", 0, [[0, "o", "x"]]),
+    ]);
+    expect(sample.sessions.map((session) => session.name)).toEqual([
+      "server",
+      "worker",
+      "terminal-c",
+    ]);
+  });
+});
+
+describe("shared clock", () => {
+  it("shortens a gap only when every terminal is idle", () => {
+    const sample = buildTerminalSample([
+      makeCast("main", 0, [
+        [0, "o", "a"],
+        [100, "o", "b"],
+      ]),
+      makeCast("tests", 0, [
+        [0, "o", "a"],
+        [1, "o", "b"],
+        [2, "o", "c"],
+        [3, "o", "d"],
+      ]),
+    ]);
+    // 0..3 busy, then 97 s with nothing: plays as 3 + 2.
+    expect(sample.playbackDuration).toBe(3 + kSharedIdleLimit);
+    expect(realToPlayback(sample, 2)).toBe(2);
+    expect(realToPlayback(sample, 100)).toBe(5);
+    expect(playbackToReal(sample, 4)).toBeCloseTo(51.5);
+    expect(realToPlayback(sample, -5)).toBe(0);
+    expect(playbackToReal(sample, 99)).toBe(100);
+  });
+
+  it("reports the idle gap being skipped", () => {
+    const sample = buildTerminalSample([
+      makeCast("main", 0, [
+        [0, "o", "a"],
+        [1, "o", "b"],
+        [60, "o", "c"],
+      ]),
+    ]);
+    expect(idleGapAt(sample, 30)).toEqual({ start: 1, end: 60 });
+    expect(idleGapAt(sample, 0.5)).toBeUndefined();
+  });
+
+  it("gives each player its raw local time, clamped to the recording", () => {
+    const tests = buildTerminalSample(twoSessions).sessions[1];
+    expect(tests).toBeDefined();
+    if (!tests) return;
+    expect(localTime(tests, 5)).toBe(0);
+    expect(localTime(tests, 30)).toBe(20);
+    expect(localTime(tests, 90)).toBe(50);
+  });
+});
+
+describe("focus", () => {
+  const sample = buildTerminalSample(twoSessions);
+  const agent = sample.agents[0];
+  if (!agent) throw new Error("expected one agent");
+
+  it("is the earliest open session before any command", () => {
+    expect(focusAt(agent, 0.5)).toBe("asciinema:terminal-main");
+  });
+
+  it("moves once the command's echo has drawn", () => {
+    expect(focusAt(agent, 15.2)).toBe("asciinema:terminal-main");
+    expect(focusAt(agent, 15.6)).toBe("asciinema:terminal-tests");
+  });
+
+  it("falls back to an open session when the focused one closes", () => {
+    expect(focusAt(agent, 61)).toBe("asciinema:terminal-main");
+    expect(focusAt(agent, 200)).toBeUndefined();
+  });
+
+  it("segments the timeline by focus", () => {
+    expect(agent.focusSegments).toEqual([
+      { sessionKey: "asciinema:terminal-main", start: 0, end: 15.51 },
+      { sessionKey: "asciinema:terminal-tests", start: 15.51, end: 60 },
+      { sessionKey: "asciinema:terminal-main", start: 60, end: 100 },
+    ]);
+  });
+
+  it("finds a session's last command at a time", () => {
+    expect(
+      lastCommandAt(sample.commands, "asciinema:terminal-main", 69)?.command
+    ).toBe("git status\n");
+    expect(
+      lastCommandAt(sample.commands, "asciinema:terminal-tests", 10)
+    ).toBeUndefined();
+  });
+});
+
+describe("rowStates", () => {
+  const { sessions } = buildTerminalSample([
+    ...twoSessions,
+    makeCast("build", 80, [[1, "o", "x"]]),
+  ]);
+
+  it("classifies by phase, focus and the user's folds", () => {
+    const states = (real: number, focus?: string, folded: string[] = []) =>
+      Object.fromEntries(rowStates(sessions, real, focus, new Set(folded)));
+    expect(states(20, "asciinema:terminal-tests")).toEqual({
+      "asciinema:terminal-main": "open",
+      "asciinema:terminal-tests": "focused",
+      "asciinema:terminal-build": "pending",
+    });
+    expect(
+      states(80.5, "asciinema:terminal-main", [
+        "asciinema:terminal-main",
+        "asciinema:terminal-build",
+      ])
+    ).toEqual({
+      "asciinema:terminal-main": "focused",
+      "asciinema:terminal-tests": "closed",
+      "asciinema:terminal-build": "folded",
+    });
+  });
+});
+
+describe("allocateRows", () => {
+  // Brief §4.4's worked case: fix-failing-tests at 40:00 has one closed, one
+  // focused and two open sessions. Stage heights are the viewport less the
+  // 46 px header, 156 px controls and 14 px stage padding.
+  const rows = [
+    { key: "main", state: "closed" as const },
+    { key: "server", state: "focused" as const, lastCommandAt: 2390 },
+    { key: "tests", state: "open" as const, lastCommandAt: 2300 },
+    { key: "build", state: "open" as const, lastCommandAt: 2100 },
+  ];
+  const allocate = (
+    stageHeight: number,
+    lineHeight: number,
+    overrides: Partial<Parameters<typeof allocateRows>[0]> = {}
+  ) =>
+    allocateRows({
+      rows,
+      stageHeight,
+      foldGain: 104,
+      lineHeight,
+      timeline: "auto",
+      ...overrides,
+    });
+
+  it("gives the focus 19 rows at 1440×900", () => {
+    const result = allocate(900 - 216, 19.5);
+    expect(Object.fromEntries(result.bodyRows)).toEqual({
+      main: 0,
+      server: 19,
+      tests: 3,
+      build: 3,
+    });
+    expect(result.timelineFolded).toBe(false);
+    expect(result.scrolls).toBe(false);
+  });
+
+  it("folds the timeline at 1440×700, leaving the focus 14 rows", () => {
+    const result = allocate(700 - 216, 19.5);
+    expect(result.timelineFolded).toBe(true);
+    expect(result.bodyRows.get("server")).toBe(14);
+  });
+
+  it("gives the focus 32 rows at 2560×1440", () => {
+    expect(allocate(1440 - 216, 27).bodyRows.get("server")).toBe(32);
+  });
+
+  it("keeps the timeline open when the user pinned it", () => {
+    const result = allocate(700 - 216, 19.5, { timeline: "unfolded" });
+    expect(result.timelineFolded).toBe(false);
+    expect(result.bodyRows.get("server")).toBe(8);
+    expect(result.scrolls).toBe(false);
+  });
+
+  it("holds the focus at 8 rows and scrolls when the floors don't fit", () => {
+    const result = allocate(300, 19.5);
+    expect(result.bodyRows.get("server")).toBe(8);
+    expect(result.bodyRows.get("tests")).toBe(3);
+    expect(result.scrolls).toBe(true);
+  });
+
+  it("caps the focus at 40 and gives extra rows to recent tails first", () => {
+    const result = allocate(2200, 19.5);
+    expect(result.bodyRows.get("server")).toBe(40);
+    expect(result.bodyRows.get("tests")).toBe(40);
+    expect(result.bodyRows.get("build")).toBeGreaterThan(3);
+    expect(result.bodyRows.get("build")).toBeLessThan(40);
+  });
+
+  it("releases a folded tail's rows to the focus", () => {
+    const result = allocateRows({
+      rows: [
+        { key: "server", state: "focused" },
+        { key: "tests", state: "folded" },
+      ],
+      stageHeight: 684,
+      foldGain: 104,
+      lineHeight: 19.5,
+      timeline: "auto",
+    });
+    expect(Object.fromEntries(result.bodyRows)).toEqual({
+      server: 30,
+      tests: 0,
+    });
+  });
+});

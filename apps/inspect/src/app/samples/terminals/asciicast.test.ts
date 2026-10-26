@@ -3,10 +3,13 @@ import { describe, expect, it } from "vitest";
 import {
   castDuration,
   castGeometry,
+  castHeader,
   castMarkers,
   highlightCommandEchoes,
+  idleShortenedTime,
   storeCasts,
-} from "./StoreTerminalSessions";
+  terminalMarker,
+} from "./asciicast";
 
 describe("storeCasts", () => {
   it("collects asciinema-prefixed string entries, named by suffix", () => {
@@ -14,13 +17,13 @@ describe("storeCasts", () => {
     expect(
       storeCasts({
         "asciinema:terminal-main": cast,
-        "asciinema:terminal-listener": cast,
-        "inspect_ranges:evidence": { pointer: "s3://..." },
+        "asciinema:terminal-server": cast,
+        "tool:state": { pointer: "s3://..." },
         plain: "value",
       })
     ).toEqual([
       { key: "asciinema:terminal-main", name: "terminal-main", cast },
-      { key: "asciinema:terminal-listener", name: "terminal-listener", cast },
+      { key: "asciinema:terminal-server", name: "terminal-server", cast },
     ]);
   });
 
@@ -38,6 +41,57 @@ describe("castGeometry", () => {
   it("falls back to 80x24 on an unparseable or bare header", () => {
     expect(castGeometry("not json\nmore")).toEqual({ rows: 24, cols: 80 });
     expect(castGeometry('{"version": 2}')).toEqual({ rows: 24, cols: 80 });
+  });
+});
+
+describe("castHeader", () => {
+  it("reads the start time and inspect_ranges session/agent fields", () => {
+    const cast = JSON.stringify({
+      version: 2,
+      width: 160,
+      height: 40,
+      timestamp: 1792950894,
+      ir_session: "tests",
+      ir_agent_span_id: "span-1",
+      ir_agent: "test-runner",
+    });
+    expect(castHeader(cast)).toEqual({
+      rows: 40,
+      cols: 160,
+      timestamp: 1792950894,
+      session: "tests",
+      agentSpanId: "span-1",
+      agentName: "test-runner",
+    });
+  });
+
+  it("leaves out absent or mistyped fields", () => {
+    expect(
+      castHeader('{"version": 2, "timestamp": "soon", "ir_session": ""}')
+    ).toEqual({ rows: 24, cols: 80 });
+  });
+});
+
+describe("terminalMarker", () => {
+  it("parses send, open and read markers", () => {
+    expect(terminalMarker("send tests: 'npm test\\n'")).toEqual({
+      action: "send",
+      session: "tests",
+      command: "npm test\n",
+    });
+    expect(terminalMarker("open server")).toEqual({
+      action: "open",
+      session: "server",
+    });
+    expect(terminalMarker("read build")).toEqual({
+      action: "read",
+      session: "build",
+    });
+  });
+
+  it("is undefined for other labels", () => {
+    expect(terminalMarker("send make")).toBeUndefined();
+    expect(terminalMarker("clipped to the tail")).toBeUndefined();
   });
 });
 
@@ -60,6 +114,18 @@ describe("castDuration", () => {
   });
 });
 
+describe("idleShortenedTime", () => {
+  const cast =
+    '{"version": 2}\n[1, "o", "a"]\n[601, "o", "b"]\n[602.5, "o", "c"]';
+
+  it("caps each gap before the time, and the time since the last event", () => {
+    expect(idleShortenedTime(cast, 0.5, 2)).toBe(0.5);
+    expect(idleShortenedTime(cast, 300, 2)).toBe(1 + 2);
+    expect(idleShortenedTime(cast, 602, 2)).toBe(1 + 2 + 1);
+    expect(idleShortenedTime(cast, 900, 2)).toBe(1 + 2 + 1.5 + 2);
+  });
+});
+
 describe("castMarkers", () => {
   it("places a command marker just after the output that echoes it", () => {
     const cast =
@@ -73,30 +139,30 @@ describe("castMarkers", () => {
 
   it("notes long think time before a command on its label", () => {
     const cast =
-      '{"version": 2}\n[1, "o", "a"]\n[601, "m", "send nmap"]\n[601.5, "o", "$ nmap"]';
+      '{"version": 2}\n[1, "o", "a"]\n[601, "m", "send make"]\n[601.5, "o", "$ make"]';
     expect(castMarkers(cast, 2, 30)).toEqual([
-      [3.51, "send nmap (after 10 min idle)"],
+      [3.51, "send make (after 10 min idle)"],
     ]);
   });
 
   it("adds no markers for idle gaps alone", () => {
     const cast =
-      '{"version": 2}\n[1, "m", "send nmap"]\n[61, "o", "$ nmap"]\n[200, "o", "done"]';
-    expect(castMarkers(cast, 2, 30)).toEqual([[3.01, "send nmap"]]);
+      '{"version": 2}\n[1, "m", "send make"]\n[61, "o", "$ make"]\n[200, "o", "done"]';
+    expect(castMarkers(cast, 2, 30)).toEqual([[3.01, "send make"]]);
   });
 
   it("keeps only send markers, labeled by command, when the cast has them", () => {
     const cast = [
       '{"version": 2}',
       JSON.stringify([0, "m", "open main"]),
-      JSON.stringify([1, "m", "send main: 'nmap -sV 10.0.0.5\\n'"]),
-      JSON.stringify([1.5, "o", "$ nmap -sV 10.0.0.5\r\n"]),
+      JSON.stringify([1, "m", "send main: 'npm test -- orders\\n'"]),
+      JSON.stringify([1.5, "o", "$ npm test -- orders\r\n"]),
       JSON.stringify([2, "m", "read main"]),
       JSON.stringify([3, "m", "send main: \"cat > a <<'EOF'\\nx\\nEOF\\n\""]),
       JSON.stringify([3.5, "o", "cat > a <<'EOF'\r\n"]),
     ].join("\n");
     expect(castMarkers(cast, 2, 30).map(([, label]) => label)).toEqual([
-      "nmap -sV 10.0.0.5",
+      "npm test -- orders",
       "cat > a <<'EOF' …",
     ]);
   });

@@ -1,0 +1,494 @@
+.view {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 420px;
+  outline: none;
+  background-color: var(--vscode-sideBar-background);
+}
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 0;
+  overflow: hidden;
+}
+
+.stageScrolls {
+  overflow-y: auto;
+}
+
+/* Rows */
+
+.row {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--vscode-editor-background);
+  box-shadow: 0 0 0 1px var(--vscode-widget-border);
+}
+
+.rowFocused {
+  box-shadow:
+    0 0 0 2px var(--vscode-focusBorder),
+    0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+.bar {
+  display: flex;
+  align-items: stretch;
+  height: 30px;
+  flex-shrink: 0;
+  color: var(--vscode-descriptionForeground);
+  background-color: var(--vscode-sideBar-background);
+  font-size: 12px;
+}
+
+.rowFocused .bar {
+  color: var(--vscode-foreground);
+  background-color: var(--vscode-list-inactiveSelectionBackground);
+}
+
+.rowFolded .bar {
+  background-color: var(--vscode-editor-background);
+}
+
+.rowClosed .bar {
+  background-color: var(--bs-secondary-bg);
+}
+
+.barButton {
+  display: flex;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.barButton:hover {
+  background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+.barButton:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: -2px;
+}
+
+.chevron {
+  justify-content: center;
+  width: 30px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.rowFocused .chevron,
+.rowFocused .sessionName {
+  color: var(--vscode-textLink-foreground);
+}
+
+.barMain {
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+  padding-right: 10px;
+  text-align: left;
+}
+
+.sessionName {
+  flex-shrink: 0;
+  font-family: var(--bs-font-monospace);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rowFolded .sessionName {
+  color: var(--vscode-foreground);
+}
+
+.lastCommand {
+  flex: 0 1 auto;
+  min-width: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--bs-font-monospace);
+}
+
+.snippet {
+  flex: 0 100 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--bs-font-monospace);
+}
+
+.barMeta {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.liveDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background-color: var(--bs-success);
+}
+
+.expand {
+  justify-content: center;
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.bodyFrame {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: var(--inspect-terminal-background);
+}
+
+.body {
+  height: 100%;
+  padding: 8px 8px 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  cursor: pointer;
+}
+
+/* Unfocused bodies keep full-contrast text; the inset shadow under the bar
+   is what quiets them. */
+.rowOpen .bodyFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 16px 14px -14px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+.body :global(.asciinema-player-theme-asciinema) {
+  --term-color-background: var(--inspect-terminal-background);
+  --term-color-foreground: var(--inspect-terminal-foreground);
+}
+
+.body :global(.ap-player) {
+  background-color: var(--inspect-terminal-background);
+}
+
+.body :global(.ap-player .ap-overlay-start) {
+  display: none;
+}
+
+.body :global(.ap-term) {
+  cursor: text;
+  user-select: text;
+}
+
+.latest {
+  position: absolute;
+  right: 18px;
+  bottom: 8px;
+  z-index: 1;
+  padding: 2px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: var(--inspect-terminal-foreground);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.latest:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Control row and timeline */
+
+.controls {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px 8px;
+  border-top: 1px solid var(--vscode-widget-border);
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 32px;
+}
+
+.playButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.playButton:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 2px;
+}
+
+.readout {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-shrink: 0;
+  font-family: var(--bs-font-monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+.readoutElapsed {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.readoutTotal {
+  font-size: 14px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.readoutNotes {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--vscode-descriptionForeground);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 10px;
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 999px;
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-textLink-foreground);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.chip:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.controlSpacer {
+  flex: 1;
+  min-width: 0;
+}
+
+.speedGroup {
+  display: inline-flex;
+  flex-shrink: 0;
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.speedButton {
+  height: 24px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.speedButton + .speedButton {
+  border-left: 1px solid var(--vscode-widget-border);
+}
+
+.speedButtonActive {
+  background-color: var(--vscode-list-inactiveSelectionBackground);
+  color: var(--vscode-textLink-foreground);
+  font-weight: 700;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  cursor: pointer;
+}
+
+.iconButton:hover,
+.speedButton:hover {
+  background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  margin-top: 8px;
+  user-select: none;
+}
+
+.laneLabels {
+  display: flex;
+  flex-direction: column;
+  padding-top: 22px;
+}
+
+.laneLabel {
+  height: 18px;
+  padding: 0 6px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--bs-font-monospace);
+  font-size: 11px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.laneLabelFocused {
+  color: var(--vscode-textLink-foreground);
+  font-weight: 700;
+}
+
+.track {
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.ruler {
+  position: relative;
+  height: 16px;
+  border-bottom: 1px solid var(--vscode-widget-border);
+  font-family: var(--bs-font-monospace);
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.rulerLabel {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.rulerLabel:first-child {
+  transform: none;
+}
+
+.rulerLabelEnd {
+  transform: translateX(-100%);
+}
+
+.lane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 13px;
+}
+
+.lifetime {
+  position: absolute;
+  top: 4px;
+  height: 5px;
+  border-radius: 3px;
+  background-color: var(--vscode-widget-border);
+}
+
+.focusSegment {
+  position: absolute;
+  top: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background-color: var(--vscode-focusBorder);
+  opacity: 0.55;
+}
+
+.tick {
+  position: absolute;
+  top: 1px;
+  width: 1px;
+  height: 11px;
+  background-color: var(--vscode-foreground);
+  opacity: 0.7;
+}
+
+.playhead {
+  position: absolute;
+  top: 17px;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background-color: var(--vscode-editor-foreground);
+  pointer-events: none;
+}
+
+.foldedTrack {
+  position: relative;
+  flex: 1;
+  min-width: 60px;
+  height: 16px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.foldedTrack .lane {
+  top: 2px;
+}
+
+.foldedTrack .playhead {
+  top: 0;
+}
+
+.foldedFocus {
+  flex-shrink: 0;
+  font-family: var(--bs-font-monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--vscode-textLink-foreground);
+}

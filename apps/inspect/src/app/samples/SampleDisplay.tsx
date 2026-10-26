@@ -123,7 +123,8 @@ import { SampleSummaryView } from "./SampleSummaryView";
 import { ScansSidebarPanel } from "./scans/ScansSidebarPanel";
 import { useSampleScans } from "./scans/useSampleScans";
 import { SampleScoresView } from "./scores/SampleScoresView";
-import { storeCasts, StoreTerminalSessions } from "./StoreTerminalSessions";
+import { storeCasts } from "./terminals/asciicast";
+import { TerminalsView } from "./terminals/TerminalsView";
 import { ChunkedTranscriptPanel } from "./transcript/chunked/ChunkedTranscriptPanel";
 import { useTranscriptFilter } from "./transcript/hooks";
 import { useInspectSearchContext } from "./transcript/search/inspectSearchAdapters";
@@ -1096,12 +1097,12 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 href={sampleTabHref(kSampleTerminalsTabId)}
                 selected={effectiveSelectedTab === kSampleTerminalsTabId}
               >
-                <div className={clsx(styles.padded, styles.fullWidth)}>
-                  <StoreTerminalSessions
-                    id={`${baseId}-${id}-terminal-sessions`}
-                    casts={terminalSessions}
-                  />
-                </div>
+                <TerminalsView
+                  id={`${baseId}-${id}-terminal-sessions`}
+                  casts={terminalSessions}
+                  events={sampleEvents}
+                  scrollRef={scrollRef}
+                />
               </TabPanel>
             ) : null}
             <TabPanel
