@@ -928,6 +928,8 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
   const mountsAtDeepLink = !!(
     sampleDetailNavigation.event || sampleDetailNavigation.message
   );
+  const onTerminalsTab =
+    effectiveSelectedTab === kSampleTerminalsTabId && !!terminalSample;
   // Shared with TranscriptPanel: while navigation owns the chrome (deep-link
   // mounts, f/h/j/k/l forces), the header's natural-scroll detection is fully
   // suppressed; a physical user gesture on the scroller hands ownership back.
@@ -940,7 +942,6 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     resetAnchor: headerResetAnchor,
     setHidden: headerSetHidden,
     navOwnsRef: chromeNavOwnsRef,
-    forceHidden: headerForceHidden,
   } = useChromeNavOwnership(scrollRef, {
     ownedForKey: () => mountsAtDeepLink,
     // The header survives sibling navigation; its collapse belongs to this visit.
@@ -948,30 +949,12 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     scrollDirection: { threshold: 80, stayHiddenOnUpScroll: true },
   });
 
-  // The Terminals tab collapses the header on activation, as a deep-link
-  // landing does (the terminals want the height); leaving the tab gives the
-  // header its previous state back and ends a filled window. Render-phase, like the hook's own
-  // resetKey realignment, so the collapse lands before paint.
-  const onTerminalsTab =
-    effectiveSelectedTab === kSampleTerminalsTabId && !!terminalSample;
-  const [terminalsHeader, setTerminalsHeader] = useState({
-    on: false,
-    hiddenBefore: false,
-  });
-  if (onTerminalsTab !== terminalsHeader.on) {
-    setTerminalsHeader({
-      on: onTerminalsTab,
-      hiddenBefore: onTerminalsTab
-        ? headerCollapsed
-        : terminalsHeader.hiddenBefore,
-    });
-    if (onTerminalsTab) {
-      headerForceHidden(true);
-    } else {
-      headerSetHidden(terminalsHeader.hiddenBefore);
-      setTerminalsFill(false);
-    }
-  }
+  // The Terminals tab shows the header collapsed (the terminals want the
+  // height); it's derived rather than written into the header's scroll state,
+  // so leaving the tab shows that state again untouched. Leaving also ends
+  // fullscreen.
+  const sampleHeaderCollapsed = headerCollapsed || onTerminalsTab;
+  if (!onTerminalsTab && terminalsFill) setTerminalsFill(false);
 
   const headerWrapperRef = useRef<HTMLDivElement | null>(null);
   const headerHeight = useElementHeight(
@@ -1091,7 +1074,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
               <SampleSummaryView
                 parent_id={id}
                 sample={selectedSampleSummary}
-                collapsed={headerCollapsed}
+                collapsed={sampleHeaderCollapsed}
               />
             </div>
           </StickyScroll>
