@@ -19,6 +19,7 @@ import {
   kTranscriptOutlineCollapseScope,
   TranscriptLayout,
   type EventNodeContext,
+  type EventPanelCallbacks,
   type SelectOptions,
   type TranscriptCollapseState,
   type TranscriptLayoutRightRailProps,
@@ -96,6 +97,7 @@ interface TranscriptPanelProps {
   initialMessageId?: string | null;
   /** Explicit `follow=1` URL param — arm the transcript's live-tail at mount. */
   followRequested?: boolean;
+  getTerminalsLink?: EventPanelCallbacks["getTerminalsLink"];
 }
 
 /**
@@ -116,6 +118,7 @@ export const TranscriptPanel: FC<TranscriptPanelProps> = memo((props) => {
     initialEventId,
     initialMessageId,
     followRequested,
+    getTerminalsLink,
     offsetTop,
     timelines: serverTimelines,
     eventNodeContext,
@@ -453,6 +456,7 @@ export const TranscriptPanel: FC<TranscriptPanelProps> = memo((props) => {
         follow: followRequested,
       }}
       getEventUrl={getFullEventUrl}
+      getTerminalsLink={getTerminalsLink}
       getEventFocusUrl={getEventFocusUrl}
       onOpenEventFocus={onOpenEventFocus}
       onNavigatedToEvent={onNavigatedToEvent}

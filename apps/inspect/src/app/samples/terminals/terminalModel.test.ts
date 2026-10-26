@@ -16,6 +16,7 @@ import {
   realToPlayback,
   resultSnippet,
   rowStates,
+  terminalLinks,
 } from "./terminalModel";
 
 const kOrigin = 1_792_950_894;
@@ -133,6 +134,25 @@ describe("buildTerminalSample", () => {
         toolCallId: "call-open",
       },
     ]);
+  });
+
+  it("maps linked tool call ids back to their place on the clock", () => {
+    const sample = buildTerminalSample(twoSessions, [
+      toolAt(14, "tests", "send", "call-b"),
+      toolAt(10.1, "tests", "open", "call-open"),
+    ]);
+    expect(Object.fromEntries(terminalLinks(sample))).toEqual({
+      "call-b": {
+        action: "send",
+        sessionKey: "asciinema:terminal-tests",
+        at: 15.51,
+      },
+      "call-open": {
+        action: "open",
+        sessionKey: "asciinema:terminal-tests",
+        at: 10,
+      },
+    });
   });
 
   it("groups sessions by their agent span, flat when casts lack one", () => {

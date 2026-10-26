@@ -7,7 +7,7 @@ import {
 } from "@tsmono/react/components";
 import { useEventListener } from "@tsmono/react/hooks";
 
-import { commandLabel } from "./asciicast";
+import { commandEchoElement, commandLabel } from "./asciicast";
 import { formatClock } from "./format";
 import {
   kMaxRows,
@@ -42,6 +42,11 @@ interface TerminalRowProps {
   /** The user scrolled the body up, away from the newest output. */
   pinned: boolean;
   onJumpToLatest: () => void;
+  /** Opens a command's tool call in the transcript. */
+  onShowCommand?: (command: TerminalCommand) => void;
+  /** A click on a command's echo in the body, with the clicked line's
+   *  text. */
+  onEchoClick?: (lineText: string) => void;
 }
 
 /**
@@ -68,12 +73,21 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   scrollerRef,
   pinned,
   onJumpToLatest,
+  onShowCommand,
+  onEchoClick,
 }) => {
   const hasBody = bodyRows > 0;
   // Only a session opening during playback flashes, not every row on load.
   const [flashOnOpen] = useState(animate);
   const showPulse = pulse && state !== "focused" && lastCommand !== undefined;
   const canFold = state === "open" || state === "folded";
+  const onMain = state === "closed" ? onExpand : onHold;
+  const mainTitle =
+    state === "closed"
+      ? `Open ${session.name} at its end`
+      : state === "focused"
+        ? undefined
+        : `Focus ${session.name}`;
   return (
     <div
       className={clsx(
@@ -114,25 +128,42 @@ export const TerminalRow: FC<TerminalRowProps> = ({
         </button>
         <button
           type="button"
-          className={clsx(styles.barButton, styles.barMain)}
-          onClick={state === "closed" ? onExpand : onHold}
-          title={
-            state === "closed"
-              ? `Open ${session.name} at its end`
-              : state === "focused"
-                ? undefined
-                : `Focus ${session.name}`
-          }
+          className={clsx(styles.barButton, styles.barName)}
+          onClick={onMain}
+          title={mainTitle}
         >
           <span className={styles.sessionName}>{session.name}</span>
           {state === "closed" ? (
             <span>ended {formatClock(session.end)}</span>
           ) : null}
-          {lastCommand ? (
-            <span className={styles.lastCommand}>
-              $ {commandLabel(lastCommand.command)}
-            </span>
-          ) : null}
+        </button>
+        {lastCommand && onShowCommand && lastCommand.toolCallId ? (
+          <button
+            type="button"
+            className={clsx(
+              styles.barButton,
+              styles.lastCommand,
+              styles.commandLink
+            )}
+            onClick={() => onShowCommand(lastCommand)}
+            title="Show this command's tool call in the transcript"
+          >
+            $ {commandLabel(lastCommand.command)}
+          </button>
+        ) : lastCommand ? (
+          <span className={styles.lastCommand}>
+            $ {commandLabel(lastCommand.command)}
+          </span>
+        ) : null}
+        {/* The rest of the bar is the same target as the name, kept out of
+            the tab order so each bar is one stop plus its controls. */}
+        <button
+          type="button"
+          className={clsx(styles.barButton, styles.barRest)}
+          onClick={onMain}
+          title={mainTitle}
+          tabIndex={-1}
+        >
           {snippet ? <span className={styles.snippet}>· {snippet}</span> : null}
           <span className={styles.barMeta}>
             {showPulse ? (
@@ -170,6 +201,7 @@ export const TerminalRow: FC<TerminalRowProps> = ({
           scrollerRef={scrollerRef}
           pinned={pinned}
           onJumpToLatest={onJumpToLatest}
+          onEchoClick={onEchoClick}
         />
       ) : null}
     </div>
@@ -186,6 +218,7 @@ interface TerminalBodyProps {
   scrollerRef: (scroller: HTMLDivElement | null) => void;
   pinned: boolean;
   onJumpToLatest: () => void;
+  onEchoClick?: (lineText: string) => void;
 }
 
 // The body scrolls (the view keeps it on the newest output unless the user
@@ -202,11 +235,17 @@ const TerminalBody: FC<TerminalBodyProps> = ({
   scrollerRef,
   pinned,
   onJumpToLatest,
+  onEchoClick,
 }) => {
   const bodyRef = useRef<HTMLDivElement | null>(null);
-  useEventListener(bodyRef, "click", () => {
+  useEventListener(bodyRef, "click", (e) => {
     // The end of a drag to select text also fires a click.
-    if (!window.getSelection()?.toString()) onTogglePlay();
+    if (window.getSelection()?.toString()) return;
+    const echo =
+      e.target instanceof Element ? commandEchoElement(e.target) : undefined;
+    const line = echo?.closest(".ap-line");
+    if (onEchoClick && line) onEchoClick(line.textContent);
+    else onTogglePlay();
   });
   // The player is display-only (the shared clock seeks it) but takes focus
   // when clicked, and its own keys would play it: the view handles keys from

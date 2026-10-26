@@ -115,10 +115,13 @@ export const useSampleDetailNavigation = () => {
   // Explicit `follow=1` arms the transcript's live-tail at mount (a shareable
   // "following the live sample" URL), overriding the deep-link stand-down.
   const follow = searchParams.get("follow") === "1";
+  // `t=` opens the Terminals tab at a time (real seconds into the run).
+  const terminalsTime = Number.parseFloat(searchParams.get("t") ?? "");
   return {
     message,
     event,
     follow,
+    terminalsTime: Number.isFinite(terminalsTime) ? terminalsTime : undefined,
   };
 };
 

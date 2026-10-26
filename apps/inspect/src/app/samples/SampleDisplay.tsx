@@ -13,7 +13,11 @@ import {
 } from "react";
 import { useNavigate } from "react-router";
 
-import { EvalSample, EvalSpec } from "@tsmono/inspect-common/types";
+import {
+  EvalSample,
+  EvalSpec,
+  type ToolEvent,
+} from "@tsmono/inspect-common/types";
 import { modelRoleNames } from "@tsmono/inspect-common/utils";
 import {
   ChatViewRowsVirtualList,
@@ -31,6 +35,7 @@ import { SelectTool } from "@tsmono/inspect-components/selection";
 import {
   dynamicDefaultExcludeEvents,
   eventsToStr,
+  type TerminalsLink,
   type TranscriptLayoutRightRailProps,
 } from "@tsmono/inspect-components/transcript";
 import type { SearchScope } from "@tsmono/inspect-components/transcript-search";
@@ -109,6 +114,7 @@ import { useSampleDetailNavigation } from "../routing/sampleNavigation";
 import {
   printSampleUrl,
   sampleEventUrl,
+  sampleTerminalsUrl,
   toFullUrl,
   useFullSampleMessageUrlBuilder,
   useLogOrSampleRouteParams,
@@ -124,6 +130,11 @@ import { ScansSidebarPanel } from "./scans/ScansSidebarPanel";
 import { useSampleScans } from "./scans/useSampleScans";
 import { SampleScoresView } from "./scores/SampleScoresView";
 import { storeCasts } from "./terminals/asciicast";
+import {
+  buildTerminalSample,
+  terminalLinks,
+  type TerminalCommand,
+} from "./terminals/terminalModel";
 import { TerminalsView } from "./terminals/TerminalsView";
 import { ChunkedTranscriptPanel } from "./transcript/chunked/ChunkedTranscriptPanel";
 import { useTranscriptFilter } from "./transcript/hooks";
@@ -345,7 +356,17 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     []
   );
 
-  const terminalSessions = sample ? storeCasts(sample.store) : [];
+  const sampleStore = sample?.store;
+  const terminalSample = useMemo(() => {
+    const casts = sampleStore ? storeCasts(sampleStore) : [];
+    return casts.length > 0
+      ? buildTerminalSample(casts, sampleEvents)
+      : undefined;
+  }, [sampleStore, sampleEvents]);
+  const terminalToolLinks = useMemo(
+    () => (terminalSample ? terminalLinks(terminalSample) : undefined),
+    [terminalSample]
+  );
   const sampleUsages = usageViewsForSample(`${baseId}-${id}`, sample, evalSpec);
   const sampleMetadatas = metadataViewsForSample(
     `${baseId}-${id}`,
@@ -476,6 +497,59 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     }
     setSelectedTab(kSampleTranscriptTabId);
     navigateAndForget(navigate, url);
+  };
+
+  const showCommandInTranscript = (command: TerminalCommand) => {
+    const sampleId = urlSampleId ?? sampleHandle?.id;
+    const sampleEpoch = urlEpoch ?? sampleHandle?.epoch;
+    if (
+      !command.eventUuid ||
+      !urlLogPath ||
+      sampleId === undefined ||
+      sampleEpoch === undefined
+    ) {
+      return;
+    }
+    setSelectedTab(kSampleTranscriptTabId);
+    navigateAndForget(
+      navigate,
+      sampleEventUrl(
+        sampleUrlBuilder,
+        command.eventUuid,
+        urlLogPath,
+        sampleId,
+        sampleEpoch
+      )
+    );
+  };
+  const getTerminalsLink = (event: ToolEvent): TerminalsLink | undefined => {
+    const link = terminalToolLinks?.get(event.id);
+    const sampleId = urlSampleId ?? sampleHandle?.id;
+    const sampleEpoch = urlEpoch ?? sampleHandle?.epoch;
+    if (
+      !link ||
+      !urlLogPath ||
+      sampleId === undefined ||
+      sampleEpoch === undefined
+    ) {
+      return undefined;
+    }
+    return {
+      label: link.action === "send" ? "Show in terminals" : "Show at this time",
+      onShow: () => {
+        setSelectedTab(kSampleTerminalsTabId);
+        navigateAndForget(
+          navigate,
+          sampleTerminalsUrl(
+            sampleUrlBuilder,
+            link.at,
+            urlLogPath,
+            sampleId,
+            sampleEpoch
+          )
+        );
+      },
+    };
   };
 
   const api = getApi();
@@ -1026,6 +1100,9 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                     initialEventId={sampleDetailNavigation.event}
                     initialMessageId={sampleDetailNavigation.message}
                     followRequested={sampleDetailNavigation.follow}
+                    getTerminalsLink={
+                      terminalToolLinks ? getTerminalsLink : undefined
+                    }
                     rightRail={hasRail ? transcriptRail : undefined}
                     selection={evidence.listSelection}
                   />
@@ -1087,7 +1164,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 )}
               </RailSidebarHost>
             </TabPanel>
-            {terminalSessions.length > 0 ? (
+            {terminalSample ? (
               <TabPanel
                 key={kSampleTerminalsTabId}
                 id={kSampleTerminalsTabId}
@@ -1098,10 +1175,12 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 selected={effectiveSelectedTab === kSampleTerminalsTabId}
               >
                 <TerminalsView
+                  key={sampleDetailNavigation.terminalsTime}
                   id={`${baseId}-${id}-terminal-sessions`}
-                  casts={terminalSessions}
-                  events={sampleEvents}
+                  sample={terminalSample}
                   scrollRef={scrollRef}
+                  onShowInTranscript={showCommandInTranscript}
+                  initialTime={sampleDetailNavigation.terminalsTime}
                 />
               </TabPanel>
             ) : null}

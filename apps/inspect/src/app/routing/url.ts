@@ -8,6 +8,7 @@ import { directoryRelativeUrl, encodePathParts } from "@tsmono/util";
 import {
   kSampleEventTabId,
   kSampleMessagesTabId,
+  kSampleTerminalsTabId,
   kSampleTranscriptTabId,
 } from "../../constants";
 
@@ -355,6 +356,24 @@ export const sampleMessageUrl = (
 ) => {
   const baseUrl = builder(logPath, sampleId, sampleEpoch, tab);
   return `${baseUrl}?message=${messageId}`;
+};
+
+/** The Terminals tab opened paused at a real time (seconds into the run). */
+export const sampleTerminalsUrl = (
+  builder: SampleUrlBuilder,
+  time: number,
+  logPath: string,
+  sampleId?: string | number,
+  sampleEpoch?: string | number
+) => {
+  const baseUrl = builder(
+    logPath,
+    sampleId,
+    sampleEpoch,
+    kSampleTerminalsTabId
+  );
+  // Rounded up, so landing on a command's time shows that command.
+  return `${baseUrl}?t=${(Math.ceil(time * 100) / 100).toFixed(2)}`;
 };
 
 /**

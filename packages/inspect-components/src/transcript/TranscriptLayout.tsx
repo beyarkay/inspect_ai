@@ -67,6 +67,7 @@ import {
 import {
   EventNode,
   type EventNodeContext,
+  type EventPanelCallbacks,
   type TranscriptCollapseState,
 } from "./types";
 
@@ -181,6 +182,7 @@ export interface TranscriptLayoutProps {
   eventsListRef?: RefObject<TranscriptViewNodesHandle | null>;
   getEventUrl?: (eventId: string) => string | undefined;
   linkingEnabled?: boolean;
+  getTerminalsLink?: EventPanelCallbacks["getTerminalsLink"];
   /** Builds the focus-mode entry href for the header's focus control
    *  (plain click enters in-window; modified clicks open a new tab). Omit to
    *  hide that control. */
@@ -253,6 +255,7 @@ export const TranscriptLayout: FC<TranscriptLayoutProps> = ({
   eventsListRef,
   getEventUrl,
   linkingEnabled,
+  getTerminalsLink,
   getEventFocusUrl,
   onOpenEventFocus,
   onNavigatedToEvent,
@@ -747,6 +750,7 @@ export const TranscriptLayout: FC<TranscriptLayoutProps> = ({
                   renderAgentCard={showSwimlanes ? renderAgentCard : undefined}
                   getEventUrl={getEventUrl}
                   linkingEnabled={linkingEnabled}
+                  getTerminalsLink={getTerminalsLink}
                   getEventFocusUrl={getEventFocusUrl}
                   onOpenEventFocus={onOpenEventFocus}
                   collapsedTranscript={collapseState?.transcript}

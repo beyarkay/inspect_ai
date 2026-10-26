@@ -141,6 +141,20 @@ a.turnButton {
 .card.jumpTarget {
   outline: 2px solid var(--inspect-jump-target-ring-color);
   outline-offset: 2px;
+  animation: jumpTargetPulse 400ms ease-in-out 2;
+}
+
+@keyframes jumpTargetPulse {
+  50% {
+    outline-offset: 5px;
+    outline-width: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card.jumpTarget {
+    animation: none;
+  }
 }
 
 /* Selected for export; compounded to outrank .depthRoot, margin absorbs the border like .expanded. */

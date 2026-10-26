@@ -142,12 +142,29 @@
   color: var(--vscode-textLink-foreground);
 }
 
-.barMain {
-  flex: 1;
-  min-width: 0;
+.barName {
+  flex-shrink: 0;
   gap: 10px;
   padding-right: 10px;
   text-align: left;
+}
+
+.barRest {
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.commandLink {
+  flex: 0 1 auto;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.commandLink:hover {
+  text-decoration: underline;
 }
 
 .sessionName {
@@ -162,6 +179,7 @@
 }
 
 .lastCommand {
+  align-self: center;
   flex: 0 1 auto;
   min-width: 3em;
   overflow: hidden;
@@ -249,6 +267,15 @@
 .body :global(.ap-term) {
   cursor: text;
   user-select: text;
+}
+
+/* A command's echo (styled by highlightCommandEchoes) opens its tool call. */
+.body :global(.ap-bold[style*="rgb(130, 170, 255)"]) {
+  cursor: pointer;
+}
+
+.body :global(.ap-bold[style*="rgb(130, 170, 255)"]:hover) {
+  text-decoration: underline;
 }
 
 .latest {

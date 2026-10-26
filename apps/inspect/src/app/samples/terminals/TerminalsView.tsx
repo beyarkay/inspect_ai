@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { FC, RefObject, useRef, useState } from "react";
 
-import type { Event } from "@tsmono/inspect-common/types";
 import {
   useAnimationFrameLoop,
   useEventListener,
@@ -9,14 +8,13 @@ import {
   useUnmount,
 } from "@tsmono/react/hooks";
 
-import { commandLabel, type StoreCast } from "./asciicast";
+import { commandLabel } from "./asciicast";
 import { ExpandedTerminal } from "./ExpandedTerminal";
 import { PlayerSync } from "./playerSync";
 import { TerminalControls } from "./TerminalControls";
 import {
   adjacentCommand,
   allocateRows,
-  buildTerminalSample,
   focusAt,
   idleGapAt,
   kSharedIdleLimit,
@@ -40,6 +38,9 @@ import { FoldedTimeline, TerminalTimeline } from "./TerminalTimeline";
 // Agent focus switches closer together than this collapse into one while
 // playing (the stage's reflow eases over 200 ms).
 const kFocusSwitchMs = 400;
+// A command's echo is on screen from its marker time; allow for the clock
+// sitting a hair before it.
+const kEchoTolerance = 0.05;
 // How long (wall seconds) a new command pulses its row's bar.
 const kPulseSeconds = 0.6;
 // The idle chip appears this long (seconds) into a skipped gap, and lingers
@@ -61,10 +62,16 @@ const kTimelineLaneHeight = 18;
 
 interface TerminalsViewProps {
   id: string;
-  casts: StoreCast[];
-  events?: Event[];
+  /** The sample's casts on one clock (buildTerminalSample). */
+  sample: TerminalSample;
   /** The sample's scroll container; the view fills its visible height. */
   scrollRef: RefObject<HTMLDivElement | null>;
+  /** Opens a command's tool call in the transcript; omit to disable
+   *  terminal → transcript links. */
+  onShowInTranscript?: (command: TerminalCommand) => void;
+  /** Where the view opens, paused, in real seconds (e.g. from a transcript
+   *  tool call's "Show in terminals"). */
+  initialTime?: number;
 }
 
 /**
@@ -74,29 +81,13 @@ interface TerminalsViewProps {
  * session's lifetime, focus and commands. (Design brief:
  * design/inspect-multiterminal-design-brief in inspect_ai.)
  */
-export const TerminalsView: FC<TerminalsViewProps> = ({
-  id,
-  casts,
-  events,
-  scrollRef,
-}) => {
-  const sample = buildTerminalSample(casts, events);
-  const agent = sample.agents[0];
-  return agent ? (
-    <SharedTerminals
-      id={id}
-      sample={sample}
-      agent={agent}
-      scrollRef={scrollRef}
-    />
-  ) : null;
+export const TerminalsView: FC<TerminalsViewProps> = (props) => {
+  const agent = props.sample.agents[0];
+  return agent ? <SharedTerminals {...props} agent={agent} /> : null;
 };
 
-interface SharedTerminalsProps {
-  id: string;
-  sample: TerminalSample;
+interface SharedTerminalsProps extends TerminalsViewProps {
   agent: TerminalAgent;
-  scrollRef: RefObject<HTMLDivElement | null>;
 }
 
 const SharedTerminals: FC<SharedTerminalsProps> = ({
@@ -104,11 +95,15 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   sample,
   agent,
   scrollRef,
+  onShowInTranscript,
+  initialTime,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const space = useSpaceBelow(rootRef, scrollRef);
 
-  const [playback, setPlaybackState] = useState(0);
+  const [playback, setPlaybackState] = useState(() =>
+    initialTime !== undefined ? realToPlayback(sample, initialTime) : 0
+  );
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [held, setHeld] = useState<string>();
@@ -137,7 +132,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
 
   // The clock's source of truth: the frame loop and scrubs advance it between
   // renders, so it can't wait on state.
-  const clockRef = useRef(0);
+  const clockRef = useRef(playback);
   const lastSwitchRef = useRef(0);
   const idleSeenRef = useRef(0);
   const [players] = useState(
@@ -252,10 +247,29 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
 
   const follow = () => setHeld(undefined);
 
-  const seekToCommand = (command: TerminalCommand) => {
+  const showInTranscript = (command: TerminalCommand) => {
+    setPlaying(false);
+    onShowInTranscript?.(command);
+  };
+
+  const seekToCommand = (command: TerminalCommand, toTranscript = false) => {
+    if (toTranscript && onShowInTranscript && command.toolCallId) {
+      showInTranscript(command);
+      return;
+    }
     setHeld(undefined);
     setClock(realToPlayback(sample, command.at));
   };
+
+  // The command whose echo is on a clicked line: the latest command to that
+  // session by now whose text the line shows.
+  const echoedCommand = (sessionKey: string, lineText: string) =>
+    agent.commands.findLast(
+      (command) =>
+        command.sessionKey === sessionKey &&
+        command.at <= real + kEchoTolerance &&
+        lineText.includes(commandLabel(command.command).replace(/ …$/, ""))
+    );
 
   const toggleFold = (key: string) => {
     const next = new Set(folded);
@@ -402,6 +416,16 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               scrollerRef={(scroller) => players.setScroller(key, scroller)}
               pinned={pinned.has(key)}
               onJumpToLatest={() => players.jumpToLatest(key)}
+              onShowCommand={onShowInTranscript ? showInTranscript : undefined}
+              onEchoClick={
+                onShowInTranscript
+                  ? (lineText) => {
+                      const command = echoedCommand(key, lineText);
+                      if (command?.toolCallId) showInTranscript(command);
+                      else togglePlay();
+                    }
+                  : undefined
+              }
             />
           );
         })}

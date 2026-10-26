@@ -224,6 +224,7 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
   );
 
   const toolLabel = getOwn(toolLabels.messageLabels, event.id);
+  const terminalsLink = eventCallbacks?.getTerminalsLink?.(event);
 
   return (
     <EventPanel
@@ -239,6 +240,17 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
       childIds={childNodes.map((child) => child.id)}
       collapseControl="bottom"
       turnNav={turnNav}
+      headerExtra={
+        terminalsLink ? (
+          <button
+            type="button"
+            className={styles.terminalsLink}
+            onClick={terminalsLink.onShow}
+          >
+            {terminalsLink.label}
+          </button>
+        ) : undefined
+      }
       eventCallbacks={eventCallbacks}
     >
       <div data-name="Summary" className={styles.summary}>

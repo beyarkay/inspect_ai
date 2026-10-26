@@ -469,6 +469,42 @@ export const resultSnippet = (
   return undefined;
 };
 
+export interface TerminalLink {
+  action: "open" | "send" | "read";
+  sessionKey: string;
+  /** Real seconds: a command's echo-drawn time, or when the call ran. */
+  at: number;
+}
+
+/**
+ * Where each linked terminal tool call (by tool call id) lands on the shared
+ * clock: the inverse of the marker ↔ tool event join.
+ */
+export const terminalLinks = (
+  sample: TerminalSample
+): Map<string, TerminalLink> => {
+  const links = new Map<string, TerminalLink>();
+  for (const command of sample.commands) {
+    if (command.toolCallId) {
+      links.set(command.toolCallId, {
+        action: "send",
+        sessionKey: command.sessionKey,
+        at: command.at,
+      });
+    }
+  }
+  for (const activity of sample.activities) {
+    if (activity.toolCallId) {
+      links.set(activity.toolCallId, {
+        action: activity.action,
+        sessionKey: activity.sessionKey,
+        at: activity.at,
+      });
+    }
+  }
+  return links;
+};
+
 export type RowState = "focused" | "open" | "folded" | "closed" | "pending";
 
 /** Each session's row state at a real time (brief §4.3). A held or focused
