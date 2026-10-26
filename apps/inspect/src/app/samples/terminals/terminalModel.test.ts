@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { testToolEvent } from "@tsmono/inspect-common/testing";
+import {
+  testSpanBeginEvent,
+  testToolEvent,
+} from "@tsmono/inspect-common/testing";
 
 import type { StoreCast } from "./asciicast";
 import {
   adjacentCommand,
+  agentTree,
   allocateRows,
   buildTerminalSample,
   focusAt,
@@ -436,5 +440,34 @@ describe("allocateRows", () => {
       server: 30,
       tests: 0,
     });
+  });
+});
+
+describe("agentTree", () => {
+  const span = (id: string, parent_id?: string, type = "agent") =>
+    testSpanBeginEvent({ id, parent_id, type, name: id });
+
+  it("orders agents depth-first in spawn order, counting only terminal agents", () => {
+    const events = [
+      span("solvers", undefined, "solvers"),
+      span("main", "solvers"),
+      span("planner", "main"),
+      span("runner", "planner"),
+      span("reviewer", "main"),
+    ];
+    expect(agentTree(["reviewer", "runner", "main"], events)).toEqual([
+      { id: "main", depth: 0 },
+      { id: "runner", depth: 1 },
+      { id: "reviewer", depth: 1 },
+    ]);
+  });
+
+  it("keeps agents without a span, and a parent cycle, as roots", () => {
+    const events = [span("a", "b"), span("b", "a")];
+    expect(agentTree(["", "a", "b"], events)).toEqual([
+      { id: "", depth: 0 },
+      { id: "a", depth: 0 },
+      { id: "b", depth: 0 },
+    ]);
   });
 });

@@ -122,6 +122,7 @@ export const useSampleDetailNavigation = () => {
     event,
     follow,
     terminalsTime: Number.isFinite(terminalsTime) ? terminalsTime : undefined,
+    terminalsAgent: searchParams.get("agent") ?? undefined,
   };
 };
 

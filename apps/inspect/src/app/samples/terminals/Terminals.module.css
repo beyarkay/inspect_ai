@@ -710,3 +710,28 @@
     opacity: 0;
   }
 }
+
+/* Agent picker (brief §9), rendered in the sample's tab toolbar. */
+.agentPickerLabel {
+  display: inline-flex;
+  gap: 0.35em;
+}
+
+.agentItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  min-width: 12em;
+}
+
+.agentSpawn {
+  color: var(--vscode-descriptionForeground);
+}
+
+.agentName {
+  flex: 1;
+}
+
+.agentCount {
+  color: var(--vscode-descriptionForeground);
+}

@@ -358,10 +358,12 @@ export const sampleMessageUrl = (
   return `${baseUrl}?message=${messageId}`;
 };
 
-/** The Terminals tab opened paused at a real time (seconds into the run). */
+/** The Terminals tab opened paused at a real time (seconds into the run),
+ *  showing an agent's terminals. */
 export const sampleTerminalsUrl = (
   builder: SampleUrlBuilder,
   time: number,
+  agentId: string,
   logPath: string,
   sampleId?: string | number,
   sampleEpoch?: string | number
@@ -373,7 +375,10 @@ export const sampleTerminalsUrl = (
     kSampleTerminalsTabId
   );
   // Rounded up, so landing on a command's time shows that command.
-  return `${baseUrl}?t=${(Math.ceil(time * 100) / 100).toFixed(2)}`;
+  const t = (Math.ceil(time * 100) / 100).toFixed(2);
+  return agentId
+    ? `${baseUrl}?t=${t}&agent=${encodeURIComponent(agentId)}`
+    : `${baseUrl}?t=${t}`;
 };
 
 /**

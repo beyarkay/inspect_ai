@@ -129,6 +129,7 @@ import { SampleSummaryView } from "./SampleSummaryView";
 import { ScansSidebarPanel } from "./scans/ScansSidebarPanel";
 import { useSampleScans } from "./scans/useSampleScans";
 import { SampleScoresView } from "./scores/SampleScoresView";
+import { AgentPicker } from "./terminals/AgentPicker";
 import { storeCasts } from "./terminals/asciicast";
 import {
   buildTerminalSample,
@@ -367,6 +368,15 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     () => (terminalSample ? terminalLinks(terminalSample) : undefined),
     [terminalSample]
   );
+  // The picked agent wins over a link's ?agent= until the next link.
+  const [pickedTerminalAgent, setPickedTerminalAgent] = useState<string>();
+  const terminalAgent = terminalSample
+    ? (terminalSample.agents.find(
+        (agent) =>
+          agent.id ===
+          (pickedTerminalAgent ?? sampleDetailNavigation.terminalsAgent)
+      ) ?? terminalSample.agents[0])
+    : undefined;
   const sampleUsages = usageViewsForSample(`${baseId}-${id}`, sample, evalSpec);
   const sampleMetadatas = metadataViewsForSample(
     `${baseId}-${id}`,
@@ -537,12 +547,18 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     return {
       label: link.action === "send" ? "Show in terminals" : "Show at this time",
       onShow: () => {
+        const agentId =
+          terminalSample?.sessions.find(
+            (session) => session.key === link.sessionKey
+          )?.agentId ?? "";
+        setPickedTerminalAgent(undefined);
         setSelectedTab(kSampleTerminalsTabId);
         navigateAndForget(
           navigate,
           sampleTerminalsUrl(
             sampleUrlBuilder,
             link.at,
+            agentId,
             urlLogPath,
             sampleId,
             sampleEpoch
@@ -666,6 +682,22 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
   // Build the toolbar in left-to-right groups separated by thin dividers:
   //   [tab-specific view controls] | [shared sample actions] | [Search]
   const tools: ReactNode[] = [];
+
+  if (
+    effectiveSelectedTab === kSampleTerminalsTabId &&
+    terminalSample &&
+    terminalAgent &&
+    terminalSample.agents.length > 1
+  ) {
+    tools.push(
+      <AgentPicker
+        key="sample-terminals-agent"
+        agents={terminalSample.agents}
+        selected={terminalAgent}
+        onSelect={setPickedTerminalAgent}
+      />
+    );
+  }
 
   if (effectiveSelectedTab === kSampleTranscriptTabId) {
     const label = isNoneFilter
@@ -1181,6 +1213,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                   scrollRef={scrollRef}
                   onShowInTranscript={showCommandInTranscript}
                   initialTime={sampleDetailNavigation.terminalsTime}
+                  agentId={terminalAgent?.id}
                 />
               </TabPanel>
             ) : null}

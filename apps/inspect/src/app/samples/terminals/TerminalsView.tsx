@@ -72,6 +72,9 @@ interface TerminalsViewProps {
   /** Where the view opens, paused, in real seconds (e.g. from a transcript
    *  tool call's "Show in terminals"). */
   initialTime?: number;
+  /** The agent whose terminals show (default: the first). Changing it keeps
+   *  the clock. */
+  agentId?: string;
 }
 
 /**
@@ -82,7 +85,9 @@ interface TerminalsViewProps {
  * design/inspect-multiterminal-design-brief in inspect_ai.)
  */
 export const TerminalsView: FC<TerminalsViewProps> = (props) => {
-  const agent = props.sample.agents[0];
+  const agent =
+    props.sample.agents.find((candidate) => candidate.id === props.agentId) ??
+    props.sample.agents[0];
   return agent ? <SharedTerminals {...props} agent={agent} /> : null;
 };
 

@@ -300,4 +300,4 @@ const rowsReadout = (state: RowState, rows: number): string =>
     ? `${rows} of ${kMaxRows} rows`
     : rows > kTailRows
       ? `tail · ${rows} rows`
-      : `open · ${kTailRows}-row floor`;
+      : `${kTailRows}-row floor`;

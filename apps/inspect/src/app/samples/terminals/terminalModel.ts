@@ -67,6 +67,8 @@ export interface TerminalAgent {
   /** The `ir_agent_span_id` of its sessions; "" for casts without one. */
   id: string;
   name: string;
+  /** Spawn depth among the sample's terminal agents (0 for a root). */
+  depth: number;
   sessions: TerminalSession[];
   commands: TerminalCommand[];
   focusSegments: FocusSegment[];
@@ -194,22 +196,25 @@ export const buildTerminalSample = (
       );
     }
   }
-  const agents = [...agentHeaders.entries()].map(([id, name]) => {
-    const agentSessions = sessionList.filter(
-      (session) => session.agentId === id
-    );
-    const keys = new Set(agentSessions.map((session) => session.key));
-    const agentCommands = commands.filter((command) =>
-      keys.has(command.sessionKey)
-    );
-    return {
-      id,
-      name,
-      sessions: agentSessions,
-      commands: agentCommands,
-      focusSegments: focusSegments(agentSessions, agentCommands),
-    };
-  });
+  const agents = agentTree([...agentHeaders.keys()], events).map(
+    ({ id, depth }) => {
+      const agentSessions = sessionList.filter(
+        (session) => session.agentId === id
+      );
+      const keys = new Set(agentSessions.map((session) => session.key));
+      const agentCommands = commands.filter((command) =>
+        keys.has(command.sessionKey)
+      );
+      return {
+        id,
+        name: agentHeaders.get(id) ?? "agent",
+        depth,
+        sessions: agentSessions,
+        commands: agentCommands,
+        focusSegments: focusSegments(agentSessions, agentCommands),
+      };
+    }
+  );
 
   return {
     origin,
@@ -503,6 +508,57 @@ export const terminalLinks = (
     }
   }
   return links;
+};
+
+/**
+ * Orders the terminal agents (by their agent span ids) as a spawn tree:
+ * depth-first in span start order, each with its depth among these agents
+ * (an intermediate agent without terminals doesn't count). Agents whose span
+ * isn't in the events keep their order, as roots.
+ */
+export const agentTree = (
+  agentIds: string[],
+  events: Event[]
+): { id: string; depth: number }[] => {
+  const spanParent = new Map<string, string | undefined>();
+  const spanOrder = new Map<string, number>();
+  for (const event of events) {
+    if (event.event === "span_begin") {
+      spanParent.set(event.id, event.parent_id ?? undefined);
+      spanOrder.set(event.id, spanOrder.size);
+    }
+  }
+  const ids = new Set(agentIds);
+  const parentAgent = (id: string): string | undefined => {
+    const seen = new Set([id]);
+    let parent = spanParent.get(id);
+    while (parent !== undefined && !ids.has(parent) && !seen.has(parent)) {
+      seen.add(parent);
+      parent = spanParent.get(parent);
+    }
+    return parent !== undefined && ids.has(parent) ? parent : undefined;
+  };
+  const order = (id: string) =>
+    spanOrder.get(id) ?? spanOrder.size + agentIds.indexOf(id);
+  const children = new Map<string | undefined, string[]>();
+  for (const id of [...agentIds].sort((a, b) => order(a) - order(b))) {
+    const parent = parentAgent(id);
+    children.set(parent, [...(children.get(parent) ?? []), id]);
+  }
+  const result: { id: string; depth: number }[] = [];
+  const visit = (parent: string | undefined, depth: number) => {
+    for (const id of children.get(parent) ?? []) {
+      result.push({ id, depth });
+      visit(id, depth + 1);
+    }
+  };
+  visit(undefined, 0);
+  // A parent cycle leaves agents unreached; they still get a row.
+  const placed = new Set(result.map(({ id }) => id));
+  for (const id of agentIds) {
+    if (!placed.has(id)) result.push({ id, depth: 0 });
+  }
+  return result;
 };
 
 export type RowState = "focused" | "open" | "folded" | "closed" | "pending";
