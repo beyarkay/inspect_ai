@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, useRef, useState } from "react";
+import { FC, MouseEvent, useRef, useState } from "react";
 
 import {
   AsciinemaPlayer,
@@ -34,7 +34,9 @@ interface TerminalRowProps {
   pulse: boolean;
   onHold: () => void;
   onToggleFold: () => void;
-  onExpand: () => void;
+  /** Opens the session on its own; the control pressed takes focus back on
+   *  close. */
+  onExpand: (opener: HTMLElement) => void;
   onTogglePlay: () => void;
   onKey: (e: KeyboardEvent) => void;
   onPlayer: (player: AsciinemaPlayerHandle | null) => void;
@@ -81,7 +83,10 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   const [flashOnOpen] = useState(animate);
   const showPulse = pulse && state !== "focused" && lastCommand !== undefined;
   const canFold = state === "open" || state === "folded";
-  const onMain = state === "closed" ? onExpand : onHold;
+  const onMain = (e: MouseEvent<HTMLButtonElement>) => {
+    if (state === "closed") onExpand(e.currentTarget);
+    else onHold();
+  };
   const mainTitle =
     state === "closed"
       ? `Open ${session.name} at its end`
@@ -183,7 +188,7 @@ export const TerminalRow: FC<TerminalRowProps> = ({
         <button
           type="button"
           className={clsx(styles.barButton, styles.expand)}
-          onClick={onExpand}
+          onClick={(e) => onExpand(e.currentTarget)}
           aria-label={`Expand ${session.name}`}
           title={`Open ${session.name} on its own`}
         >

@@ -57,12 +57,16 @@ from inspect_ai.model import (
 )
 from inspect_ai.tool import ToolCall, ToolInfo, ToolParam, ToolParams
 
-DEFAULT_DATA_DIR = (
-    Path(__file__).resolve().parents[10]
-    / "design"
-    / "inspect-multiterminal-design-brief"
-    / "data"
-)
+
+
+def default_data_dir() -> Path | None:
+    """The design brief's data when run from an inspect_ai checkout."""
+    parents = Path(__file__).resolve().parents
+    if len(parents) <= 10:
+        return None
+    return parents[10] / "design" / "inspect-multiterminal-design-brief" / "data"
+
+
 MODEL = "mockllm/model"
 READ_COUNTS = {
     "fix-failing-tests": 6,
@@ -634,9 +638,11 @@ def log_filename(fx: Fixture) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    parser.add_argument("--data-dir", type=Path, default=default_data_dir())
     parser.add_argument("--out-dir", type=Path, required=True)
     args = parser.parse_args()
+    if args.data_dir is None:
+        parser.error("--data-dir is required outside an inspect_ai checkout")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for path in sorted(args.data_dir.glob("*.json")):

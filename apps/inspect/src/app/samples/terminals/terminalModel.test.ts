@@ -9,6 +9,7 @@ import type { StoreCast } from "./asciicast";
 import {
   adjacentCommand,
   agentTree,
+  alignByTime,
   allocateRows,
   buildTerminalSample,
   focusAt,
@@ -16,6 +17,7 @@ import {
   kSharedIdleLimit,
   lastCommandAt,
   localTime,
+  parseTerminalCasts,
   playbackToReal,
   realToPlayback,
   resultSnippet,
@@ -440,6 +442,54 @@ describe("allocateRows", () => {
       server: 30,
       tests: 0,
     });
+  });
+});
+
+describe("tool call join", () => {
+  it("keeps two close commands in order rather than pairing each with the nearer call", () => {
+    // Markers trail the calls by 0.9 s; nearest-first would swap them.
+    const casts = [
+      makeCast("main", 0, [
+        ...send("main", 10.9, "cd src"),
+        ...send("main", 11.9, "ls"),
+      ]),
+    ];
+    const sample = buildTerminalSample(casts, [
+      toolAt(10, "main", "send", "call-1"),
+      toolAt(11, "main", "send", "call-2"),
+    ]);
+    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
+      "call-1",
+      "call-2",
+    ]);
+  });
+
+  it("leaves a call without a marker unpaired instead of taking the next marker", () => {
+    const casts = [makeCast("main", 0, [...send("main", 11.9, "ls")])];
+    const sample = buildTerminalSample(casts, [
+      toolAt(10, "main", "send", "call-orphan"),
+      toolAt(11, "main", "send", "call-ls"),
+    ]);
+    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
+      "call-ls",
+    ]);
+  });
+
+  it("builds the same sample from pre-parsed casts", () => {
+    const events = [toolAt(1.2, "main", "send", "call-a")];
+    expect(
+      buildTerminalSample(parseTerminalCasts(twoSessions), events)
+    ).toEqual(buildTerminalSample(twoSessions, events));
+  });
+});
+
+describe("alignByTime", () => {
+  it("pairs in order within the gap and skips what doesn't fit", () => {
+    expect(alignByTime([1, 2, 30], [0.9, 2.1, 7, 40], 5)).toEqual([
+      [0, 0],
+      [1, 1],
+    ]);
+    expect(alignByTime([], [1], 5)).toEqual([]);
   });
 });
 

@@ -133,6 +133,7 @@ import { AgentPicker } from "./terminals/AgentPicker";
 import { storeCasts } from "./terminals/asciicast";
 import {
   buildTerminalSample,
+  parseTerminalCasts,
   terminalLinks,
   type TerminalCommand,
 } from "./terminals/terminalModel";
@@ -357,13 +358,20 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     []
   );
 
+  // The casts (multi-MB strings) parse once per store; a running sample's
+  // event polls only redo the join. Memoised for that identity, not speed.
   const sampleStore = sample?.store;
-  const terminalSample = useMemo(() => {
+  const terminalCasts = useMemo(() => {
     const casts = sampleStore ? storeCasts(sampleStore) : [];
-    return casts.length > 0
-      ? buildTerminalSample(casts, sampleEvents)
-      : undefined;
-  }, [sampleStore, sampleEvents]);
+    return casts.length > 0 ? parseTerminalCasts(casts) : undefined;
+  }, [sampleStore]);
+  const terminalSample = useMemo(
+    () =>
+      terminalCasts
+        ? buildTerminalSample(terminalCasts, sampleEvents)
+        : undefined,
+    [terminalCasts, sampleEvents]
+  );
   const terminalToolLinks = useMemo(
     () => (terminalSample ? terminalLinks(terminalSample) : undefined),
     [terminalSample]

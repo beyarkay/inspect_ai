@@ -157,6 +157,7 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
                 kPeekDelayMs
               );
             }}
+            onPointerLeave={() => window.clearTimeout(peekTimer.current)}
           >
             {foldedTimeline}
             {hold || scrubPreview ? null : idleChip}

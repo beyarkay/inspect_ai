@@ -8,6 +8,7 @@ import {
   kCommandMarkerOffset,
   terminalMarker,
   type StoreCast,
+  type TerminalMarker,
 } from "./asciicast";
 
 // On the shared clock a gap is shortened to this only while every terminal is
@@ -94,19 +95,12 @@ export interface TerminalSample {
  * `ir_agent_span_id` header field; casts without it form one group.
  */
 export const buildTerminalSample = (
-  casts: StoreCast[],
+  casts: StoreCast[] | TerminalCasts,
   events: Event[] = []
 ): TerminalSample => {
-  const parsed = casts.map((storeCast) => {
-    const header = castHeader(storeCast.cast);
-    const castEventList = castEvents(storeCast.cast);
-    const markers = castEventList.flatMap((event) => {
-      const marker =
-        event.type === "m" ? terminalMarker(event.data) : undefined;
-      return marker ? [{ event, marker }] : [];
-    });
-    return { storeCast, header, events: castEventList, markers };
-  });
+  const parsed = Array.isArray(casts)
+    ? parseTerminalCasts(casts).casts
+    : casts.casts;
 
   const timestamps = parsed.flatMap(({ header }) =>
     header.timestamp !== undefined ? [header.timestamp] : []
@@ -114,38 +108,51 @@ export const buildTerminalSample = (
   const origin = timestamps.length > 0 ? Math.min(...timestamps) : 0;
 
   const sessions = parsed
-    .map(({ storeCast, header, events: castEventList, markers }) => {
-      const start =
-        header.timestamp !== undefined ? header.timestamp - origin : 0;
-      const length = castEventList.at(-1)?.time ?? 0;
-      const session: TerminalSession = {
-        key: storeCast.key,
-        name: header.session ?? markers[0]?.marker.session ?? storeCast.name,
-        cast: highlightCommandEchoes(storeCast.cast),
-        rows: header.rows,
-        cols: header.cols,
-        start,
-        end: start + length,
-        agentId: header.agentSpanId ?? "",
-        output: castEventList
-          .filter((event) => event.type === "o")
-          .map(({ time, data }) => ({ time, data })),
-      };
-      return { session, header, events: castEventList, markers };
-    })
+    .map(
+      ({ storeCast, header, highlighted, events: castEventList, markers }) => {
+        const start =
+          header.timestamp !== undefined ? header.timestamp - origin : 0;
+        const length = castEventList.at(-1)?.time ?? 0;
+        const session: TerminalSession = {
+          key: storeCast.key,
+          name: header.session ?? markers[0]?.marker.session ?? storeCast.name,
+          cast: highlighted,
+          rows: header.rows,
+          cols: header.cols,
+          start,
+          end: start + length,
+          agentId: header.agentSpanId ?? "",
+          output: castEventList
+            .filter((event) => event.type === "o")
+            .map(({ time, data }) => ({ time, data })),
+        };
+        return { session, header, events: castEventList, markers };
+      }
+    )
     .sort(
       (a, b) =>
         a.session.start - b.session.start ||
         a.session.key.localeCompare(b.session.key)
     );
 
-  const toolJoin = toolEventJoiner(events, origin);
+  const markerList = sessions.flatMap(({ session, markers }) =>
+    markers.map(({ event, marker }) => ({
+      marker,
+      session: session.name,
+      action: marker.action,
+      at: session.start + event.time,
+    }))
+  );
+  const joined = joinToolEvents(markerList, events, origin);
+  const joinedByMarker = new Map(
+    [...joined].map(([entry, toolEvent]) => [entry.marker, toolEvent])
+  );
   const commands: TerminalCommand[] = [];
   const activities: TerminalActivity[] = [];
   for (const { session, events: castEventList, markers } of sessions) {
     for (const { event, marker } of markers) {
       const sentAt = session.start + event.time;
-      const toolEvent = toolJoin(session.name, marker.action, sentAt);
+      const toolEvent = joinedByMarker.get(marker);
       const link = toolEvent
         ? {
             toolCallId: toolEvent.id,
@@ -228,10 +235,59 @@ export const buildTerminalSample = (
   };
 };
 
-// Each terminal tool call joins at most one marker: the one of the same
-// session and action nearest its start, within the join window.
-const toolEventJoiner = (events: Event[], origin: number) => {
-  const candidates = events.flatMap((event) => {
+/** The sample's casts parsed and highlighted once. This is the expensive part
+ *  of building the sample (multi-MB strings), so a host that rebuilds the
+ *  sample as events arrive can keep it across rebuilds. */
+export interface TerminalCasts {
+  casts: ParsedCast[];
+}
+
+interface ParsedCast {
+  storeCast: StoreCast;
+  header: ReturnType<typeof castHeader>;
+  highlighted: string;
+  events: ReturnType<typeof castEvents>;
+  markers: {
+    event: ReturnType<typeof castEvents>[number];
+    marker: TerminalMarker;
+  }[];
+}
+
+export const parseTerminalCasts = (casts: StoreCast[]): TerminalCasts => ({
+  casts: casts.map((storeCast) => {
+    const header = castHeader(storeCast.cast);
+    const castEventList = castEvents(storeCast.cast);
+    const markers = castEventList.flatMap((event) => {
+      const marker =
+        event.type === "m" ? terminalMarker(event.data) : undefined;
+      return marker ? [{ event, marker }] : [];
+    });
+    return {
+      storeCast,
+      header,
+      highlighted: highlightCommandEchoes(storeCast.cast),
+      events: castEventList,
+      markers,
+    };
+  }),
+});
+
+// Markers join the sample's terminal tool calls per session and action, in
+// order: both sequences are monotone, so the join is the order-preserving
+// alignment with the least total time distance, where a marker or call may
+// stay unmatched (a call that failed before writing its marker, a marker
+// from a call outside the transcript) at the cost of the join window. A
+// nearest-first join could pair two calls a second apart the wrong way round,
+// since cast times carry up to a second of jitter (cast starts are whole
+// seconds).
+const joinToolEvents = <
+  M extends { session: string; action: string; at: number },
+>(
+  markers: M[],
+  events: Event[],
+  origin: number
+): Map<M, ToolEvent> => {
+  const calls = events.flatMap((event) => {
     if (event.event !== "tool" || event.function !== "terminal") return [];
     const session = event.arguments.session;
     const action = event.arguments.action;
@@ -242,29 +298,80 @@ const toolEventJoiner = (events: Event[], origin: number) => {
       ? [{ event, session, action, time }]
       : [];
   });
-  const used = new Set<ToolEvent>();
-  return (
-    session: string,
-    action: string,
-    at: number
-  ): ToolEvent | undefined => {
-    let best: (typeof candidates)[number] | undefined;
-    for (const candidate of candidates) {
-      if (
-        used.has(candidate.event) ||
-        candidate.session !== session ||
-        candidate.action !== action ||
-        Math.abs(candidate.time - at) > kToolEventJoinWindow
-      ) {
-        continue;
-      }
-      if (!best || Math.abs(candidate.time - at) < Math.abs(best.time - at)) {
-        best = candidate;
-      }
+  const joined = new Map<M, ToolEvent>();
+  const groups = new Set(
+    [...markers, ...calls].map((m) => `${m.session}\n${m.action}`)
+  );
+  for (const group of groups) {
+    const [session, action] = group.split("\n");
+    const a = markers.filter(
+      (m) => m.session === session && m.action === action
+    );
+    const b = calls
+      .filter((c) => c.session === session && c.action === action)
+      .sort((x, y) => x.time - y.time);
+    for (const [i, j] of alignByTime(
+      a.map((m) => m.at),
+      b.map((c) => c.time),
+      kToolEventJoinWindow
+    )) {
+      const marker = a[i];
+      const call = b[j];
+      if (marker && call) joined.set(marker, call.event);
     }
-    if (best) used.add(best.event);
-    return best?.event;
-  };
+  }
+  return joined;
+};
+
+// The order-preserving pairing of two sorted sequences that minimises the
+// summed distance of pairs, with any element allowed to stay unpaired at
+// `gap` cost; pairs further apart than `gap` are never made.
+export const alignByTime = (
+  a: number[],
+  b: number[],
+  gap: number
+): [number, number][] => {
+  const cost = Array.from({ length: a.length + 1 }, () =>
+    new Array<number>(b.length + 1).fill(0)
+  );
+  for (let i = 0; i <= a.length; i++) {
+    for (let j = 0; j <= b.length; j++) {
+      if (i === 0 && j === 0) continue;
+      let best = Infinity;
+      if (i > 0) best = Math.min(best, (cost[i - 1]?.[j] ?? Infinity) + gap);
+      if (j > 0) best = Math.min(best, (cost[i]?.[j - 1] ?? Infinity) + gap);
+      const ai = a[i - 1];
+      const bj = b[j - 1];
+      if (i > 0 && j > 0 && ai !== undefined && bj !== undefined) {
+        const d = Math.abs(ai - bj);
+        if (d <= gap) {
+          best = Math.min(best, (cost[i - 1]?.[j - 1] ?? Infinity) + d);
+        }
+      }
+      const row = cost[i];
+      if (row) row[j] = best;
+    }
+  }
+  const pairs: [number, number][] = [];
+  let i = a.length;
+  let j = b.length;
+  while (i > 0 && j > 0) {
+    const here = cost[i]?.[j] ?? Infinity;
+    const ai = a[i - 1];
+    const bj = b[j - 1];
+    const d =
+      ai !== undefined && bj !== undefined ? Math.abs(ai - bj) : Infinity;
+    if (d <= gap && here === (cost[i - 1]?.[j - 1] ?? Infinity) + d) {
+      pairs.push([i - 1, j - 1]);
+      i--;
+      j--;
+    } else if (here === (cost[i - 1]?.[j] ?? Infinity) + gap) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+  return pairs.reverse();
 };
 
 // The shared clock: over the union of every session's event times, a gap

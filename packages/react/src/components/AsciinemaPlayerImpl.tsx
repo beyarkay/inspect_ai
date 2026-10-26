@@ -17,7 +17,7 @@ interface AsciinemaPlayerBaseProps {
   loop?: boolean;
   theme?: string;
   /** Gaps longer than this play at this length (default 2s); null plays
-   *  every gap in full. */
+   *  every gap in full, even when the cast header sets `idle_time_limit`. */
   idleTimeLimit?: number | null;
   /** Where playback starts, in seconds on the idle-shortened timeline. */
   startAt?: number;
@@ -131,7 +131,8 @@ const AsciinemaPlayerImpl: FC<AsciinemaPlayerProps> = ({
       loop,
       theme,
       speed,
-      idleTimeLimit: idleTimeLimit ?? undefined,
+      // The player reads the header's limit when the option is undefined.
+      idleTimeLimit: idleTimeLimit ?? Number.POSITIVE_INFINITY,
       startAt,
       fit,
       poster,

@@ -133,6 +133,8 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const [expanded, setExpanded] = useState<{
     session: TerminalSession;
     startAt: number;
+    /** The control that opened it, which takes focus back on close. */
+    opener?: HTMLElement;
   }>();
 
   // The clock's source of truth: the frame loop and scrubs advance it between
@@ -164,6 +166,14 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     clockRef.current = Math.min(Math.max(next, 0), sample.playbackDuration);
     setPlaybackState(clockRef.current);
     players.request(locate);
+    // Once the agent is in the held session, following it is the same view,
+    // so the hold is over (as when the user clicks the agent's row).
+    if (
+      held !== undefined &&
+      focusAt(agent, playbackToReal(sample, clockRef.current)) === held
+    ) {
+      setHeld(undefined);
+    }
   };
 
   useAnimationFrameLoop((elapsed, now) => {
@@ -212,6 +222,12 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   );
   const focusKey = heldSession?.key ?? agentFocus;
   const states = rowStates(agent.sessions, real, focusKey, folded);
+  const lastCommands = new Map(
+    agent.sessions.map((session) => [
+      session.key,
+      lastCommandAt(agent.commands, session.key, real),
+    ])
+  );
 
   const viewHeight = Math.max(space, kMinViewHeight);
   const timelineHeight =
@@ -221,7 +237,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       rows: agent.sessions.map((session) => ({
         key: session.key,
         state: states.get(session.key) ?? "pending",
-        lastCommandAt: lastCommandAt(agent.commands, session.key, real)?.at,
+        lastCommandAt: lastCommands.get(session.key)?.at,
       })),
       stageHeight:
         viewHeight - kFoldedControlsHeight - timelineHeight - kStagePadding,
@@ -282,9 +298,16 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     setFolded(next);
   };
 
-  const expand = (session: TerminalSession) => {
+  // Folds the held row: a held row shows as focused, so the fold is visible
+  // only once the hold is released.
+  const foldHeld = (key: string) => {
+    setFolded(new Set(folded).add(key));
+    setHeld(undefined);
+  };
+
+  const expand = (session: TerminalSession, opener?: HTMLElement) => {
     setPlaying(false);
-    setExpanded({ session, startAt: localTime(session, real) });
+    setExpanded({ session, startAt: localTime(session, real), opener });
   };
 
   const stepCommand = (step: 1 | -1) => {
@@ -301,6 +324,14 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     if (next) hold(next.key);
   };
 
+  // The view's keys apply while nothing in particular has focus (the body or
+  // the sample's scroll container) or focus is inside the view: the tab bar
+  // and the lists around it keep their own keys.
+  const ownsKeys = (target: EventTarget | null) =>
+    target === document.body ||
+    target === scrollRef.current ||
+    (target instanceof Node && (rootRef.current?.contains(target) ?? false));
+
   const onKey = (e: KeyboardEvent) => {
     if (
       expanded ||
@@ -308,7 +339,8 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       e.altKey ||
       e.ctrlKey ||
       e.metaKey ||
-      isEditable(e.target)
+      isEditable(e.target) ||
+      !ownsKeys(e.target)
     ) {
       return;
     }
@@ -331,8 +363,16 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         agent.sessions.find((candidate) => candidate.key === focusKey);
       if (!session) return;
       e.preventDefault();
-      if (e.shiftKey) expand(session);
-      else if (heldSession) toggleFold(heldSession.key);
+      if (e.shiftKey) {
+        expand(
+          session,
+          e.target instanceof HTMLElement && e.target !== document.body
+            ? e.target
+            : undefined
+        );
+      } else if (heldSession) {
+        foldHeld(heldSession.key);
+      }
     }
   };
   const endScrub = () => setScrubbing(false);
@@ -348,9 +388,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const focusSession = agent.sessions.find(
     (session) => session.key === focusKey
   );
-  const focusCommand = focusKey
-    ? lastCommandAt(agent.commands, focusKey, real)
-    : undefined;
+  const focusCommand = focusKey ? lastCommands.get(focusKey) : undefined;
   const scrubPreview = scrubbing
     ? [
         focusSession ? `${focusSession.name} focused` : undefined,
@@ -367,7 +405,11 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     focusKey,
     agentFocusKey: agentFocus,
     onScrub: setClock,
-    onScrubStart: () => setScrubbing(true),
+    // A drag owns the clock: the frame loop would run away from the pointer.
+    onScrubStart: () => {
+      setPlaying(false);
+      setScrubbing(true);
+    },
     onHold: hold,
     onSeekCommand: seekToCommand,
   };
@@ -399,7 +441,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               state={state}
               bodyRows={allocation.bodyRows.get(key) ?? 0}
               lineHeight={lineHeight}
-              lastCommand={lastCommandAt(agent.commands, key, real)}
+              lastCommand={lastCommands.get(key)}
               snippet={
                 state === "folded" || state === "closed"
                   ? resultSnippet(session, real)
@@ -409,12 +451,11 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               pulse={
                 playing &&
                 heldSession !== undefined &&
-                (lastCommandAt(agent.commands, key, real)?.at ?? -1) >=
-                  pulseSince
+                (lastCommands.get(key)?.at ?? -1) >= pulseSince
               }
               onHold={() => hold(key)}
               onToggleFold={() => toggleFold(key)}
-              onExpand={() => expand(session)}
+              onExpand={(opener) => expand(session, opener)}
               onTogglePlay={togglePlay}
               onKey={onKey}
               onPlayer={(player) => players.setPlayer(key, player, locate)}
@@ -462,13 +503,15 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         }
         foldedTimeline={
           allocation.timelineFolded ? (
-            <FoldedTimeline {...timelineProps} />
+            <FoldedTimeline key={agent.id} {...timelineProps} />
           ) : undefined
         }
-        peekTimeline={<TerminalTimeline {...timelineProps} />}
+        peekTimeline={<TerminalTimeline key={agent.id} {...timelineProps} />}
       >
+        {/* Keyed by agent so a tick hovered for one agent doesn't leave its
+            chip over another's lanes. */}
         {allocation.timelineFolded ? null : (
-          <TerminalTimeline {...timelineProps} />
+          <TerminalTimeline key={agent.id} {...timelineProps} />
         )}
       </TerminalControls>
       {expanded ? (
@@ -480,6 +523,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
           onSpeedChange={setSpeed}
           onClose={() => {
             setExpanded(undefined);
+            expanded.opener?.focus();
           }}
         />
       ) : null}
