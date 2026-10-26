@@ -8,6 +8,48 @@
   background-color: var(--vscode-sideBar-background);
 }
 
+/* Filling the window: over the sample's sticky header (1002), under dropdown
+   menus (1050; the agent picker's menu opens from the fill header) and the
+   expanded terminal (1060). */
+.viewFill {
+  position: fixed;
+  inset: 0;
+  z-index: 1030;
+  height: 100vh;
+}
+
+.fillHeader {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  flex: none;
+  height: 44px;
+  padding: 0 1em;
+  border-bottom: 1px solid var(--bs-border-color);
+  background-color: var(--bs-body-bg);
+}
+
+.fillTitle {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fillNote {
+  color: var(--vscode-descriptionForeground);
+  font-size: var(--inspect-font-size-small);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fillTools {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-left: auto;
+}
+
 /* Sized to its rows, so the controls sit right under them; once the rows
    need the view's whole height the stage shrinks and the controls stay at
    the bottom. */

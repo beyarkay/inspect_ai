@@ -1,12 +1,15 @@
 import clsx from "clsx";
-import { FC, RefObject, useRef, useState } from "react";
+import { FC, ReactNode, RefObject, useRef, useState } from "react";
 
 import {
   useAnimationFrameLoop,
+  useElementHeight,
   useEventListener,
+  useMountEffect,
   useSpaceBelow,
   useUnmount,
 } from "@tsmono/react/hooks";
+import { Icon } from "@tsmono/react/icons";
 
 import { commandLabel } from "./asciicast";
 import { ExpandedTerminal } from "./ExpandedTerminal";
@@ -54,6 +57,8 @@ const kDefaultLineHeight = 19.5;
 const kMinViewHeight = 420;
 // The stage's vertical padding (see Terminals.module.css).
 const kStagePadding = 24;
+// The fill-window header's height (see .fillHeader).
+const kFillHeaderHeight = 44;
 // Control row heights (see Terminals.module.css): the folded row, and what
 // each timeline lane adds when unfolded.
 const kFoldedControlsHeight = 51;
@@ -75,6 +80,17 @@ interface TerminalsViewProps {
   /** The agent whose terminals show (default: the first). Changing it keeps
    *  the clock. */
   agentId?: string;
+  /** Fill the window: the view covers the viewport under its own header
+   *  (title, agents note, the host's tools and an exit). The players and
+   *  clock carry over; Escape or the exit control leaves it. */
+  fill?: TerminalsFill;
+}
+
+export interface TerminalsFill {
+  title: string;
+  /** Tab-toolbar controls that move into the header (the agent picker). */
+  tools?: ReactNode;
+  onExit: () => void;
 }
 
 /**
@@ -102,9 +118,13 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   scrollRef,
   onShowInTranscript,
   initialTime,
+  fill,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const space = useSpaceBelow(rootRef, scrollRef);
+  // Filling the window, the root is the viewport (CSS); its height is what's
+  // left after the fill header.
+  const rootHeight = useElementHeight(rootRef, fill !== undefined);
 
   const [playback, setPlaybackState] = useState(() =>
     initialTime !== undefined ? realToPlayback(sample, initialTime) : 0
@@ -229,7 +249,10 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     ])
   );
 
-  const viewHeight = Math.max(space, kMinViewHeight);
+  const viewHeight = Math.max(
+    fill ? rootHeight - kFillHeaderHeight : space,
+    kMinViewHeight
+  );
   const timelineHeight =
     kTimelineBaseHeight + agent.sessions.length * kTimelineLaneHeight;
   const allocate = (timeline: TimelineFold) =>
@@ -333,17 +356,19 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     (target instanceof Node && (rootRef.current?.contains(target) ?? false));
 
   const onKey = (e: KeyboardEvent) => {
-    if (
-      expanded ||
-      e.defaultPrevented ||
-      e.altKey ||
-      e.ctrlKey ||
-      e.metaKey ||
-      isEditable(e.target) ||
-      !ownsKeys(e.target)
-    ) {
+    if (expanded || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
+    // Escape leaves the filled window from anywhere (the control that filled
+    // it keeps focus under the overlay).
+    if (e.key === "Escape") {
+      if (fill && !isEditable(e.target)) {
+        e.preventDefault();
+        fill.onExit();
+      }
+      return;
+    }
+    if (isEditable(e.target) || !ownsKeys(e.target)) return;
     const onButton = e.target instanceof HTMLButtonElement;
     if (e.key === " ") {
       // Space is play/pause everywhere in the view, including on its buttons
@@ -420,9 +445,18 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   return (
     <div
       ref={rootRef}
-      className={styles.view}
-      style={{ maxHeight: viewHeight }}
+      className={clsx(styles.view, fill && styles.viewFill)}
+      style={fill ? undefined : { maxHeight: viewHeight }}
+      role={fill ? "region" : undefined}
+      aria-label={fill ? "Terminals filling the window" : undefined}
     >
+      {fill ? (
+        <FillHeader
+          fill={fill}
+          agentCount={sample.agents.length}
+          agentName={agent.name}
+        />
+      ) : null}
       <div
         className={clsx(
           styles.stage,
@@ -527,6 +561,41 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
           }}
         />
       ) : null}
+    </div>
+  );
+};
+
+// The filled window's header (brief §9's dialog header): title, agents note,
+// the host's tools and the exit, which takes focus so the view's keys apply.
+const FillHeader: FC<{
+  fill: TerminalsFill;
+  agentCount: number;
+  agentName: string;
+}> = ({ fill, agentCount, agentName }) => {
+  const exitRef = useRef<HTMLButtonElement>(null);
+  useMountEffect(() => exitRef.current?.focus());
+  return (
+    <div className={styles.fillHeader}>
+      <span className={styles.fillTitle}>{fill.title}</span>
+      {agentCount > 1 ? (
+        <span className={styles.fillNote}>
+          {agentCount} agents in this sample · showing {agentName}&apos;s
+          sessions
+        </span>
+      ) : null}
+      <span className={styles.fillTools}>
+        {fill.tools}
+        <button
+          ref={exitRef}
+          type="button"
+          className={styles.iconButton}
+          onClick={fill.onExit}
+          aria-label="Exit fill window"
+          title="Back to the sample (Esc)"
+        >
+          <Icon name="close" />
+        </button>
+      </span>
     </div>
   );
 };

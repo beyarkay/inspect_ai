@@ -378,6 +378,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
   );
   // The picked agent wins over a link's ?agent= until the next link.
   const [pickedTerminalAgent, setPickedTerminalAgent] = useState<string>();
+  const [terminalsFill, setTerminalsFill] = useState(false);
   const terminalAgent = terminalSample
     ? (terminalSample.agents.find(
         (agent) =>
@@ -691,18 +692,25 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
   //   [tab-specific view controls] | [shared sample actions] | [Search]
   const tools: ReactNode[] = [];
 
-  if (
-    effectiveSelectedTab === kSampleTerminalsTabId &&
-    terminalSample &&
-    terminalAgent &&
-    terminalSample.agents.length > 1
-  ) {
-    tools.push(
+  const terminalAgentPicker =
+    terminalSample && terminalAgent && terminalSample.agents.length > 1 ? (
       <AgentPicker
         key="sample-terminals-agent"
         agents={terminalSample.agents}
         selected={terminalAgent}
         onSelect={setPickedTerminalAgent}
+      />
+    ) : null;
+  if (effectiveSelectedTab === kSampleTerminalsTabId && terminalSample) {
+    if (terminalAgentPicker) tools.push(terminalAgentPicker);
+    tools.push(
+      <ToolButton
+        key="sample-terminals-fill"
+        label="Fill window"
+        icon="focusEnter"
+        onClick={() => setTerminalsFill(true)}
+        subtle
+        collapseLabel
       />
     );
   }
@@ -931,12 +939,38 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     resetAnchor: headerResetAnchor,
     setHidden: headerSetHidden,
     navOwnsRef: chromeNavOwnsRef,
+    forceHidden: headerForceHidden,
   } = useChromeNavOwnership(scrollRef, {
     ownedForKey: () => mountsAtDeepLink,
     // The header survives sibling navigation; its collapse belongs to this visit.
     resetKey: visitId,
     scrollDirection: { threshold: 80, stayHiddenOnUpScroll: true },
   });
+
+  // The Terminals tab collapses the header on activation, as a deep-link
+  // landing does (the terminals want the height); leaving the tab gives the
+  // header its previous state back and ends a filled window. Render-phase, like the hook's own
+  // resetKey realignment, so the collapse lands before paint.
+  const onTerminalsTab =
+    effectiveSelectedTab === kSampleTerminalsTabId && !!terminalSample;
+  const [terminalsHeader, setTerminalsHeader] = useState({
+    on: false,
+    hiddenBefore: false,
+  });
+  if (onTerminalsTab !== terminalsHeader.on) {
+    setTerminalsHeader({
+      on: onTerminalsTab,
+      hiddenBefore: onTerminalsTab
+        ? headerCollapsed
+        : terminalsHeader.hiddenBefore,
+    });
+    if (onTerminalsTab) {
+      headerForceHidden(true);
+    } else {
+      headerSetHidden(terminalsHeader.hiddenBefore);
+      setTerminalsFill(false);
+    }
+  }
 
   const headerWrapperRef = useRef<HTMLDivElement | null>(null);
   const headerHeight = useElementHeight(
@@ -1222,6 +1256,19 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                   onShowInTranscript={showCommandInTranscript}
                   initialTime={sampleDetailNavigation.terminalsTime}
                   agentId={terminalAgent?.id}
+                  fill={
+                    terminalsFill
+                      ? {
+                          title: `${String(sample?.id ?? id)}${
+                            sample && sample.epoch > 1
+                              ? ` · epoch ${sample.epoch}`
+                              : ""
+                          }`,
+                          tools: terminalAgentPicker,
+                          onExit: () => setTerminalsFill(false),
+                        }
+                      : undefined
+                  }
                 />
               </TabPanel>
             ) : null}

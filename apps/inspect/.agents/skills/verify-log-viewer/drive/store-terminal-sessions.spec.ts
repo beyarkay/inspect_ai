@@ -63,13 +63,37 @@ test("terminals share one clock and link to the transcript both ways", async ({
   await expect(row(page, "server")).toHaveAttribute("data-state", "open");
   // One agent: no agent picker.
   await expect(page.getByRole("button", { name: /terms?$/ })).toHaveCount(0);
-  await page.screenshot({ path: join(evidence, "terminals-shared-view.png") });
-
-  // Space plays and pauses from anywhere in the view.
+  // Space plays and pauses with focus on the page body.
   await page.keyboard.press("Space");
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
   await page.keyboard.press("Space");
   await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
+  // The tab collapses the sample header (the input block goes).
+  await expect(page.getByText(/The webapp test suite is failing/)).toHaveCount(
+    0
+  );
+  await page.screenshot({ path: join(evidence, "terminals-shared-view.png") });
+
+  // Fill window covers the viewport under its own header; Escape leaves it.
+  await page.getByRole("button", { name: "Fill window" }).click();
+  const fill = page.getByRole("region", {
+    name: "Terminals filling the window",
+  });
+  await expect(fill).toBeVisible();
+  const fillBox = await fill.boundingBox();
+  expect(fillBox?.height).toBe(page.viewportSize()?.height);
+  await expect(readout(page)).toHaveText(/^20:00/);
+  await page.screenshot({ path: join(evidence, "terminals-fill-window.png") });
+  await page.keyboard.press("Escape");
+  await expect(fill).toHaveCount(0);
+
+  // Leaving the tab gives the header back (it was expanded before).
+  await page.getByRole("tab", { name: "Info" }).click();
+  await expect(
+    page.getByText(/The webapp test suite is failing/)
+  ).toBeVisible();
+  await page.goto(sampleUrl(singleAgentLog, "terminals?t=1200"));
+  await expect(readout(page)).toHaveText(/^20:00/, { timeout: 15_000 });
 
   // ⤢ opens one session full-viewport; Escape returns to the shared view.
   await page.getByRole("button", { name: "Expand main" }).click();
