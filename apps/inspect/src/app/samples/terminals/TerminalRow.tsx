@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, MouseEvent, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 
 import {
   AsciinemaPlayer,
@@ -34,9 +34,6 @@ interface TerminalRowProps {
   pulse: boolean;
   onHold: () => void;
   onToggleFold: () => void;
-  /** Opens the session on its own; the control pressed takes focus back on
-   *  close. */
-  onExpand: (opener: HTMLElement) => void;
   onTogglePlay: () => void;
   onKey: (e: KeyboardEvent) => void;
   onPlayer: (player: AsciinemaPlayerHandle | null) => void;
@@ -68,7 +65,6 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   pulse,
   onHold,
   onToggleFold,
-  onExpand,
   onTogglePlay,
   onKey,
   onPlayer,
@@ -83,16 +79,10 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   const [flashOnOpen] = useState(animate);
   const showPulse = pulse && state !== "focused" && lastCommand !== undefined;
   const canFold = state === "open" || state === "folded";
-  const onMain = (e: MouseEvent<HTMLButtonElement>) => {
-    if (state === "closed") onExpand(e.currentTarget);
-    else onHold();
-  };
   const mainTitle =
-    state === "closed"
-      ? `Open ${session.name} at its end`
-      : state === "focused"
-        ? undefined
-        : `Focus ${session.name}`;
+    state === "focused" || state === "closed"
+      ? undefined
+      : `Focus ${session.name}`;
   return (
     <div
       className={clsx(
@@ -134,8 +124,9 @@ export const TerminalRow: FC<TerminalRowProps> = ({
         <button
           type="button"
           className={clsx(styles.barButton, styles.barName)}
-          onClick={onMain}
+          onClick={onHold}
           title={mainTitle}
+          disabled={state === "closed"}
         >
           <span className={styles.sessionName}>{session.name}</span>
           {state === "closed" ? (
@@ -165,9 +156,10 @@ export const TerminalRow: FC<TerminalRowProps> = ({
         <button
           type="button"
           className={clsx(styles.barButton, styles.barRest)}
-          onClick={onMain}
+          onClick={onHold}
           title={mainTitle}
           tabIndex={-1}
+          disabled={state === "closed"}
         >
           {snippet ? <span className={styles.snippet}>· {snippet}</span> : null}
           <span className={styles.barMeta}>
@@ -184,15 +176,6 @@ export const TerminalRow: FC<TerminalRowProps> = ({
             ) : null}
             {hasBody ? <span>{rowsReadout(state, bodyRows)}</span> : null}
           </span>
-        </button>
-        <button
-          type="button"
-          className={clsx(styles.barButton, styles.expand)}
-          onClick={(e) => onExpand(e.currentTarget)}
-          aria-label={`Expand ${session.name}`}
-          title={`Open ${session.name} on its own`}
-        >
-          ⤢
         </button>
       </div>
       {hasBody ? (

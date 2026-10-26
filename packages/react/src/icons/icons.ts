@@ -61,6 +61,8 @@ export const iconClasses = {
   flow: "ii inspect-flow",
   focusEnter: "bi bi-arrows-angle-expand",
   focusExit: "bi bi-arrows-angle-contract",
+  fullscreen: "bi bi-arrows-fullscreen",
+  fullscreenExit: "bi bi-fullscreen-exit",
   folder: "bi bi-folder",
   fork: "bi bi-sign-intersection-y-fill",
   globe: "bi bi-globe2",

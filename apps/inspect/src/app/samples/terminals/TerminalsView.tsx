@@ -12,15 +12,12 @@ import {
 import { Icon } from "@tsmono/react/icons";
 
 import { commandLabel } from "./asciicast";
-import { ExpandedTerminal } from "./ExpandedTerminal";
 import { PlayerSync } from "./playerSync";
 import { TerminalControls } from "./TerminalControls";
 import {
   adjacentCommand,
   allocateRows,
   focusAt,
-  idleGapAt,
-  kSharedIdleLimit,
   lastCommandAt,
   localTime,
   playbackToReal,
@@ -31,7 +28,6 @@ import {
   type TerminalAgent,
   type TerminalCommand,
   type TerminalSample,
-  type TerminalSession,
   type TimelineFold,
 } from "./terminalModel";
 import { TerminalRow } from "./TerminalRow";
@@ -46,12 +42,6 @@ const kFocusSwitchMs = 400;
 const kEchoTolerance = 0.05;
 // How long (wall seconds) a new command pulses its row's bar.
 const kPulseSeconds = 0.6;
-// The idle chip appears this long (seconds) into a skipped gap, and lingers
-// this long (ms) after it.
-const kIdleChipDelay = 0.12;
-const kIdleChipLinger = 1000;
-// Gaps that skip less real time than this (seconds) don't raise the chip.
-const kIdleChipMinSkip = 5;
 // Until a player has drawn and its line height can be measured.
 const kDefaultLineHeight = 19.5;
 const kMinViewHeight = 420;
@@ -80,9 +70,9 @@ interface TerminalsViewProps {
   /** The agent whose terminals show (default: the first). Changing it keeps
    *  the clock. */
   agentId?: string;
-  /** Fill the window: the view covers the viewport under its own header
-   *  (title, agents note, the host's tools and an exit). The players and
-   *  clock carry over; Escape or the exit control leaves it. */
+  /** Fullscreen: the view covers the viewport under its own header (title,
+   *  agents note, the host's tools and an exit). The players and clock carry
+   *  over; Escape or the exit control leaves it. */
   fill?: TerminalsFill;
 }
 
@@ -140,28 +130,17 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     auto: boolean;
   }>();
   const [scrubbing, setScrubbing] = useState(false);
-  const [idleChip, setIdleChip] = useState<{
-    skipped: number;
-    visible: boolean;
-  }>();
   // While playing, the agent's focus as the stage shows it: switches closer
   // together than kFocusSwitchMs collapse, so rapid switching doesn't thrash
   // the layout.
   const [playingFocus, setPlayingFocus] = useState<string>();
   const [lineHeight, setLineHeight] = useState(kDefaultLineHeight);
   const [pinned, setPinned] = useState<ReadonlySet<string>>(new Set());
-  const [expanded, setExpanded] = useState<{
-    session: TerminalSession;
-    startAt: number;
-    /** The control that opened it, which takes focus back on close. */
-    opener?: HTMLElement;
-  }>();
 
   // The clock's source of truth: the frame loop and scrubs advance it between
   // renders, so it can't wait on state.
   const clockRef = useRef(playback);
   const lastSwitchRef = useRef(0);
-  const idleSeenRef = useRef(0);
   const [players] = useState(
     () =>
       new PlayerSync(kDefaultLineHeight, setLineHeight, (key, isPinned) =>
@@ -208,24 +187,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     ) {
       lastSwitchRef.current = now;
       setPlayingFocus(target);
-    }
-
-    // The idle chip shows once a skipped gap has played for a moment, counts
-    // the real time skipped so far, and lingers briefly after the gap.
-    const gap = idleGapAt(sample, clockReal);
-    const into = gap ? clockRef.current - realToPlayback(sample, gap.start) : 0;
-    if (
-      gap &&
-      gap.end - gap.start - kSharedIdleLimit >= kIdleChipMinSkip &&
-      into / speed >= kIdleChipDelay
-    ) {
-      idleSeenRef.current = now;
-      setIdleChip({ skipped: clockReal - gap.start - into, visible: true });
-    } else if (
-      idleChip?.visible &&
-      now - idleSeenRef.current > kIdleChipLinger
-    ) {
-      setIdleChip({ ...idleChip, visible: false });
     }
   }, playing);
 
@@ -280,7 +241,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     } else {
       if (ended) setClock(0);
       setPlayingFocus(ended ? undefined : agentFocus);
-      setIdleChip(undefined);
       setPlaying(true);
     }
   };
@@ -328,11 +288,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     setHeld(undefined);
   };
 
-  const expand = (session: TerminalSession, opener?: HTMLElement) => {
-    setPlaying(false);
-    setExpanded({ session, startAt: localTime(session, real), opener });
-  };
-
   const stepCommand = (step: 1 | -1) => {
     const command = adjacentCommand(agent.commands, real, step);
     if (command) setClock(realToPlayback(sample, command.at));
@@ -356,9 +311,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     (target instanceof Node && (rootRef.current?.contains(target) ?? false));
 
   const onKey = (e: KeyboardEvent) => {
-    if (expanded || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) {
-      return;
-    }
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     // Escape leaves the filled window from anywhere (the control that filled
     // it keeps focus under the overlay).
     if (e.key === "Escape") {
@@ -382,22 +335,9 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       holdAdjacent(e.key === "ArrowUp" ? -1 : 1);
     } else if (e.key === "[" || e.key === "]") {
       stepCommand(e.key === "[" ? -1 : 1);
-    } else if (e.key === "Enter" && !onButton) {
-      const session =
-        heldSession ??
-        agent.sessions.find((candidate) => candidate.key === focusKey);
-      if (!session) return;
+    } else if (e.key === "Enter" && !onButton && heldSession) {
       e.preventDefault();
-      if (e.shiftKey) {
-        expand(
-          session,
-          e.target instanceof HTMLElement && e.target !== document.body
-            ? e.target
-            : undefined
-        );
-      } else if (heldSession) {
-        foldHeld(heldSession.key);
-      }
+      foldHeld(heldSession.key);
     }
   };
   const endScrub = () => setScrubbing(false);
@@ -448,7 +388,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       className={clsx(styles.view, fill && styles.viewFill)}
       style={fill ? undefined : { maxHeight: viewHeight }}
       role={fill ? "region" : undefined}
-      aria-label={fill ? "Terminals filling the window" : undefined}
+      aria-label={fill ? "Terminals fullscreen" : undefined}
     >
       {fill ? (
         <FillHeader
@@ -489,7 +429,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               }
               onHold={() => hold(key)}
               onToggleFold={() => toggleFold(key)}
-              onExpand={(opener) => expand(session, opener)}
               onTogglePlay={togglePlay}
               onKey={onKey}
               onPlayer={(player) => players.setPlayer(key, player, locate)}
@@ -524,9 +463,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
           heldName ? { session: heldName, agentSession: agentName } : undefined
         }
         onFollow={follow}
-        idleSkipped={playing ? idleChip?.skipped : undefined}
-        idleVisible={playing && (idleChip?.visible ?? false)}
-        totalIdleSkipped={sample.duration - sample.playbackDuration}
         scrubPreview={scrubPreview}
         timelineFolded={allocation.timelineFolded}
         onToggleTimeline={() =>
@@ -548,19 +484,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
           <TerminalTimeline key={agent.id} {...timelineProps} />
         )}
       </TerminalControls>
-      {expanded ? (
-        <ExpandedTerminal
-          id={`${id}-${expanded.session.name}-expanded`}
-          session={expanded.session}
-          startAt={expanded.startAt}
-          speed={speed}
-          onSpeedChange={setSpeed}
-          onClose={() => {
-            setExpanded(undefined);
-            expanded.opener?.focus();
-          }}
-        />
-      ) : null}
     </div>
   );
 };
@@ -588,12 +511,12 @@ const FillHeader: FC<{
         <button
           ref={exitRef}
           type="button"
-          className={styles.iconButton}
+          className={clsx(styles.iconButton, styles.fillExit)}
           onClick={fill.onExit}
-          aria-label="Exit fill window"
-          title="Back to the sample (Esc)"
+          aria-label="Exit fullscreen"
+          title="Exit fullscreen (Esc)"
         >
-          <Icon name="close" />
+          <Icon name="fullscreenExit" />
         </button>
       </span>
     </div>

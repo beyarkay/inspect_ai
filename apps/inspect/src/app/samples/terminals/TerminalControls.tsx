@@ -23,11 +23,6 @@ interface TerminalControlsProps {
   /** Shown while the user holds a row other than the agent's. */
   hold?: { session: string; agentSession?: string };
   onFollow: () => void;
-  /** Real seconds skipped in the current (or just-ended) idle gap. */
-  idleSkipped?: number;
-  idleVisible: boolean;
-  /** Real seconds the whole run's idle shortening skips. */
-  totalIdleSkipped: number;
   /** What's at the playhead, while the user drags it. */
   scrubPreview?: string;
   timelineFolded: boolean;
@@ -54,9 +49,6 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
   onSpeedChange,
   hold,
   onFollow,
-  idleSkipped,
-  idleVisible,
-  totalIdleSkipped,
   scrubPreview,
   timelineFolded,
   onToggleTimeline,
@@ -71,21 +63,6 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
     setPeek(false);
   };
   useUnmount(() => window.clearTimeout(peekTimer.current));
-
-  const idleChip =
-    idleSkipped !== undefined ? (
-      <span
-        className={clsx(
-          styles.chip,
-          styles.idleChip,
-          !idleVisible && styles.chipHidden
-        )}
-        aria-hidden={!idleVisible}
-      >
-        <span className={styles.idleDot} aria-hidden="true" />
-        agent thinking · {formatClock(idleSkipped)} skipped
-      </span>
-    ) : null;
 
   return (
     <div className={styles.controls} onPointerLeave={endPeek}>
@@ -111,12 +88,7 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
             {ended ? (
               <>
                 <span>run complete</span>
-                <span>
-                  played in {formatClock(playbackDuration)}
-                  {totalIdleSkipped >= 1
-                    ? ` · ${formatClock(totalIdleSkipped)} of idle skipped`
-                    : ""}
-                </span>
+                <span>played in {formatClock(playbackDuration)}</span>
               </>
             ) : (
               <>
@@ -144,9 +116,7 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
             {hold.agentSession ? ` · agent is in ${hold.agentSession}` : ""} —
             follow again
           </button>
-        ) : timelineFolded ? null : (
-          idleChip
-        )}
+        ) : null}
         {foldedTimeline ? (
           <span
             className={styles.foldedTimeline}
@@ -160,7 +130,6 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
             onPointerLeave={() => window.clearTimeout(peekTimer.current)}
           >
             {foldedTimeline}
-            {hold || scrubPreview ? null : idleChip}
           </span>
         ) : (
           <span className={styles.controlSpacer} />

@@ -706,8 +706,9 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     tools.push(
       <ToolButton
         key="sample-terminals-fill"
-        label="Fill window"
-        icon="focusEnter"
+        className={styles.fullscreenTool}
+        label="Fullscreen"
+        icon="fullscreen"
         onClick={() => setTerminalsFill(true)}
         subtle
         collapseLabel

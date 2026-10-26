@@ -50,6 +50,10 @@
   margin-left: auto;
 }
 
+.fillExit {
+  font-size: 1.3em;
+}
+
 /* Sized to its rows, so the controls sit right under them; once the rows
    need the view's whole height the stage shrinks and the controls stay at
    the bottom. */
@@ -256,12 +260,6 @@
   margin-right: 5px;
   border-radius: 50%;
   background-color: var(--bs-success);
-}
-
-.expand {
-  justify-content: center;
-  width: 30px;
-  flex-shrink: 0;
 }
 
 .bodyFrame {
@@ -653,30 +651,6 @@
   flex-shrink: 1;
 }
 
-.idleChip {
-  flex-shrink: 0;
-  color: var(--vscode-descriptionForeground);
-  background-color: var(--bs-secondary-bg);
-  cursor: default;
-  transition: opacity 200ms ease;
-  animation: chipIn 150ms ease-out;
-}
-
-.idleChip:hover {
-  background-color: var(--bs-secondary-bg);
-}
-
-.idleDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--vscode-descriptionForeground);
-}
-
-.chipHidden {
-  opacity: 0;
-}
-
 .scrubChip {
   flex-shrink: 1;
   border-color: transparent;
@@ -728,12 +702,10 @@
 @media (prefers-reduced-motion: reduce) {
   .row,
   .bar,
-  .bodyFrame,
-  .idleChip {
+  .bodyFrame {
     transition: none;
   }
 
-  .idleChip,
   .peek {
     animation: none;
   }

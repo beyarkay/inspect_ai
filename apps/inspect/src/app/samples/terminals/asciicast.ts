@@ -1,4 +1,4 @@
-import { formatTime, stripAnsi } from "@tsmono/util";
+import { stripAnsi } from "@tsmono/util";
 
 // Store keys bearing this prefix hold asciicast v2 documents written by
 // terminal-recording tools (one key per named session).
@@ -88,100 +88,9 @@ export const castEvents = (cast: string): CastEvent[] =>
     .slice(1)
     .flatMap((line) => parseEvent(line) ?? []);
 
-// Recording length in seconds (asciicast v2 event times are absolute). With
-// `idleTimeLimit`, each gap between events is capped at it, as the player does
-// on playback. Lines that aren't events are skipped.
-export const castDuration = (cast: string, idleTimeLimit?: number): number => {
-  let duration = 0;
-  let previous = 0;
-  for (const line of cast.split("\n").slice(1)) {
-    const time = eventTime(line);
-    if (time === undefined) continue;
-    const gap = Math.max(0, time - previous);
-    duration +=
-      idleTimeLimit === undefined ? gap : Math.min(gap, idleTimeLimit);
-    previous = time;
-  }
-  return duration;
-};
-
-/**
- * Where a moment of the recording (seconds as captured) falls on the
- * player's idle-shortened timeline, which is the timeline its `startAt` and
- * `seek` take.
- */
-export const idleShortenedTime = (
-  cast: string,
-  time: number,
-  idleTimeLimit: number
-): number => {
-  let shortened = 0;
-  let previous = 0;
-  for (const event of castEvents(cast)) {
-    if (event.time > time) break;
-    shortened += Math.min(Math.max(0, event.time - previous), idleTimeLimit);
-    previous = event.time;
-  }
-  return shortened + Math.min(Math.max(0, time - previous), idleTimeLimit);
-};
-
 // How far past the echoing output a command marker sits, so a pause there
 // comes after that output has drawn.
 export const kCommandMarkerOffset = 0.01;
-
-/**
- * The cast's own markers, placed on the playback timeline (every gap capped
- * at `idleTimeLimit`) for the player's `markers` option. When the cast has
- * command ("send …") markers, only those are kept, labeled by the command, so
- * the scrubber (and [ / ] jumps) step through commands, not screen reads. Each
- * sits just after the first output that follows it: the recorded marker is
- * stamped when the command is sent, before the terminal echoes it, so seeking
- * there would hide the command. Think time of at least `minGap` seconds before
- * a marker is noted on its label.
- */
-export const castMarkers = (
-  cast: string,
-  idleTimeLimit: number,
-  minGap: number
-): [number, string][] => {
-  const markers: [number, string][] = [];
-  let pending: { time: number; label: string } | undefined;
-  const flushPending = (time: number) => {
-    if (pending) {
-      markers.push([time, pending.label]);
-      pending = undefined;
-    }
-  };
-
-  const events = castEvents(cast);
-  const commandsOnly = events.some(
-    (event) => event.type === "m" && sentCommand(event.data) !== undefined
-  );
-
-  let playback = 0;
-  let previous = 0;
-  for (const event of events) {
-    const gap = Math.max(0, event.time - previous);
-    const idle = gap >= minGap ? `${formatTime(gap)} idle` : undefined;
-    playback += Math.min(gap, idleTimeLimit);
-    previous = event.time;
-
-    if (event.type === "m") {
-      const command = sentCommand(event.data);
-      if (commandsOnly && command === undefined) continue;
-      const label = command !== undefined ? commandLabel(command) : event.data;
-      flushPending(pending?.time ?? playback);
-      pending = {
-        time: playback,
-        label: idle ? `${label} (after ${idle})` : label,
-      };
-    } else if (event.type === "o") {
-      flushPending(playback + kCommandMarkerOffset);
-    }
-  }
-  flushPending(pending?.time ?? playback);
-  return markers;
-};
 
 // Bold soft blue (#82AAFF, as 24-bit color so the player theme can't remap
 // it), then back to normal weight and default color (not a full reset, which
@@ -307,8 +216,6 @@ export const commandLabel = (command: string): string => {
   const first = (lines[0] ?? "").trim();
   return lines.length > 1 ? `${first} …` : first;
 };
-
-const eventTime = (line: string): number | undefined => parseEvent(line)?.time;
 
 const parseEvent = (line: string): CastEvent | undefined => {
   if (!line.trim()) return undefined;

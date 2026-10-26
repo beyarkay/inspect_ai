@@ -74,16 +74,16 @@ test("terminals share one clock and link to the transcript both ways", async ({
   );
   await page.screenshot({ path: join(evidence, "terminals-shared-view.png") });
 
-  // Fill window covers the viewport under its own header; Escape leaves it.
-  await page.getByRole("button", { name: "Fill window" }).click();
+  // Fullscreen covers the viewport under its own header; Escape leaves it.
+  await page.getByRole("button", { name: "Fullscreen" }).click();
   const fill = page.getByRole("region", {
-    name: "Terminals filling the window",
+    name: "Terminals fullscreen",
   });
   await expect(fill).toBeVisible();
   const fillBox = await fill.boundingBox();
   expect(fillBox?.height).toBe(page.viewportSize()?.height);
   await expect(readout(page)).toHaveText(/^20:00/);
-  await page.screenshot({ path: join(evidence, "terminals-fill-window.png") });
+  await page.screenshot({ path: join(evidence, "terminals-fullscreen.png") });
   await page.keyboard.press("Escape");
   await expect(fill).toHaveCount(0);
 
@@ -94,13 +94,6 @@ test("terminals share one clock and link to the transcript both ways", async ({
   ).toBeVisible();
   await page.goto(sampleUrl(singleAgentLog, "terminals?t=1200"));
   await expect(readout(page)).toHaveText(/^20:00/, { timeout: 15_000 });
-
-  // ⤢ opens one session full-viewport; Escape returns to the shared view.
-  await page.getByRole("button", { name: "Expand main" }).click();
-  const expanded = page.getByRole("dialog", { name: "Terminal main" });
-  await expect(expanded).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(expanded).toHaveCount(0);
 
   // The focused bar's command opens its tool call in the transcript, which
   // offers the way back.
