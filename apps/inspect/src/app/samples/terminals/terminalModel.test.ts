@@ -4,6 +4,7 @@ import { testToolEvent } from "@tsmono/inspect-common/testing";
 
 import type { StoreCast } from "./asciicast";
 import {
+  adjacentCommand,
   allocateRows,
   buildTerminalSample,
   focusAt,
@@ -13,6 +14,7 @@ import {
   localTime,
   playbackToReal,
   realToPlayback,
+  resultSnippet,
   rowStates,
 } from "./terminalModel";
 
@@ -262,6 +264,45 @@ describe("focus", () => {
     expect(
       lastCommandAt(sample.commands, "asciinema:terminal-tests", 10)
     ).toBeUndefined();
+  });
+});
+
+describe("adjacentCommand", () => {
+  const { commands } = buildTerminalSample(twoSessions);
+
+  it("steps to the next or previous command across sessions", () => {
+    expect(adjacentCommand(commands, 10, 1)?.command).toBe(
+      "npx vitest --watch\n"
+    );
+    expect(adjacentCommand(commands, 10, -1)?.command).toBe("git status\n");
+  });
+
+  it("steps past a command the playhead sits on", () => {
+    expect(adjacentCommand(commands, 15.51, 1)?.command).toBe(
+      "npm run build\n"
+    );
+    expect(adjacentCommand(commands, 15.51, -1)?.command).toBe("git status\n");
+    expect(adjacentCommand(commands, 70.51, 1)).toBeUndefined();
+  });
+});
+
+describe("resultSnippet", () => {
+  const { sessions } = buildTerminalSample([
+    makeCast("build", 0, [
+      [1, "m", "send build: 'npm run build\\n'"],
+      [1.5, "o", "$ npm run build\r\n\x1b[32m✓ built in 14.5s\x1b[0m\r\n"],
+      [1.6, "o", "$ "],
+    ]),
+  ]);
+  const build = sessions[0];
+  if (!build) throw new Error("expected one session");
+
+  it("is the last output line, skipping prompts and echoes", () => {
+    expect(resultSnippet(build, 2)).toBe("✓ built in 14.5s");
+  });
+
+  it("only counts output shown by the time", () => {
+    expect(resultSnippet(build, 1.2)).toBeUndefined();
   });
 });
 

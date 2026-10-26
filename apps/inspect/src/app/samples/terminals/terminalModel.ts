@@ -1,4 +1,5 @@
 import type { Event, ToolEvent } from "@tsmono/inspect-common/types";
+import { stripAnsi } from "@tsmono/util";
 
 import {
   castEvents,
@@ -425,6 +426,47 @@ export const lastCommandAt = (
     if (command.sessionKey === sessionKey) last = command;
   }
   return last;
+};
+
+/** The command before or after a real time, across every given session. */
+export const adjacentCommand = (
+  commands: TerminalCommand[],
+  real: number,
+  step: 1 | -1
+): TerminalCommand | undefined => {
+  // A seek lands exactly on a command; skip past it rather than returning it.
+  const epsilon = 0.05;
+  if (step === 1)
+    return commands.find((command) => command.at > real + epsilon);
+  return commands.findLast((command) => command.at < real - epsilon);
+};
+
+// A shell prompt alone, or the echo of a command, says nothing about results.
+const kPromptOnly = /^[$#>%]\s*$/;
+const kEchoLine = /^\$ /;
+
+/**
+ * The last non-empty output line a session had shown by a real time, ANSI
+ * stripped, skipping bare prompts and command echoes: what a folded or closed
+ * bar shows as its result.
+ */
+export const resultSnippet = (
+  session: TerminalSession,
+  real: number
+): string | undefined => {
+  const local = real - session.start;
+  for (let i = session.output.length - 1; i >= 0; i--) {
+    const chunk = session.output[i];
+    if (!chunk || chunk.time > local) continue;
+    const lines = stripAnsi(chunk.data).split(/\r?\n|\r/);
+    for (let j = lines.length - 1; j >= 0; j--) {
+      const line = (lines[j] ?? "").trim();
+      if (line && !kPromptOnly.test(line) && !kEchoLine.test(line)) {
+        return line;
+      }
+    }
+  }
+  return undefined;
 };
 
 export type RowState = "focused" | "open" | "folded" | "closed" | "pending";

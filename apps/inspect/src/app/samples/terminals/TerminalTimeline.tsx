@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, PointerEvent, useRef } from "react";
+import { FC, PointerEvent, useRef, useState } from "react";
 
 import { commandLabel } from "./asciicast";
 import { formatClock } from "./format";
@@ -18,7 +18,7 @@ const kRulerStep = 300;
 // are dropped: idle shortening packs real time unevenly.
 const kRulerMinGap = 0.05;
 
-interface TerminalTimelineProps {
+interface TimelineProps {
   sample: TerminalSample;
   agent: TerminalAgent;
   real: number;
@@ -27,6 +27,10 @@ interface TerminalTimelineProps {
   /** The agent's own session at the playhead. */
   agentFocusKey?: string;
   onScrub: (playback: number) => void;
+  /** A press on the track starts a drag (the view ends it on any pointer
+   *  release, since the track may unmount mid-drag when the timeline
+   *  folds). */
+  onScrubStart: () => void;
   onHold: (sessionKey: string) => void;
   onSeekCommand: (command: TerminalCommand) => void;
 }
@@ -36,18 +40,20 @@ interface TerminalTimelineProps {
  * focus segments, a tick per command, and a draggable playhead. The x axis is
  * playback time, so busy stretches get the room.
  */
-export const TerminalTimeline: FC<TerminalTimelineProps> = ({
+export const TerminalTimeline: FC<TimelineProps> = ({
   sample,
   agent,
   real,
   focusKey,
   agentFocusKey,
   onScrub,
+  onScrubStart,
   onHold,
   onSeekCommand,
 }) => {
   const x = (time: number) => fraction(sample, time);
-  const scrub = useScrub(sample.playbackDuration, onScrub);
+  const scrub = useScrub(sample.playbackDuration, onScrub, onScrubStart);
+  const [hovered, setHovered] = useState<TickHover>();
   return (
     <div className={styles.timeline}>
       <div className={styles.laneLabels}>
@@ -101,36 +107,59 @@ export const TerminalTimeline: FC<TerminalTimelineProps> = ({
               end={x(session.end)}
               x={x}
               onSeekCommand={onSeekCommand}
+              onHover={(command) =>
+                setHovered(
+                  command
+                    ? { command, session: session.name, top: 22 + i * 18 }
+                    : undefined
+                )
+              }
             />
           </div>
         ))}
         <div className={styles.playhead} style={{ left: percent(x(real)) }} />
+        {hovered ? <TickChip hover={hovered} x={x} /> : null}
       </div>
     </div>
   );
 };
 
-interface FoldedTimelineProps {
-  sample: TerminalSample;
-  agent: TerminalAgent;
-  real: number;
-  focusKey?: string;
-  onScrub: (playback: number) => void;
-  onSeekCommand: (command: TerminalCommand) => void;
+interface TickHover {
+  command: TerminalCommand;
+  session: string;
+  /** The lane's top within the track (px). */
+  top: number;
 }
+
+const TickChip: FC<{ hover: TickHover; x: (time: number) => number }> = ({
+  hover,
+  x,
+}) => {
+  const at = x(hover.command.at);
+  return (
+    <span
+      className={clsx(styles.tickChip, at > 0.6 && styles.tickChipLeft)}
+      style={{ left: percent(at), top: hover.top }}
+    >
+      {hover.session} · {formatClock(hover.command.at)} · ${" "}
+      {commandLabel(hover.command.command)}
+    </span>
+  );
+};
 
 /** The folded timeline (brief §6.3): the focused session's lane alone, inline
  *  in the control row. */
-export const FoldedTimeline: FC<FoldedTimelineProps> = ({
+export const FoldedTimeline: FC<TimelineProps> = ({
   sample,
   agent,
   real,
   focusKey,
   onScrub,
+  onScrubStart,
   onSeekCommand,
 }) => {
   const x = (time: number) => fraction(sample, time);
-  const scrub = useScrub(sample.playbackDuration, onScrub);
+  const scrub = useScrub(sample.playbackDuration, onScrub, onScrubStart);
   const focused = agent.sessions.find((session) => session.key === focusKey);
   return (
     <>
@@ -163,6 +192,7 @@ interface SessionLaneProps {
   end: number;
   x: (time: number) => number;
   onSeekCommand: (command: TerminalCommand) => void;
+  onHover?: (command: TerminalCommand | undefined) => void;
 }
 
 const SessionLane: FC<SessionLaneProps> = ({
@@ -172,6 +202,7 @@ const SessionLane: FC<SessionLaneProps> = ({
   end,
   x,
   onSeekCommand,
+  onHover,
 }) => (
   <>
     <div
@@ -197,7 +228,13 @@ const SessionLane: FC<SessionLaneProps> = ({
           key={command.at}
           className={styles.tick}
           style={{ left: percent(x(command.at)) }}
-          title={`${formatClock(command.at)} · $ ${commandLabel(command.command)}`}
+          title={
+            onHover
+              ? undefined
+              : `${formatClock(command.at)} · $ ${commandLabel(command.command)}`
+          }
+          onPointerEnter={() => onHover?.(command)}
+          onPointerLeave={() => onHover?.(undefined)}
           onPointerDown={(e) => {
             e.stopPropagation();
             onSeekCommand(command);
@@ -232,7 +269,8 @@ const rulerMarks = (
 // Pointer handlers that turn a press or drag on a track into playback times.
 const useScrub = (
   playbackDuration: number,
-  onScrub: (playback: number) => void
+  onScrub: (playback: number) => void,
+  onScrubStart: () => void
 ) => {
   const dragging = useRef(false);
   const scrubTo = (e: PointerEvent<HTMLDivElement>) => {
@@ -244,6 +282,7 @@ const useScrub = (
     onPointerDown: (e: PointerEvent<HTMLDivElement>) => {
       dragging.current = true;
       e.currentTarget.setPointerCapture(e.pointerId);
+      onScrubStart();
       scrubTo(e);
     },
     onPointerMove: (e: PointerEvent<HTMLDivElement>) => {

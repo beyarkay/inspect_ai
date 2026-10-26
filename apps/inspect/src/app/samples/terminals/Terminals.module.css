@@ -4,18 +4,20 @@
   flex: 1 1 auto;
   width: 100%;
   min-width: 0;
-  min-height: 420px;
   outline: none;
   background-color: var(--vscode-sideBar-background);
 }
 
+/* Sized to its rows, so the controls sit right under them; once the rows
+   need the view's whole height the stage shrinks and the controls stay at
+   the bottom. */
 .stage {
-  flex: 1;
+  flex: 0 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 14px 14px 0;
+  padding: 14px 14px 10px;
   overflow: hidden;
 }
 
@@ -33,6 +35,7 @@
   overflow: hidden;
   background-color: var(--vscode-editor-background);
   box-shadow: 0 0 0 1px var(--vscode-widget-border);
+  transition: box-shadow 120ms ease;
 }
 
 .rowFocused {
@@ -42,6 +45,7 @@
 }
 
 .bar {
+  position: relative;
   display: flex;
   align-items: stretch;
   height: 30px;
@@ -49,6 +53,48 @@
   color: var(--vscode-descriptionForeground);
   background-color: var(--vscode-sideBar-background);
   font-size: 12px;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+/* An accent tint over the bar that fades: a session opening, or a command
+   landing in a row the user isn't watching. */
+.barFlash {
+  position: absolute;
+  inset: 0;
+  background-color: var(--vscode-focusBorder);
+  opacity: 0;
+  pointer-events: none;
+  animation: barFlash 600ms ease-out;
+}
+
+@keyframes barFlash {
+  0% {
+    opacity: 0;
+  }
+  17% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.newCommand {
+  color: var(--vscode-textLink-foreground);
+  font-weight: 700;
+  animation: newCommand 600ms ease-out forwards;
+}
+
+@keyframes newCommand {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .rowFocused .bar {
@@ -162,6 +208,7 @@
   position: relative;
   flex-shrink: 0;
   overflow: hidden;
+  transition: height 200ms cubic-bezier(0.2, 0, 0, 1);
   background-color: var(--inspect-terminal-background);
 }
 
@@ -449,13 +496,49 @@
   opacity: 0.55;
 }
 
+/* A 7 px target around a 1 px line. */
 .tick {
   position: absolute;
   top: 1px;
-  width: 1px;
+  width: 7px;
   height: 11px;
+  margin-left: -3px;
+  cursor: pointer;
+}
+
+.tick::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  width: 1px;
+  height: 100%;
   background-color: var(--vscode-foreground);
   opacity: 0.7;
+}
+
+.tick:hover::before {
+  opacity: 1;
+  width: 2px;
+  left: 2.5px;
+}
+
+.tickChip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-6px, -110%);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: var(--vscode-editorHoverWidget-background);
+  color: var(--vscode-editor-foreground);
+  box-shadow: 0 0 0 1px var(--vscode-widget-border);
+  font-family: var(--bs-font-monospace);
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tickChipLeft {
+  transform: translate(calc(-100% + 6px), -110%);
 }
 
 .playhead {
@@ -491,4 +574,112 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--vscode-textLink-foreground);
+}
+
+.controls {
+  position: relative;
+}
+
+.holdChip {
+  flex-shrink: 1;
+}
+
+.idleChip {
+  flex-shrink: 0;
+  color: var(--vscode-descriptionForeground);
+  background-color: var(--bs-secondary-bg);
+  cursor: default;
+  transition: opacity 200ms ease;
+  animation: chipIn 150ms ease-out;
+}
+
+.idleChip:hover {
+  background-color: var(--bs-secondary-bg);
+}
+
+.idleDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--vscode-descriptionForeground);
+}
+
+.chipHidden {
+  opacity: 0;
+}
+
+.scrubChip {
+  flex-shrink: 1;
+  border-color: transparent;
+  background-color: var(--vscode-editor-foreground);
+  color: var(--vscode-editor-background);
+  font-family: var(--bs-font-monospace);
+  cursor: default;
+}
+
+.scrubChip:hover {
+  background-color: var(--vscode-editor-foreground);
+}
+
+@keyframes chipIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.foldedTimeline {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The full lanes slide up over the stage while the folded bar is hovered. */
+.peek {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  z-index: 3;
+  padding: 0 14px 8px;
+  border-top: 1px solid var(--vscode-widget-border);
+  background-color: var(--vscode-editor-background);
+  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.18);
+  animation: peekIn 150ms ease-out;
+}
+
+@keyframes peekIn {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .bar,
+  .bodyFrame,
+  .idleChip {
+    transition: none;
+  }
+
+  .idleChip,
+  .peek {
+    animation: none;
+  }
+
+  /* The pulse becomes a steady tint for the same time. */
+  .barFlash {
+    animation: barFlashSteady 600ms steps(1, end);
+  }
+}
+
+@keyframes barFlashSteady {
+  0% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 0;
+  }
 }

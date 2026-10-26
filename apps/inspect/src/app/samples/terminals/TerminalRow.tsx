@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 
 import {
   AsciinemaPlayer,
@@ -26,6 +26,12 @@ interface TerminalRowProps {
   bodyRows: number;
   lineHeight: number;
   lastCommand?: TerminalCommand;
+  /** The last output line, for bars without a body. */
+  snippet?: string;
+  /** Playing: a row that appears flashes its bar. */
+  animate: boolean;
+  /** A command just landed in this row while the user holds another. */
+  pulse: boolean;
   onHold: () => void;
   onToggleFold: () => void;
   onExpand: () => void;
@@ -50,6 +56,9 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   bodyRows,
   lineHeight,
   lastCommand,
+  snippet,
+  animate,
+  pulse,
   onHold,
   onToggleFold,
   onExpand,
@@ -61,6 +70,9 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   onJumpToLatest,
 }) => {
   const hasBody = bodyRows > 0;
+  // Only a session opening during playback flashes, not every row on load.
+  const [flashOnOpen] = useState(animate);
+  const showPulse = pulse && state !== "focused" && lastCommand !== undefined;
   const canFold = state === "open" || state === "folded";
   return (
     <div
@@ -75,6 +87,17 @@ export const TerminalRow: FC<TerminalRowProps> = ({
       data-state={state}
     >
       <div className={styles.bar}>
+        {flashOnOpen ? (
+          <span className={styles.barFlash} aria-hidden="true" />
+        ) : null}
+        {showPulse ? (
+          // Keyed by the command, so each new one restarts the animation.
+          <span
+            key={lastCommand.at}
+            className={styles.barFlash}
+            aria-hidden="true"
+          />
+        ) : null}
         <button
           type="button"
           className={clsx(styles.barButton, styles.chevron)}
@@ -110,7 +133,13 @@ export const TerminalRow: FC<TerminalRowProps> = ({
               $ {commandLabel(lastCommand.command)}
             </span>
           ) : null}
+          {snippet ? <span className={styles.snippet}>· {snippet}</span> : null}
           <span className={styles.barMeta}>
+            {showPulse ? (
+              <span key={lastCommand.at} className={styles.newCommand}>
+                new command
+              </span>
+            ) : null}
             {state === "open" || state === "folded" ? (
               <span>
                 <span className={styles.liveDot} aria-hidden="true" />
