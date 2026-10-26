@@ -65,7 +65,6 @@ export interface TranscriptViewNodesProps {
   renderAgentCard?: (node: EventNode, className?: string) => ReactNode;
   getEventUrl?: (eventId: string) => string | undefined;
   linkingEnabled?: boolean;
-  getTerminalsLink?: EventPanelCallbacks["getTerminalsLink"];
   /** Builds the focus-mode entry href for the header's focus control
    *  (plain click enters in-window; modified clicks open a new tab). Omit to
    *  hide that control. */
@@ -147,7 +146,6 @@ export const TranscriptViewNodes = forwardRef<
     renderAgentCard,
     getEventUrl,
     linkingEnabled,
-    getTerminalsLink,
     getEventFocusUrl,
     onOpenEventFocus,
     collapsedTranscript,
@@ -437,9 +435,6 @@ export const TranscriptViewNodes = forwardRef<
   // target so re-renders from filter/collapse don't re-fire an already-handled
   // jump.
   const lastScrolledKeyRef = useRef<string | null>(null);
-  // The event card a go-to-turn-bar jump or a deep link landed on keeps a
-  // selection ring until the next jump.
-  const [jumpTargetId, setJumpTargetId] = useState<string | null>(null);
   // eslint-disable-next-line tsmono/no-raw-use-effect -- baselined at rule introduction; migrate to a named hook or derived state
   useEffect(() => {
     if (!scrollEventId) {
@@ -451,7 +446,6 @@ export const TranscriptViewNodes = forwardRef<
     const idx = flattenedNodes.findIndex((n) => n.id === scrollEventId);
     if (idx === -1) return;
     lastScrolledKeyRef.current = targetKey;
-    setJumpTargetId(scrollEventId);
     // A deep-link landing ALWAYS collapses the chrome — target-position
     // special cases proved log-shape-dependent.
     onHeadroomSetHidden?.(true);
@@ -626,6 +620,10 @@ export const TranscriptViewNodes = forwardRef<
 
   const goToTurnBarRef = useRef<GoToTurnBarHandle | null>(null);
 
+  // The event card a go-to-turn-bar jump landed on keeps a persistent
+  // selection ring until the next bar jump.
+  const [jumpTargetId, setJumpTargetId] = useState<string | null>(null);
+
   // Per-event-header turn controls: several headers can be visible at once,
   // so each steps from ITS OWN turn number, never the shared current turn.
   const onPrevTurn = useCallback(
@@ -698,7 +696,6 @@ export const TranscriptViewNodes = forwardRef<
       onTurnLabelClick,
       onTabSelected,
       onOpenEventFocus,
-      getTerminalsLink,
       isJumpTarget: jumpTargetId
         ? (eventNodeId: string) => eventNodeId === jumpTargetId
         : undefined,
@@ -715,7 +712,6 @@ export const TranscriptViewNodes = forwardRef<
       onTurnLabelClick,
       onTabSelected,
       onOpenEventFocus,
-      getTerminalsLink,
       jumpTargetId,
     ]
   );

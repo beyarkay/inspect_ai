@@ -32,9 +32,7 @@ interface TimelineProps {
    *  folds). */
   onScrubStart: () => void;
   onHold: (sessionKey: string) => void;
-  /** A tick was pressed; ⌘/Ctrl-press asks for its tool call in the
-   *  transcript rather than a seek. */
-  onSeekCommand: (command: TerminalCommand, toTranscript: boolean) => void;
+  onSeekCommand: (command: TerminalCommand) => void;
 }
 
 /**
@@ -193,9 +191,7 @@ interface SessionLaneProps {
   start: number;
   end: number;
   x: (time: number) => number;
-  /** A tick was pressed; ⌘/Ctrl-press asks for its tool call in the
-   *  transcript rather than a seek. */
-  onSeekCommand: (command: TerminalCommand, toTranscript: boolean) => void;
+  onSeekCommand: (command: TerminalCommand) => void;
   onHover?: (command: TerminalCommand | undefined) => void;
 }
 
@@ -241,7 +237,7 @@ const SessionLane: FC<SessionLaneProps> = ({
           onPointerLeave={() => onHover?.(undefined)}
           onPointerDown={(e) => {
             e.stopPropagation();
-            onSeekCommand(command, e.metaKey || e.ctrlKey);
+            onSeekCommand(command);
           }}
         />
       ))}

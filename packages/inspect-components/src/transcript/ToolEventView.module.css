@@ -23,16 +23,3 @@
 .progress {
   margin-left: 0;
 }
-
-.terminalsLink {
-  border: none;
-  background: none;
-  padding: 0 0.25em;
-  font-size: var(--inspect-font-size-smaller);
-  color: var(--vscode-textLink-foreground);
-  cursor: pointer;
-}
-
-.terminalsLink:hover {
-  text-decoration: underline;
-}

@@ -96,17 +96,6 @@ export const kCommandMarkerOffset = 0.01;
 // it), then back to normal weight and default color (not a full reset, which
 // would drop any styling the output set around it).
 const kInputStyleStart = "\x1b[1;38;2;130;170;255m";
-// How the player renders that style: a bold span with an inline color.
-const kInputColorCss = "rgb(130, 170, 255)";
-
-/** The rendered command echo (see highlightCommandEchoes) containing an
- *  element of a player's terminal, if any. */
-export const commandEchoElement = (element: Element): Element | undefined => {
-  const span = element.closest(".ap-bold");
-  return span?.getAttribute("style")?.includes(kInputColorCss)
-    ? span
-    : undefined;
-};
 const kInputStyleEnd = "\x1b[22;39m";
 
 /**

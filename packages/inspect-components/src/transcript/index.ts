@@ -16,7 +16,6 @@ export type {
   EventType,
   EventTypeValue,
   StateManager,
-  TerminalsLink,
   TranscriptCollapseState,
   TranscriptEventState,
   TranscriptState,

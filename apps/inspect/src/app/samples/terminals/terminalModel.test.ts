@@ -1,15 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  testSpanBeginEvent,
-  testToolEvent,
-} from "@tsmono/inspect-common/testing";
+import { testSpanBeginEvent } from "@tsmono/inspect-common/testing";
 
 import type { StoreCast } from "./asciicast";
 import {
   adjacentCommand,
   agentTree,
-  alignByTime,
   allocateRows,
   buildTerminalSample,
   focusAt,
@@ -22,7 +18,6 @@ import {
   realToPlayback,
   resultSnippet,
   rowStates,
-  terminalLinks,
 } from "./terminalModel";
 
 const kOrigin = 1_792_950_894;
@@ -55,15 +50,6 @@ const send = (
   [time, "m", `send ${session}: '${command}\\n'`],
   [time + 0.5, "o", `$ ${command}\r\n`],
 ];
-
-const toolAt = (offset: number, session: string, action: string, id: string) =>
-  testToolEvent({
-    id,
-    uuid: `ev-${id}`,
-    function: "terminal",
-    arguments: { session, action },
-    timestamp: new Date((kOrigin + offset) * 1000).toISOString(),
-  });
 
 // main opens at 0 and runs to 100; tests opens at 10 and runs to 60.
 const twoSessions = [
@@ -108,106 +94,10 @@ describe("buildTerminalSample", () => {
     ]);
   });
 
-  it("joins markers to terminal tool calls by session, action and time", () => {
-    const sample = buildTerminalSample(twoSessions, [
-      toolAt(14, "tests", "send", "call-b"),
-      toolAt(1.2, "main", "send", "call-a"),
-      toolAt(10.1, "tests", "open", "call-open"),
-      // Too far from any main send to join.
-      toolAt(40, "main", "send", "call-far"),
-    ]);
-    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
-      "call-a",
-      "call-b",
-      undefined,
-    ]);
-    expect(sample.commands[0]?.eventUuid).toBe("ev-call-a");
-    expect(
-      sample.activities.map(({ action, sessionKey, toolCallId }) => ({
-        action,
-        sessionKey,
-        toolCallId,
-      }))
-    ).toEqual([
-      {
-        action: "open",
-        sessionKey: "asciinema:terminal-main",
-        toolCallId: undefined,
-      },
-      {
-        action: "open",
-        sessionKey: "asciinema:terminal-tests",
-        toolCallId: "call-open",
-      },
-    ]);
-  });
-
-  it("maps linked tool call ids back to their place on the clock", () => {
-    const sample = buildTerminalSample(twoSessions, [
-      toolAt(14, "tests", "send", "call-b"),
-      toolAt(10.1, "tests", "open", "call-open"),
-    ]);
-    expect(Object.fromEntries(terminalLinks(sample))).toEqual({
-      "call-b": {
-        action: "send",
-        sessionKey: "asciinema:terminal-tests",
-        at: 15.51,
-      },
-      "call-open": {
-        action: "open",
-        sessionKey: "asciinema:terminal-tests",
-        at: 10,
-      },
-    });
-  });
-
-  it("groups sessions by their agent span, flat when casts lack one", () => {
-    expect(
-      buildTerminalSample(twoSessions).agents.map(({ id, name }) => ({
-        id,
-        name,
-      }))
-    ).toEqual([{ id: "", name: "agent" }]);
-
-    const multi = buildTerminalSample([
-      makeCast("main", 0, send("main", 1, "ls"), {
-        ir_agent_span_id: "span-main",
-        ir_agent: "main",
-      }),
-      makeCast("tests", 10, send("tests", 1, "npm test"), {
-        ir_agent_span_id: "span-runner",
-        ir_agent: "test-runner",
-      }),
-    ]);
-    expect(
-      multi.agents.map(({ id, name, sessions, commands }) => ({
-        id,
-        name,
-        sessions: sessions.map((session) => session.name),
-        commands: commands.length,
-      }))
-    ).toEqual([
-      { id: "span-main", name: "main", sessions: ["main"], commands: 1 },
-      {
-        id: "span-runner",
-        name: "test-runner",
-        sessions: ["tests"],
-        commands: 1,
-      },
-    ]);
-  });
-
-  it("names a session by ir_session, then its markers, then its key", () => {
-    const sample = buildTerminalSample([
-      makeCast("a", 0, [[0, "m", "open web"]], { ir_session: "server" }),
-      makeCast("b", 0, [[0, "m", "open worker"]]),
-      makeCast("c", 0, [[0, "o", "x"]]),
-    ]);
-    expect(sample.sessions.map((session) => session.name)).toEqual([
-      "server",
-      "worker",
-      "terminal-c",
-    ]);
+  it("builds the same sample from pre-parsed casts", () => {
+    expect(buildTerminalSample(parseTerminalCasts(twoSessions))).toEqual(
+      buildTerminalSample(twoSessions)
+    );
   });
 });
 
@@ -442,54 +332,6 @@ describe("allocateRows", () => {
       server: 30,
       tests: 0,
     });
-  });
-});
-
-describe("tool call join", () => {
-  it("keeps two close commands in order rather than pairing each with the nearer call", () => {
-    // Markers trail the calls by 0.9 s; nearest-first would swap them.
-    const casts = [
-      makeCast("main", 0, [
-        ...send("main", 10.9, "cd src"),
-        ...send("main", 11.9, "ls"),
-      ]),
-    ];
-    const sample = buildTerminalSample(casts, [
-      toolAt(10, "main", "send", "call-1"),
-      toolAt(11, "main", "send", "call-2"),
-    ]);
-    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
-      "call-1",
-      "call-2",
-    ]);
-  });
-
-  it("leaves a call without a marker unpaired instead of taking the next marker", () => {
-    const casts = [makeCast("main", 0, [...send("main", 11.9, "ls")])];
-    const sample = buildTerminalSample(casts, [
-      toolAt(10, "main", "send", "call-orphan"),
-      toolAt(11, "main", "send", "call-ls"),
-    ]);
-    expect(sample.commands.map((command) => command.toolCallId)).toEqual([
-      "call-ls",
-    ]);
-  });
-
-  it("builds the same sample from pre-parsed casts", () => {
-    const events = [toolAt(1.2, "main", "send", "call-a")];
-    expect(
-      buildTerminalSample(parseTerminalCasts(twoSessions), events)
-    ).toEqual(buildTerminalSample(twoSessions, events));
-  });
-});
-
-describe("alignByTime", () => {
-  it("pairs in order within the gap and skips what doesn't fit", () => {
-    expect(alignByTime([1, 2, 30], [0.9, 2.1, 7, 40], 5)).toEqual([
-      [0, 0],
-      [1, 1],
-    ]);
-    expect(alignByTime([], [1], 5)).toEqual([]);
   });
 });
 

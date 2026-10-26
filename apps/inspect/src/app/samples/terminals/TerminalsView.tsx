@@ -37,9 +37,6 @@ import { FoldedTimeline, TerminalTimeline } from "./TerminalTimeline";
 // Agent focus switches closer together than this collapse into one while
 // playing (the stage's reflow eases over 200 ms).
 const kFocusSwitchMs = 400;
-// A command's echo is on screen from its marker time; allow for the clock
-// sitting a hair before it.
-const kEchoTolerance = 0.05;
 // How long (wall seconds) a new command pulses its row's bar.
 const kPulseSeconds = 0.6;
 // Until a player has drawn and its line height can be measured.
@@ -61,12 +58,6 @@ interface TerminalsViewProps {
   sample: TerminalSample;
   /** The sample's scroll container; the view fills its visible height. */
   scrollRef: RefObject<HTMLDivElement | null>;
-  /** Opens a command's tool call in the transcript; omit to disable
-   *  terminal → transcript links. */
-  onShowInTranscript?: (command: TerminalCommand) => void;
-  /** Where the view opens, paused, in real seconds (e.g. from a transcript
-   *  tool call's "Show in terminals"). */
-  initialTime?: number;
   /** The agent whose terminals show (default: the first). Changing it keeps
    *  the clock. */
   agentId?: string;
@@ -106,8 +97,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   sample,
   agent,
   scrollRef,
-  onShowInTranscript,
-  initialTime,
   fill,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -116,9 +105,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   // left after the fill header.
   const rootHeight = useElementHeight(rootRef, fill !== undefined);
 
-  const [playback, setPlaybackState] = useState(() =>
-    initialTime !== undefined ? realToPlayback(sample, initialTime) : 0
-  );
+  const [playback, setPlaybackState] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [held, setHeld] = useState<string>();
@@ -251,29 +238,10 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
 
   const follow = () => setHeld(undefined);
 
-  const showInTranscript = (command: TerminalCommand) => {
-    setPlaying(false);
-    onShowInTranscript?.(command);
-  };
-
-  const seekToCommand = (command: TerminalCommand, toTranscript = false) => {
-    if (toTranscript && onShowInTranscript && command.toolCallId) {
-      showInTranscript(command);
-      return;
-    }
+  const seekToCommand = (command: TerminalCommand) => {
     setHeld(undefined);
     setClock(realToPlayback(sample, command.at));
   };
-
-  // The command whose echo is on a clicked line: the latest command to that
-  // session by now whose text the line shows.
-  const echoedCommand = (sessionKey: string, lineText: string) =>
-    agent.commands.findLast(
-      (command) =>
-        command.sessionKey === sessionKey &&
-        command.at <= real + kEchoTolerance &&
-        lineText.includes(commandLabel(command.command).replace(/ …$/, ""))
-    );
 
   const toggleFold = (key: string) => {
     const next = new Set(folded);
@@ -435,16 +403,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               scrollerRef={(scroller) => players.setScroller(key, scroller)}
               pinned={pinned.has(key)}
               onJumpToLatest={() => players.jumpToLatest(key)}
-              onShowCommand={onShowInTranscript ? showInTranscript : undefined}
-              onEchoClick={
-                onShowInTranscript
-                  ? (lineText) => {
-                      const command = echoedCommand(key, lineText);
-                      if (command?.toolCallId) showInTranscript(command);
-                      else togglePlay();
-                    }
-                  : undefined
-              }
             />
           );
         })}

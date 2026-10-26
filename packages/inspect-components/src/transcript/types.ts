@@ -235,15 +235,6 @@ export interface EventPanelCallbacks {
    *  the href so modified clicks open a new tab natively; a plain left-click
    *  calls this instead. */
   onOpenEventFocus?: (focusRoute: string) => void;
-  /** The host's link from a tool call to where it ran in a recorded terminal;
-   *  undefined when no recording covers the call (the card shows no link). */
-  getTerminalsLink?: (event: ToolEvent) => TerminalsLink | undefined;
-}
-
-/** A tool call's link into the host's terminal recordings. */
-export interface TerminalsLink {
-  label: string;
-  onShow: () => void;
 }
 
 /**

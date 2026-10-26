@@ -140,39 +140,6 @@ describe("ToolEventView", () => {
     expect(container.textContent).toContain('path: "foo.txt"');
   });
 
-  it("shows the host's terminals link only for calls it links", () => {
-    const onShow = vi.fn();
-    const renderLinked = (linked: boolean) =>
-      render(
-        <ComponentStateProvider hooks={makeStateHooks()}>
-          <ComponentNavigationProvider navigation={{ navigate: () => {} }}>
-            <ContentTrustProvider value="trusted">
-              <ToolEventView
-                eventNode={makeNode("terminal", { session: "main" })}
-                childNodes={[]}
-                eventCallbacks={{
-                  getTerminalsLink: (event) =>
-                    linked && event.id === "tool-call-1"
-                      ? { label: "Show in terminals", onShow }
-                      : undefined,
-                }}
-              />
-            </ContentTrustProvider>
-          </ComponentNavigationProvider>
-        </ComponentStateProvider>
-      );
-
-    renderLinked(false);
-    expect(
-      screen.queryByRole("button", { name: "Show in terminals" })
-    ).toBeNull();
-    cleanup();
-
-    renderLinked(true);
-    fireEvent.click(screen.getByRole("button", { name: "Show in terminals" }));
-    expect(onShow).toHaveBeenCalledOnce();
-  });
-
   it("still renders a known tool's input arg in the input zone", () => {
     const { container } = renderView("bash", { cmd: "echo hello" });
 

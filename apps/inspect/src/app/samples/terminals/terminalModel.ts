@@ -1,4 +1,4 @@
-import type { Event, ToolEvent } from "@tsmono/inspect-common/types";
+import type { Event } from "@tsmono/inspect-common/types";
 import { stripAnsi } from "@tsmono/util";
 
 import {
@@ -16,10 +16,6 @@ import {
 export const kSharedIdleLimit = 2;
 
 export const kPlaybackSpeeds = [1, 2, 4];
-
-// A cast marker and the tool call that wrote it are stamped by different
-// clocks (and the cast start is whole seconds), so they join within a window.
-const kToolEventJoinWindow = 5;
 
 export interface TerminalSession {
   /** Store key; the session's identity. */
@@ -46,16 +42,6 @@ export interface TerminalCommand {
   /** When its echo has drawn (real seconds): focus moves here, and seeking
    *  here shows the command. */
   at: number;
-  toolCallId?: string;
-  eventUuid?: string;
-}
-
-export interface TerminalActivity {
-  action: "open" | "read";
-  sessionKey: string;
-  at: number;
-  toolCallId?: string;
-  eventUuid?: string;
 }
 
 export interface FocusSegment {
@@ -85,14 +71,13 @@ export interface TerminalSample {
   playbackDuration: number;
   sessions: TerminalSession[];
   commands: TerminalCommand[];
-  activities: TerminalActivity[];
   agents: TerminalAgent[];
 }
 
 /**
- * Places the store casts on one real-time axis and joins their markers to the
- * transcript's terminal tool calls. Sessions are grouped into agents by their
- * `ir_agent_span_id` header field; casts without it form one group.
+ * Places the store casts on one real-time axis. Sessions are grouped into
+ * agents by their `ir_agent_span_id` header field; casts without it form one
+ * group.
  */
 export const buildTerminalSample = (
   casts: StoreCast[] | TerminalCasts,
@@ -135,30 +120,10 @@ export const buildTerminalSample = (
         a.session.key.localeCompare(b.session.key)
     );
 
-  const markerList = sessions.flatMap(({ session, markers }) =>
-    markers.map(({ event, marker }) => ({
-      marker,
-      session: session.name,
-      action: marker.action,
-      at: session.start + event.time,
-    }))
-  );
-  const joined = joinToolEvents(markerList, events, origin);
-  const joinedByMarker = new Map(
-    [...joined].map(([entry, toolEvent]) => [entry.marker, toolEvent])
-  );
   const commands: TerminalCommand[] = [];
-  const activities: TerminalActivity[] = [];
   for (const { session, events: castEventList, markers } of sessions) {
     for (const { event, marker } of markers) {
       const sentAt = session.start + event.time;
-      const toolEvent = joinedByMarker.get(marker);
-      const link = toolEvent
-        ? {
-            toolCallId: toolEvent.id,
-            ...(toolEvent.uuid ? { eventUuid: toolEvent.uuid } : {}),
-          }
-        : {};
       if (marker.action === "send") {
         const echo = castEventList.find(
           (candidate) => candidate.type === "o" && candidate.time >= event.time
@@ -175,20 +140,11 @@ export const buildTerminalSample = (
           command: marker.command ?? "",
           sentAt,
           at: session.start + echoed,
-          ...link,
-        });
-      } else {
-        activities.push({
-          action: marker.action,
-          sessionKey: session.key,
-          at: sentAt,
-          ...link,
         });
       }
     }
   }
   commands.sort((a, b) => a.at - b.at);
-  activities.sort((a, b) => a.at - b.at);
 
   const sessionList = sessions.map(({ session }) => session);
   const duration = Math.max(0, ...sessionList.map((session) => session.end));
@@ -230,7 +186,6 @@ export const buildTerminalSample = (
     playbackDuration: knots.at(-1)?.[1] ?? 0,
     sessions: sessionList,
     commands,
-    activities,
     agents,
   };
 };
@@ -271,108 +226,6 @@ export const parseTerminalCasts = (casts: StoreCast[]): TerminalCasts => ({
     };
   }),
 });
-
-// Markers join the sample's terminal tool calls per session and action, in
-// order: both sequences are monotone, so the join is the order-preserving
-// alignment with the least total time distance, where a marker or call may
-// stay unmatched (a call that failed before writing its marker, a marker
-// from a call outside the transcript) at the cost of the join window. A
-// nearest-first join could pair two calls a second apart the wrong way round,
-// since cast times carry up to a second of jitter (cast starts are whole
-// seconds).
-const joinToolEvents = <
-  M extends { session: string; action: string; at: number },
->(
-  markers: M[],
-  events: Event[],
-  origin: number
-): Map<M, ToolEvent> => {
-  const calls = events.flatMap((event) => {
-    if (event.event !== "tool" || event.function !== "terminal") return [];
-    const session = event.arguments.session;
-    const action = event.arguments.action;
-    const time = Date.parse(event.timestamp) / 1000 - origin;
-    return typeof session === "string" &&
-      typeof action === "string" &&
-      Number.isFinite(time)
-      ? [{ event, session, action, time }]
-      : [];
-  });
-  const joined = new Map<M, ToolEvent>();
-  const groups = new Set(
-    [...markers, ...calls].map((m) => `${m.session}\n${m.action}`)
-  );
-  for (const group of groups) {
-    const [session, action] = group.split("\n");
-    const a = markers.filter(
-      (m) => m.session === session && m.action === action
-    );
-    const b = calls
-      .filter((c) => c.session === session && c.action === action)
-      .sort((x, y) => x.time - y.time);
-    for (const [i, j] of alignByTime(
-      a.map((m) => m.at),
-      b.map((c) => c.time),
-      kToolEventJoinWindow
-    )) {
-      const marker = a[i];
-      const call = b[j];
-      if (marker && call) joined.set(marker, call.event);
-    }
-  }
-  return joined;
-};
-
-// The order-preserving pairing of two sorted sequences that minimises the
-// summed distance of pairs, with any element allowed to stay unpaired at
-// `gap` cost; pairs further apart than `gap` are never made.
-export const alignByTime = (
-  a: number[],
-  b: number[],
-  gap: number
-): [number, number][] => {
-  const cost = Array.from({ length: a.length + 1 }, () =>
-    new Array<number>(b.length + 1).fill(0)
-  );
-  for (let i = 0; i <= a.length; i++) {
-    for (let j = 0; j <= b.length; j++) {
-      if (i === 0 && j === 0) continue;
-      let best = Infinity;
-      if (i > 0) best = Math.min(best, (cost[i - 1]?.[j] ?? Infinity) + gap);
-      if (j > 0) best = Math.min(best, (cost[i]?.[j - 1] ?? Infinity) + gap);
-      const ai = a[i - 1];
-      const bj = b[j - 1];
-      if (i > 0 && j > 0 && ai !== undefined && bj !== undefined) {
-        const d = Math.abs(ai - bj);
-        if (d <= gap) {
-          best = Math.min(best, (cost[i - 1]?.[j - 1] ?? Infinity) + d);
-        }
-      }
-      const row = cost[i];
-      if (row) row[j] = best;
-    }
-  }
-  const pairs: [number, number][] = [];
-  let i = a.length;
-  let j = b.length;
-  while (i > 0 && j > 0) {
-    const here = cost[i]?.[j] ?? Infinity;
-    const ai = a[i - 1];
-    const bj = b[j - 1];
-    const d =
-      ai !== undefined && bj !== undefined ? Math.abs(ai - bj) : Infinity;
-    if (d <= gap && here === (cost[i - 1]?.[j - 1] ?? Infinity) + d) {
-      pairs.push([i - 1, j - 1]);
-      i--;
-      j--;
-    } else if (here === (cost[i - 1]?.[j] ?? Infinity) + gap) {
-      i--;
-    } else {
-      j--;
-    }
-  }
-  return pairs.reverse();
-};
 
 // The shared clock: over the union of every session's event times, a gap
 // plays at full length unless it exceeds the idle limit, which only happens
@@ -579,42 +432,6 @@ export const resultSnippet = (
     }
   }
   return undefined;
-};
-
-export interface TerminalLink {
-  action: "open" | "send" | "read";
-  sessionKey: string;
-  /** Real seconds: a command's echo-drawn time, or when the call ran. */
-  at: number;
-}
-
-/**
- * Where each linked terminal tool call (by tool call id) lands on the shared
- * clock: the inverse of the marker ↔ tool event join.
- */
-export const terminalLinks = (
-  sample: TerminalSample
-): Map<string, TerminalLink> => {
-  const links = new Map<string, TerminalLink>();
-  for (const command of sample.commands) {
-    if (command.toolCallId) {
-      links.set(command.toolCallId, {
-        action: "send",
-        sessionKey: command.sessionKey,
-        at: command.at,
-      });
-    }
-  }
-  for (const activity of sample.activities) {
-    if (activity.toolCallId) {
-      links.set(activity.toolCallId, {
-        action: activity.action,
-        sessionKey: activity.sessionKey,
-        at: activity.at,
-      });
-    }
-  }
-  return links;
 };
 
 /**

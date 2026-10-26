@@ -203,16 +203,6 @@
   text-align: left;
 }
 
-.commandLink {
-  flex: 0 1 auto;
-  padding: 0 4px;
-  border-radius: 3px;
-}
-
-.commandLink:hover {
-  text-decoration: underline;
-}
-
 .sessionName {
   flex-shrink: 0;
   font-family: var(--bs-font-monospace);
@@ -307,15 +297,6 @@
 .body :global(.ap-term) {
   cursor: text;
   user-select: text;
-}
-
-/* A command's echo (styled by highlightCommandEchoes) opens its tool call. */
-.body :global(.ap-bold[style*="rgb(130, 170, 255)"]) {
-  cursor: pointer;
-}
-
-.body :global(.ap-bold[style*="rgb(130, 170, 255)"]:hover) {
-  text-decoration: underline;
 }
 
 .latest {
