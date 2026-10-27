@@ -17,6 +17,11 @@ export const kSharedIdleLimit = 2;
 
 export const kPlaybackSpeeds = [1, 2, 4];
 
+// The player draws only its screen (no scrollback), so a session plays on a
+// screen tall enough for all its output, keeping the history scrollable. The
+// cap keeps the player's canvas (24px a row) within browser size limits.
+export const kMaxScreenRows = 1000;
+
 export interface TerminalSession {
   /** Store key; the session's identity. */
   key: string;
@@ -26,9 +31,18 @@ export interface TerminalSession {
   cast: string;
   rows: number;
   cols: number;
+  /** The player's screen height: the recorded rows plus a row per output
+   *  line, up to kMaxScreenRows. A clear still wipes it. */
+  screenRows: number;
   /** Real seconds from the sample's terminal origin. */
   start: number;
   end: number;
+  /** When the row appears (real seconds). A terminal opening beside visible
+   *  ones waits for its first command's echo, so it appears once focus moves
+   *  to it rather than at a prompt-only height that grows a moment later; one
+   *  opening into an empty view (or never sent a command) shows at its
+   *  start. */
+  shownFrom: number;
   agentId: string;
   /** Output events, in local (session) seconds. */
   output: { time: number; data: string }[];
@@ -98,14 +112,21 @@ export const buildTerminalSample = (
         const start =
           header.timestamp !== undefined ? header.timestamp - origin : 0;
         const length = castEventList.at(-1)?.time ?? 0;
+        const outputLines = castEventList.reduce(
+          (count, event) =>
+            event.type === "o" ? count + countNewlines(event.data) : count,
+          0
+        );
         const session: TerminalSession = {
           key: storeCast.key,
           name: header.session ?? markers[0]?.marker.session ?? storeCast.name,
           cast: highlighted,
           rows: header.rows,
           cols: header.cols,
+          screenRows: Math.min(kMaxScreenRows, header.rows + outputLines),
           start,
           end: start + length,
+          shownFrom: start,
           agentId: header.agentSpanId ?? "",
           output: castEventList
             .filter((event) => event.type === "o")
@@ -146,7 +167,10 @@ export const buildTerminalSample = (
   }
   commands.sort((a, b) => a.at - b.at);
 
-  const sessionList = sessions.map(({ session }) => session);
+  const sessionList = shownFrom(
+    sessions.map(({ session }) => session),
+    commands
+  );
   const duration = Math.max(0, ...sessionList.map((session) => session.end));
   const knots = buildKnots(sessionList, commands, duration);
 
@@ -226,6 +250,42 @@ export const parseTerminalCasts = (casts: StoreCast[]): TerminalCasts => ({
     };
   }),
 });
+
+const countNewlines = (data: string): number => {
+  let count = 0;
+  for (let i = data.indexOf("\n"); i !== -1; i = data.indexOf("\n", i + 1)) {
+    count++;
+  }
+  return count;
+};
+
+// Sessions are in start order, so each one's visible predecessors are
+// settled before it.
+const shownFrom = (
+  sessions: TerminalSession[],
+  commands: TerminalCommand[]
+): TerminalSession[] => {
+  const shown: TerminalSession[] = [];
+  for (const session of sessions) {
+    const besideVisible = shown.some(
+      (other) =>
+        other.shownFrom <= session.start &&
+        other.end >= session.start &&
+        other.agentId === session.agentId
+    );
+    const firstCommand = commands.find(
+      (command) => command.sessionKey === session.key
+    );
+    shown.push({
+      ...session,
+      shownFrom:
+        besideVisible && firstCommand
+          ? Math.min(firstCommand.at, session.end)
+          : session.start,
+    });
+  }
+  return shown;
+};
 
 // The shared clock: over the union of every session's event times, a gap
 // plays at full length unless it exceeds the idle limit, which only happens
@@ -320,7 +380,7 @@ export const sessionPhase = (
   session: TerminalSession,
   real: number
 ): SessionPhase =>
-  real < session.start ? "pending" : real > session.end ? "closed" : "open";
+  real < session.shownFrom ? "pending" : real > session.end ? "closed" : "open";
 
 /** The player position for a real time: seconds into the session's own
  *  recording (the players don't shorten idle time). */
@@ -359,7 +419,7 @@ const focusSegments = (
   const boundaries = [
     ...new Set([
       ...commands.map((command) => command.at),
-      ...sessions.flatMap((session) => [session.start, session.end]),
+      ...sessions.flatMap((session) => [session.shownFrom, session.end]),
     ]),
   ].sort((a, b) => a - b);
   const segments: FocusSegment[] = [];

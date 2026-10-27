@@ -1163,16 +1163,12 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                   fill={
                     terminalsFill
                       ? {
-                          title: `${String(sample?.id ?? id)}${
-                            sample && sample.epoch > 1
-                              ? ` · epoch ${sample.epoch}`
-                              : ""
-                          }`,
                           tools: terminalAgentPicker,
                           onExit: () => setTerminalsFill(false),
                         }
                       : undefined
                   }
+                  onFullscreen={() => setTerminalsFill(true)}
                 />
               </TabPanel>
             ) : null}

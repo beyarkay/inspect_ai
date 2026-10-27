@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, useRef, useState } from "react";
+import { FC, ReactNode, useRef, useState } from "react";
 
 import {
   AsciinemaPlayer,
@@ -7,12 +7,12 @@ import {
 } from "@tsmono/react/components";
 import { useEventListener } from "@tsmono/react/hooks";
 
+import { cssVars } from "../../../utils/cssVars";
+
 import { commandLabel } from "./asciicast";
 import { formatClock } from "./format";
 import {
-  kMaxRows,
   kRowBodyPadding,
-  kTailRows,
   type RowState,
   type TerminalCommand,
   type TerminalSession,
@@ -41,6 +41,9 @@ interface TerminalRowProps {
   /** The user scrolled the body up, away from the newest output. */
   pinned: boolean;
   onJumpToLatest: () => void;
+  /** The view's controls (fullscreen, and in fullscreen the agent picker);
+   *  given to the top row only. */
+  tools?: ReactNode;
 }
 
 /**
@@ -66,6 +69,7 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   scrollerRef,
   pinned,
   onJumpToLatest,
+  tools,
 }) => {
   const hasBody = bodyRows > 0;
   // Only a session opening during playback flashes, not every row on load.
@@ -154,9 +158,9 @@ export const TerminalRow: FC<TerminalRowProps> = ({
                 {state === "folded" ? "open · folded" : "open"}
               </span>
             ) : null}
-            {hasBody ? <span>{rowsReadout(state, bodyRows)}</span> : null}
           </span>
         </button>
+        {tools ? <span className={styles.barTools}>{tools}</span> : null}
       </div>
       {hasBody ? (
         <TerminalBody
@@ -229,18 +233,24 @@ const TerminalBody: FC<TerminalBodyProps> = ({
         }}
         className={styles.body}
       >
-        <AsciinemaPlayer
-          id={id}
-          cast={session.cast}
-          rows={session.rows}
-          cols={session.cols}
-          fit="width"
-          autoPlay={false}
-          controls={false}
-          idleTimeLimit={null}
-          poster="npt:0"
-          onPlayer={onPlayer}
-        />
+        <div
+          className={clsx("ap-default-term-ff", styles.playerCap)}
+          data-terminal-clip
+          style={cssVars({ "--terminal-cols": String(session.cols) })}
+        >
+          <AsciinemaPlayer
+            id={id}
+            cast={session.cast}
+            rows={session.screenRows}
+            cols={session.cols}
+            fit="width"
+            autoPlay={false}
+            controls={false}
+            idleTimeLimit={null}
+            poster="npt:0"
+            onPlayer={onPlayer}
+          />
+        </div>
       </div>
       {pinned ? (
         <button
@@ -255,10 +265,3 @@ const TerminalBody: FC<TerminalBodyProps> = ({
     </div>
   );
 };
-
-const rowsReadout = (state: RowState, rows: number): string =>
-  state === "focused"
-    ? `${rows} of ${kMaxRows} rows`
-    : rows > kTailRows
-      ? `tail · ${rows} rows`
-      : `${kTailRows}-row floor`;

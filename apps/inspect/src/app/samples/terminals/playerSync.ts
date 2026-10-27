@@ -8,6 +8,10 @@ const kSeekTolerance = 0.05;
 // Scrolling further than this many lines above the newest output pins the
 // body where the user put it.
 const kPinLines = 2;
+// A scroll gesture (wheel, touch, scrollbar drag, and the momentum after
+// them) lasts until scrolling has been quiet this long.
+const kGestureIdleMs = 150;
+const kGestureEvents = ["wheel", "touchmove", "pointerdown"] as const;
 
 /** A session's player position (seconds into its recording) at the shared
  *  clock's current time; undefined for an unknown session. */
@@ -20,6 +24,9 @@ interface Scroller {
   /** The scrollTop we last set, so our own scrolls aren't read as the
    *  user's. */
   setTop: number;
+  /** Ends the user's scroll gesture; set while one is in progress, when
+   *  following waits so it doesn't fight the gesture. */
+  gesture: number | undefined;
   dispose: () => void;
 }
 
@@ -27,8 +34,15 @@ interface Scroller {
  * Keeps the shared view's players at the master clock's time. The players
  * never play on their own: each is seeked (throttled) to its session's local
  * time. Each row body is a scroll container that follows the newest output
- * (its last non-empty line kept at the bottom) until the user scrolls up past
- * a couple of lines, which pins it until they return to the bottom.
+ * until the user scrolls up past a couple of lines, which pins it until they
+ * return to the bottom.
+ *
+ * A player's screen is taller than its output (see screenRows), so the body's
+ * clip element (`[data-terminal-clip]`) is cut just below the last non-empty
+ * line: the scroll range ends at the output. The clip and the follow are
+ * updated from a mutation observer on the player's lines, which runs after
+ * the player redraws and before the browser paints, so new output and the
+ * scroll position land in the same frame.
  */
 export class PlayerSync {
   private readonly players = new Map<string, AsciinemaPlayerHandle>();
@@ -86,17 +100,34 @@ export class PlayerSync {
     }
 
     const onScroll = () => this.onUserScroll(key);
-    const observer = new ResizeObserver(() => this.follow(key));
+    const onGesture = () => this.extendGesture(key);
+    const layout = () => this.layout(key);
+    const resizes = new ResizeObserver(layout);
+    const mutations = new MutationObserver(layout);
     element.addEventListener("scroll", onScroll, { passive: true });
-    observer.observe(element);
+    for (const type of kGestureEvents) {
+      element.addEventListener(type, onGesture, { passive: true });
+    }
+    resizes.observe(element);
+    mutations.observe(element, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
     this.scrollers.set(key, {
       element,
       pinned: false,
       detaching: false,
       setTop: element.scrollTop,
+      gesture: undefined,
       dispose: () => {
+        window.clearTimeout(this.scrollers.get(key)?.gesture);
         element.removeEventListener("scroll", onScroll);
-        observer.disconnect();
+        for (const type of kGestureEvents) {
+          element.removeEventListener(type, onGesture);
+        }
+        resizes.disconnect();
+        mutations.disconnect();
       },
     });
   }
@@ -111,6 +142,8 @@ export class PlayerSync {
   jumpToLatest(key: string): void {
     const scroller = this.scrollers.get(key);
     if (!scroller) return;
+    window.clearTimeout(scroller.gesture);
+    scroller.gesture = undefined;
     this.setPinned(key, scroller, false);
     this.follow(key);
   }
@@ -142,32 +175,47 @@ export class PlayerSync {
       if (previous !== undefined && Math.abs(previous - local) < kSeekTolerance)
         continue;
       this.seekedTo.set(key, local);
-      // The frame at the new time draws on the next animation frame.
-      player.seek(local).then(
-        () => requestAnimationFrame(() => this.follow(key)),
-        () => undefined
-      );
+      player.seek(local).catch(() => undefined);
     }
   }
 
-  // Scrolls a following body so its last non-empty line sits at the bottom.
+  // Clips the body to its output and, unless pinned, scrolls to the bottom.
+  private layout(key: string): void {
+    const scroller = this.scrollers.get(key);
+    if (!scroller) return;
+    this.clip(scroller.element);
+    this.follow(key);
+  }
+
   private follow(key: string): void {
     const scroller = this.scrollers.get(key);
-    if (!scroller || scroller.pinned) return;
-    const target = this.followTop(scroller.element);
-    if (target === undefined) return;
-    scroller.element.scrollTop = target;
-    scroller.setTop = scroller.element.scrollTop;
+    if (!scroller || scroller.pinned || scroller.gesture !== undefined) return;
+    const { element } = scroller;
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+    scroller.setTop = element.scrollTop;
   }
 
   private onUserScroll(key: string): void {
     const scroller = this.scrollers.get(key);
     if (!scroller) return;
-    const top = scroller.element.scrollTop;
+    const { element } = scroller;
+    const top = element.scrollTop;
     if (Math.abs(top - scroller.setTop) < 1) return;
-    const target = this.followTop(scroller.element);
-    if (target === undefined) return;
-    this.setPinned(key, scroller, target - top > kPinLines * this.lineHeight);
+    if (scroller.gesture !== undefined) this.extendGesture(key);
+    const below = element.scrollHeight - element.clientHeight - top;
+    this.setPinned(key, scroller, below > kPinLines * this.lineHeight);
+  }
+
+  // Starts or extends the user's scroll gesture; when it ends, a body left
+  // near the bottom follows again.
+  private extendGesture(key: string): void {
+    const scroller = this.scrollers.get(key);
+    if (!scroller) return;
+    window.clearTimeout(scroller.gesture);
+    scroller.gesture = window.setTimeout(() => {
+      scroller.gesture = undefined;
+      this.layout(key);
+    }, kGestureIdleMs);
   }
 
   private setPinned(key: string, scroller: Scroller, pinned: boolean): void {
@@ -176,13 +224,13 @@ export class PlayerSync {
     this.onPinned(key, pinned);
   }
 
-  // The scrollTop that puts the last non-empty line at the bottom of the
-  // body's visible area; also picks up the line height the player's width-fit
-  // produced.
-  private followTop(element: HTMLElement): number | undefined {
-    const lines = element.querySelectorAll(".ap-line");
+  // Sets the clip's height to end just below the last non-empty line; also
+  // picks up the line height the player's width-fit produced.
+  private clip(element: HTMLElement): void {
+    const clip = element.querySelector<HTMLElement>("[data-terminal-clip]");
     const term = element.querySelector(".ap-term");
-    if (!term || lines.length === 0) return undefined;
+    const lines = element.querySelectorAll(".ap-line");
+    if (!clip || !term || lines.length === 0) return;
     const termRect = term.getBoundingClientRect();
     // The line pitch: a line's own box can be shorter than the spacing the
     // terminal lays lines out at.
@@ -193,10 +241,7 @@ export class PlayerSync {
     }
     let last = lines.length - 1;
     while (last > 0 && !lines[last]?.textContent.trim()) last--;
-    const termTop =
-      termRect.top - element.getBoundingClientRect().top + element.scrollTop;
-    const bottomPadding = parseFloat(getComputedStyle(element).paddingBottom);
-    const lineBottom = termTop + (last + 1) * this.lineHeight;
-    return Math.max(0, lineBottom + bottomPadding - element.clientHeight);
+    const termTop = termRect.top - clip.getBoundingClientRect().top;
+    clip.style.height = `${termTop + (last + 1) * this.lineHeight}px`;
   }
 }

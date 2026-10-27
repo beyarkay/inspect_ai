@@ -5,7 +5,6 @@ import {
   useAnimationFrameLoop,
   useElementHeight,
   useEventListener,
-  useMountEffect,
   useSpaceBelow,
   useUnmount,
 } from "@tsmono/react/hooks";
@@ -44,8 +43,6 @@ const kDefaultLineHeight = 19.5;
 const kMinViewHeight = 420;
 // The stage's vertical padding (see Terminals.module.css).
 const kStagePadding = 24;
-// The fill-window header's height (see .fillHeader).
-const kFillHeaderHeight = 44;
 // Control row heights (see Terminals.module.css): the folded row, and what
 // each timeline lane adds when unfolded.
 const kFoldedControlsHeight = 51;
@@ -65,11 +62,13 @@ interface TerminalsViewProps {
    *  agents note, the host's tools and an exit). The players and clock carry
    *  over; Escape or the exit control leaves it. */
   fill?: TerminalsFill;
+  /** Enters fullscreen from the top row's bar. */
+  onFullscreen?: () => void;
 }
 
 export interface TerminalsFill {
-  title: string;
-  /** Tab-toolbar controls that move into the header (the agent picker). */
+  /** Tab-toolbar controls that move into the top row's bar (the agent
+   *  picker). */
   tools?: ReactNode;
   onExit: () => void;
 }
@@ -98,11 +97,11 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   agent,
   scrollRef,
   fill,
+  onFullscreen,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const space = useSpaceBelow(rootRef, scrollRef);
-  // Filling the window, the root is the viewport (CSS); its height is what's
-  // left after the fill header.
+  // Filling the window, the root is the viewport (CSS).
   const rootHeight = useElementHeight(rootRef, fill !== undefined);
 
   const [playback, setPlaybackState] = useState(0);
@@ -197,10 +196,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     ])
   );
 
-  const viewHeight = Math.max(
-    fill ? rootHeight - kFillHeaderHeight : space,
-    kMinViewHeight
-  );
+  const viewHeight = Math.max(fill ? rootHeight : space, kMinViewHeight);
   const timelineHeight =
     kTimelineBaseHeight + agent.sessions.length * kTimelineLaneHeight;
   const allocate = (timeline: TimelineFold) =>
@@ -242,6 +238,36 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     setHeld(undefined);
     setClock(realToPlayback(sample, command.at));
   };
+
+  const viewTools = fill ? (
+    <>
+      {fill.tools}
+      <button
+        type="button"
+        className={styles.fullscreenButton}
+        onClick={fill.onExit}
+        aria-label="Exit fullscreen"
+        title="Exit fullscreen (Esc)"
+      >
+        <Icon name="fullscreenExit" />
+      </button>
+    </>
+  ) : onFullscreen ? (
+    <button
+      type="button"
+      className={styles.fullscreenButton}
+      onClick={onFullscreen}
+      aria-label="Show terminals fullscreen"
+      title="Fullscreen"
+    >
+      <Icon name="fullscreen" />
+    </button>
+  ) : undefined;
+
+  const topKey = agent.sessions.find((session) => {
+    const state = states.get(session.key);
+    return state !== undefined && state !== "pending";
+  })?.key;
 
   const toggleFold = (key: string) => {
     const next = new Set(folded);
@@ -358,13 +384,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       role={fill ? "region" : undefined}
       aria-label={fill ? "Terminals fullscreen" : undefined}
     >
-      {fill ? (
-        <FillHeader
-          fill={fill}
-          agentCount={sample.agents.length}
-          agentName={agent.name}
-        />
-      ) : null}
       <div
         className={clsx(
           styles.stage,
@@ -374,6 +393,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         {agent.sessions.map((session) => {
           const state = states.get(session.key);
           if (!state || state === "pending") return null;
+          const topRow = session.key === topKey;
           const key = session.key;
           return (
             <TerminalRow
@@ -403,6 +423,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               scrollerRef={(scroller) => players.setScroller(key, scroller)}
               pinned={pinned.has(key)}
               onJumpToLatest={() => players.jumpToLatest(key)}
+              tools={topRow ? viewTools : undefined}
             />
           );
         })}
@@ -448,39 +469,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
 
 // The filled window's header (brief §9's dialog header): title, agents note,
 // the host's tools and the exit, which takes focus so the view's keys apply.
-const FillHeader: FC<{
-  fill: TerminalsFill;
-  agentCount: number;
-  agentName: string;
-}> = ({ fill, agentCount, agentName }) => {
-  const exitRef = useRef<HTMLButtonElement>(null);
-  useMountEffect(() => exitRef.current?.focus());
-  return (
-    <div className={styles.fillHeader}>
-      <span className={styles.fillTitle}>{fill.title}</span>
-      {agentCount > 1 ? (
-        <span className={styles.fillNote}>
-          {agentCount} agents in this sample · showing {agentName}&apos;s
-          sessions
-        </span>
-      ) : null}
-      <span className={styles.fillTools}>
-        {fill.tools}
-        <button
-          ref={exitRef}
-          type="button"
-          className={clsx(styles.iconButton, styles.fillExit)}
-          onClick={fill.onExit}
-          aria-label="Exit fullscreen"
-          title="Exit fullscreen (Esc)"
-        >
-          <Icon name="fullscreenExit" />
-        </button>
-      </span>
-    </div>
-  );
-};
-
 const isEditable = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&
   (target.isContentEditable ||

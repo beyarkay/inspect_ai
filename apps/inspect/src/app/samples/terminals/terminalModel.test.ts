@@ -10,6 +10,7 @@ import {
   buildTerminalSample,
   focusAt,
   idleGapAt,
+  kMaxScreenRows,
   kSharedIdleLimit,
   lastCommandAt,
   localTime,
@@ -18,6 +19,7 @@ import {
   realToPlayback,
   resultSnippet,
   rowStates,
+  sessionPhase,
 } from "./terminalModel";
 
 const kOrigin = 1_792_950_894;
@@ -92,6 +94,28 @@ describe("buildTerminalSample", () => {
       { command: "npx vitest --watch\n", sentAt: 15, at: 15.51 },
       { command: "npm run build\n", sentAt: 70, at: 70.51 },
     ]);
+  });
+
+  it("shows a terminal opened beside a visible one at its first command", () => {
+    const sample = buildTerminalSample(twoSessions);
+    const [main, tests] = sample.sessions;
+    if (!main || !tests) throw new Error("expected two sessions");
+    // main opens into an empty view, so it shows at once.
+    expect(sessionPhase(main, 0)).toBe("open");
+    // tests opens at 10 beside main, and waits for its first echo at 15.51.
+    expect(sessionPhase(tests, 12)).toBe("pending");
+    expect(sessionPhase(tests, 15.6)).toBe("open");
+  });
+
+  it("gives each player a screen tall enough for all its output", () => {
+    const sample = buildTerminalSample(twoSessions);
+    expect(sample.sessions.map((session) => session.screenRows)).toEqual([
+      43, 42,
+    ]);
+    const long = buildTerminalSample([
+      makeCast("main", 0, [[1, "o", "line\r\n".repeat(5000)]]),
+    ]);
+    expect(long.sessions[0]?.screenRows).toBe(kMaxScreenRows);
   });
 
   it("builds the same sample from pre-parsed casts", () => {

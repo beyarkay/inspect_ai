@@ -77,7 +77,7 @@ test("terminals share one clock", async ({ page }) => {
   // Fullscreen covers the viewport under its own header, on the same clock;
   // Escape leaves it.
   const paused = (await readout(page).textContent()) ?? stepped;
-  await page.getByRole("button", { name: "Fullscreen" }).click();
+  await page.getByRole("button", { name: "Fullscreen", exact: true }).click();
   const fill = page.getByRole("region", {
     name: "Terminals fullscreen",
   });
@@ -86,6 +86,14 @@ test("terminals share one clock", async ({ page }) => {
   expect(fillBox?.height).toBe(page.viewportSize()?.height);
   await expect(readout(page)).toHaveText(paused);
   await page.screenshot({ path: join(evidence, "terminals-fullscreen.png") });
+  await page.keyboard.press("Escape");
+  await expect(fill).toHaveCount(0);
+  // The top row's bar offers the same way in.
+  await page.getByRole("button", { name: "Show terminals fullscreen" }).click();
+  await expect(fill).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Show terminals fullscreen" })
+  ).toHaveCount(0);
   await page.keyboard.press("Escape");
   await expect(fill).toHaveCount(0);
 

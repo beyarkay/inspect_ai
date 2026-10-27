@@ -18,42 +18,6 @@
   height: 100vh;
 }
 
-.fillHeader {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  flex: none;
-  height: 44px;
-  padding: 0 1em;
-  border-bottom: 1px solid var(--bs-border-color);
-  background-color: var(--bs-body-bg);
-}
-
-.fillTitle {
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.fillNote {
-  color: var(--vscode-descriptionForeground);
-  font-size: var(--inspect-font-size-small);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fillTools {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-left: auto;
-}
-
-.fillExit {
-  font-size: 1.3em;
-}
-
 /* Sized to its rows, so the controls sit right under them; once the rows
    need the view's whole height the stage shrinks and the controls stay at
    the bottom. */
@@ -243,6 +207,30 @@
   white-space: nowrap;
 }
 
+.barTools {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px 0 4px;
+}
+
+.fullscreenButton {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  border: 0;
+  padding: 0 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fullscreenButton:hover {
+  color: var(--vscode-foreground);
+}
+
 .liveDot {
   display: inline-block;
   width: 7px;
@@ -265,6 +253,9 @@
   padding: 8px 8px 6px;
   overflow-y: auto;
   overflow-x: hidden;
+  /* PlayerSync owns the scroll position; the browser's anchoring would move
+     it again when the player rewrites its lines. */
+  overflow-anchor: none;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
@@ -279,6 +270,16 @@
   inset: 0;
   box-shadow: inset 0 16px 14px -14px rgba(0, 0, 0, 0.7);
   pointer-events: none;
+}
+
+/* The player fits its columns to this box's width, so capping the width at
+   the columns in the terminal font at --inspect-terminal-font-size (plus the
+   player's 0.75em border each side) caps the text at that size. */
+.playerCap {
+  overflow: hidden;
+  max-width: calc(var(--terminal-cols) * 1ch + 1.5em);
+  font-family: var(--term-font-family, monospace);
+  font-size: var(--inspect-terminal-font-size);
 }
 
 .body :global(.asciinema-player-theme-asciinema) {
