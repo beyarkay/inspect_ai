@@ -95,6 +95,7 @@ import {
   useMessagesExport,
   useSampleMessages,
 } from "../../log_data";
+import { useSampleTabTitle } from "../../pro-ux/sampleTabs";
 import { setDocumentTitle } from "../../state/actions";
 import {
   useSelectedEvalSampleData,
@@ -388,6 +389,10 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
     scrollRef,
     sample
   );
+  const tabTitle = useSampleTabTitle({
+    usage: sampleUsages.length > 0,
+    metadata: sampleMetadatas.length > 0,
+  });
 
   const tabsetId = `task-sample-details-tab-${id}`;
 
@@ -1028,7 +1033,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
               key={kSampleTranscriptTabId}
               id={kSampleTranscriptTabId}
               className={clsx("sample-tab", styles.overflowVisible)}
-              title="Transcript"
+              {...tabTitle(kSampleTranscriptTabId, "Transcript")}
               onSelected={onSelectedTab}
               href={sampleTabHref(kSampleTranscriptTabId)}
               selected={
@@ -1067,7 +1072,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                   <NoContentsPanel
                     text={
                       eventsCleared
-                        ? "Transcript events were removed because this sample exceeds the browser's size limit. Use the Messages tab to view the conversation."
+                        ? `Transcript events were removed because this sample exceeds the browser's size limit. Use the ${tabTitle(kSampleMessagesTabId, "Messages").title} tab to view the conversation.`
                         : "No events to display."
                     }
                   />
@@ -1106,7 +1111,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 styles.fullWidth,
                 styles.overflowVisible
               )}
-              title="Messages"
+              {...tabTitle(kSampleMessagesTabId, "Messages")}
               onSelected={onSelectedTab}
               href={sampleTabHref(kSampleMessagesTabId)}
               selected={effectiveSelectedTab === kSampleMessagesTabId}
@@ -1158,7 +1163,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 key={kSampleTerminalsTabId}
                 id={kSampleTerminalsTabId}
                 className="sample-tab"
-                title="Terminals"
+                {...tabTitle(kSampleTerminalsTabId, "Terminals")}
                 onSelected={onSelectedTab}
                 href={sampleTabHref(kSampleTerminalsTabId)}
                 selected={effectiveSelectedTab === kSampleTerminalsTabId}
@@ -1194,7 +1199,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
               key={kSampleScoringTabId}
               id={kSampleScoringTabId}
               className="sample-tab"
-              title="Scoring"
+              {...tabTitle(kSampleScoringTabId, "Scoring")}
               onSelected={onSelectedTab}
               href={sampleTabHref(kSampleScoringTabId)}
               selected={effectiveSelectedTab === kSampleScoringTabId}
@@ -1210,7 +1215,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 key={kSampleActivityTabId}
                 id={kSampleActivityTabId}
                 className={clsx("sample-tab", styles.fullWidth)}
-                title="Activity"
+                {...tabTitle(kSampleActivityTabId, "Activity")}
                 onSelected={onSelectedTab}
                 selected={effectiveSelectedTab === kSampleActivityTabId}
                 scrollable={false}
@@ -1233,7 +1238,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
             <TabPanel
               id={kSampleInfoTabId}
               className={clsx("sample-tab")}
-              title="Info"
+              {...tabTitle(kSampleInfoTabId, "Info")}
               onSelected={onSelectedTab}
               href={sampleTabHref(kSampleInfoTabId)}
               selected={effectiveSelectedTab === kSampleInfoTabId}
@@ -1257,7 +1262,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
               <TabPanel
                 id={kSampleErrorTabId}
                 className="sample-tab"
-                title="Error"
+                {...tabTitle(kSampleErrorTabId, "Error")}
                 onSelected={onSelectedTab}
                 href={sampleTabHref(kSampleErrorTabId)}
                 selected={effectiveSelectedTab === kSampleErrorTabId}
@@ -1284,7 +1289,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
               <TabPanel
                 id={kSampleRetriesTabId}
                 className="sample-tab"
-                title="Retries"
+                {...tabTitle(kSampleRetriesTabId, "Retries")}
                 onSelected={onSelectedTab}
                 href={sampleTabHref(kSampleRetriesTabId)}
                 selected={effectiveSelectedTab === kSampleRetriesTabId}
@@ -1305,7 +1310,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
             <TabPanel
               id={kSampleJsonTabId}
               className={"sample-tab"}
-              title="JSON"
+              {...tabTitle(kSampleJsonTabId, "JSON")}
               onSelected={onSelectedTab}
               href={sampleTabHref(kSampleJsonTabId)}
               selected={effectiveSelectedTab === kSampleJsonTabId}

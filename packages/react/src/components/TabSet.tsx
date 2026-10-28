@@ -42,6 +42,8 @@ interface TabPanelProps {
   className?: string | string[];
   children?: ReactNode;
   title: string;
+  /** Hover text for the tab. */
+  hint?: string;
   icon?: IconName;
   onSelected: (e: MouseEvent<HTMLElement>) => void;
   /** URL the tab navigates to. When set, the tab renders as a link so
@@ -141,6 +143,7 @@ const Tab: FC<{
           id={tabId}
           href={href}
           className={clsx(tabClassName, styles.linkTab)}
+          title={tab.props.hint}
           role="tab"
           aria-controls={tabContentsId}
           aria-selected={isActive}
@@ -159,6 +162,7 @@ const Tab: FC<{
         <button
           id={tabId}
           className={tabClassName}
+          title={tab.props.hint}
           type="button"
           role="tab"
           aria-controls={tabContentsId}
