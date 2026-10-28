@@ -1,3 +1,4 @@
+import { clearCardSelection } from "./cardSelect";
 import {
   allVisible,
   controlByText,
@@ -94,7 +95,7 @@ export const bindings: Binding[] = [
   },
   {
     keys: ["Esc"],
-    label: "leave a field, else go up one level",
+    label: "leave a field, deselect, else go up one level",
     group: "Anywhere",
     run: () => {
       const active = document.activeElement;
@@ -104,6 +105,7 @@ export const bindings: Binding[] = [
       }
       if (actions.closeHelp()) return true;
       if (overlayOpen()) return false;
+      if (clearCardSelection()) return true;
       return click(byLabel("Back") ?? byLabel("back"));
     },
   },

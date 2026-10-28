@@ -7,6 +7,7 @@ import "./breadcrumbs.css";
 import "./trajectory.css";
 import "./search.css";
 
+import { installCardSelect } from "./cardSelect";
 import { installCells } from "./cells";
 import { isProUxEnabled } from "./enabled";
 import { closeHelp, installHelp, toggleHelp } from "./help";
@@ -49,3 +50,4 @@ setKeyActions({
 installKeys();
 installHelp();
 installCells();
+installCardSelect();

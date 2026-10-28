@@ -36,6 +36,7 @@ import { isHostedEnvironment } from "@tsmono/util";
 import { Events } from "../../../@types/extraInspect";
 import { useLogDir } from "../../../app_config";
 import { isProUxEnabled } from "../../../pro-ux/enabled";
+import { useCardSelectSync } from "../../../pro-ux/useCardSelectSync";
 import { useStore } from "../../../state/store";
 import { useCurrentLogFile } from "../../routing/currentSelection";
 import {
@@ -420,6 +421,12 @@ export const TranscriptPanel: FC<TranscriptPanelProps> = memo((props) => {
   const onOutlineNavigate = useCallback((eventId: string) => {
     eventsListRef.current?.scrollToEvent(eventId);
   }, []);
+  useCardSelectSync(
+    initialEventId,
+    eventsListRef,
+    onNavigatedToEvent,
+    setSearchParams
+  );
 
   // ---------------------------------------------------------------------------
   // Render
