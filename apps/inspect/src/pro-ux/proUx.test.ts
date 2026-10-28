@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { scaleTop } from "./cells";
 import { css, inferno, isDark, prgn, sequential } from "./colour";
+import { emptyColumnIds, moveToEnd } from "./emptyColumns";
 import { parseDuration, parseNumber } from "./grid";
 
 describe("parseDuration", () => {
@@ -58,5 +59,42 @@ describe("colour", () => {
   it("makes more mean darker on the clipped sequential map", () => {
     expect(isDark(sequential(1))).toBe(true);
     expect(isDark(sequential(0))).toBe(false);
+  });
+});
+
+describe("emptyColumnIds", () => {
+  interface Row {
+    a?: string;
+    b: number;
+    tags: string[];
+  }
+  const rows: Row[] = [
+    { a: "", b: 1, tags: [] },
+    { a: "-", b: 0, tags: [] },
+  ];
+  const columns = [
+    { id: "a", accessorFn: (r: Row) => r.a },
+    { id: "b", accessorFn: (r: Row) => r.b },
+    { id: "tags", accessorFn: (r: Row) => r.tags },
+    { id: "icon" },
+  ];
+
+  it("flags columns with no value in any row, keeps zero as a value", () => {
+    expect([...emptyColumnIds(columns, rows)].sort()).toEqual(["a", "tags"]);
+  });
+
+  it("treats no rows as nothing to collapse", () => {
+    expect(emptyColumnIds(columns, []).size).toBe(0);
+  });
+});
+
+describe("moveToEnd", () => {
+  it("moves the given ids last and keeps the rest in order", () => {
+    expect(moveToEnd(["a", "b", "c", "d"], new Set(["b", "a"]))).toEqual([
+      "c",
+      "d",
+      "a",
+      "b",
+    ]);
   });
 });

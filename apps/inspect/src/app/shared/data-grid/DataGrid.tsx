@@ -39,6 +39,10 @@ import { Icon } from "@tsmono/react/icons";
 import { openHrefInNewTab } from "@tsmono/react/routing";
 import { isRecord, isVscode } from "@tsmono/util";
 
+import {
+  moveToEnd,
+  useCollapsedEmptyColumns,
+} from "../../../pro-ux/emptyColumns";
 import { useStableValue } from "../useStableValue";
 
 import { computeAutoSizeWidth } from "./autoSize";
@@ -287,7 +291,7 @@ export interface DataGridProps<TRow extends RowData> {
  */
 export function DataGrid<TRow extends RowData>({
   data,
-  columns,
+  columns: rawColumns,
   getRowId,
   columnVisibility,
   sorting,
@@ -313,6 +317,7 @@ export function DataGrid<TRow extends RowData>({
   autoFocus = false,
   ariaLabel,
 }: DataGridProps<TRow>): ReactElement {
+  const { columns, emptyIds } = useCollapsedEmptyColumns(rawColumns, data);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const getRowHref = isVscode() ? undefined : getRowHrefProp;
 
@@ -392,8 +397,8 @@ export function DataGrid<TRow extends RowData>({
     const leafIds = columns
       .map((c) => c.id)
       .filter((id): id is string => id !== undefined);
-    return resolveColumnOrder(orderSource, leafIds);
-  }, [orderSource, columns]);
+    return moveToEnd(resolveColumnOrder(orderSource, leafIds), emptyIds);
+  }, [orderSource, columns, emptyIds]);
   const commitColumnOrder = useCallback(
     (next: string[]) => {
       if (onColumnOrderChange) onColumnOrderChange(next);
