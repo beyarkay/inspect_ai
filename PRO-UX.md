@@ -62,19 +62,26 @@ inspect view`).
   logs, `…` lists the folded path.
 - **Tables:** value bars after token counts and durations; score badges;
   resizing one column leaves the rest alone; empty columns go last at 28px;
-  optional soft-wrap.
+  columns never cut their header label short; optional soft-wrap.
+- **Tasks table:** score badge plus an aligned histogram per task (mean of
+  sample scores when the scorer has no metric), sortable; Samples next to
+  Score; a caret lists a log's samples; Task args as key/value pairs.
 - **Sample table:** a trajectory strip per sample (tokens or seconds); an
   input every sample shares is shown once above the table.
+- **Tabs:** sample tabs Transcript, Conversation, Scoring, Activity, Usage &
+  metadata, JSON; model-call tabs Summary, Full input, Tools, Raw API, with
+  the call's settings and usage as one line under Summary.
 - **Transcript:**
   - outline hidden behind its own peek-or-dock button;
-  - time bar coloured by event kind, with a key;
-  - simple shell calls read `[>_] cat app.py`;
-  - collapsible tool calls;
-  - "more" only when over four lines are hidden, with "less" in the same spot;
-  - hover hints on model-call tabs;
+  - time bar coloured by event kind, with a key; a click lands on that event;
+  - tool calls in natural form: `[>_] cat app.py`, patches and edits as
+    coloured diffs, file reads as path plus highlighted contents, and a
+    "prettify" toggle that puts chained commands one per line;
+  - header caret steps folded › / open ⌄ / fully open ⌄⌄;
+  - a click outlines the card or message and puts it in the address bar;
   - a copy button on each message;
-  - grep search runs as you type;
-  - Cmd-F opens a find bar that reaches off-screen events.
+  - grep is the default search, runs as you type, and jumps to the match;
+  - Cmd-F highlights every match and steps through them, off-screen too.
 - **Scores:** JSON and XML as trees, fully open, with a depth control.
 - **Colours:** user blue, assistant green, reasoning pink, tool orange,
   system sky, everywhere (`packages/inspect-components/src/pro-ux/kinds.ts`).
