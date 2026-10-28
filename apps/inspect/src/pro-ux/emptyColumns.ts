@@ -1,11 +1,15 @@
 import { useMemo } from "react";
 
+import { useHtmlFlag } from "@tsmono/inspect-components/pro-ux";
+
+import { fitHeaders, useFontsLoaded } from "./headerFit";
 import { useProPref } from "./prefs";
 
 export const kEmptyColumnWidth = 28;
 
 interface ColumnLike<TRow> {
   id?: string;
+  header?: unknown;
   accessorFn?: (row: TRow, index: number) => unknown;
   size?: number;
   minSize?: number;
@@ -45,19 +49,26 @@ export const moveToEnd = (
   ...order.filter((id) => ids.has(id)),
 ];
 
-/** Narrow empty columns and report their ids; a no-op when the pref is off. */
+/** Narrow empty columns and report their ids, and under the pro-ux skin widen
+ *  the rest so no header label is cut short. */
 export const useCollapsedEmptyColumns = <TRow, C extends ColumnLike<TRow>>(
   columns: readonly C[],
   rows: readonly TRow[]
 ): { columns: C[]; emptyIds: Set<string> } => {
   const enabled = useProPref("collapseEmptyColumns");
+  const skin = useHtmlFlag("data-pro-ux");
+  const fontsLoaded = useFontsLoaded();
   return useMemo(() => {
     const emptyIds = enabled
       ? emptyColumnIds(columns, rows)
       : new Set<string>();
-    if (emptyIds.size === 0) return { columns: [...columns], emptyIds };
+    const fitted =
+      skin && fontsLoaded
+        ? fitHeaders(columns, emptyIds, (c) => c.id)
+        : columns;
+    if (emptyIds.size === 0) return { columns: [...fitted], emptyIds };
     return {
-      columns: columns.map((c) =>
+      columns: fitted.map((c) =>
         c.id !== undefined && emptyIds.has(c.id)
           ? {
               ...c,
@@ -70,5 +81,5 @@ export const useCollapsedEmptyColumns = <TRow, C extends ColumnLike<TRow>>(
       ),
       emptyIds,
     };
-  }, [enabled, columns, rows]);
+  }, [enabled, skin, fontsLoaded, columns, rows]);
 };

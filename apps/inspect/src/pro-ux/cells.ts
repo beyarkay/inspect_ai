@@ -19,17 +19,26 @@ import {
 
 type Kind = "score" | "quantity" | "duration";
 
+const isDurationLabel = (label: string): boolean =>
+  label.includes("duration") || label === "time";
+
+const isQuantityLabel = (label: string): boolean =>
+  label.includes("tokens") ||
+  label === "samples" ||
+  label.includes("cost") ||
+  label === "messages";
+
+/** Columns whose header carries the value-bar key. */
+export const isRankedLabel = (label: string): boolean => {
+  const lower = label.toLowerCase();
+  return isDurationLabel(lower) || isQuantityLabel(lower);
+};
+
 const kindOf = (column: Column): Kind | null => {
   const label = column.label.toLowerCase();
   if (column.id.startsWith("score") || label === "score") return "score";
-  if (label.includes("duration") || label === "time") return "duration";
-  if (
-    label.includes("tokens") ||
-    label === "samples" ||
-    label.includes("cost") ||
-    label === "messages"
-  )
-    return "quantity";
+  if (isDurationLabel(label)) return "duration";
+  if (isQuantityLabel(label)) return "quantity";
   return null;
 };
 
