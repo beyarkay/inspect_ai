@@ -1,3 +1,5 @@
+import { defaultSearchType } from "../pro-ux/searchModes";
+
 import type { GrepOptions, SearchType } from "./searchRequest";
 
 export type GrepSearchPanelState = {
@@ -35,7 +37,7 @@ export type StoredSearchPanelState = {
 };
 
 export const createInitialSearchPanelState = (): SearchPanelState => ({
-  searchType: "llm",
+  searchType: defaultSearchType(),
   searches: {
     grep: {
       query: "",

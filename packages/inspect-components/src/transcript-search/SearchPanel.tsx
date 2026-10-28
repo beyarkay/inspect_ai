@@ -32,6 +32,7 @@ import {
   AutosizeTextareaConfig,
 } from "@tsmono/util";
 
+import { searchModeSegments } from "../pro-ux/searchModes";
 import { autoRunKey, useAutoRun } from "../pro-ux/useAutoRun";
 
 import styles from "./SearchPanel.module.css";
@@ -403,10 +404,7 @@ export const SearchPanel: FC<SearchPanelProps> = ({
             <div className={styles.typeToggle}>
               <SegmentedControl
                 selectedId={searchType}
-                segments={[
-                  { id: "llm", label: "LLM" },
-                  { id: "grep", label: "Grep" },
-                ]}
+                segments={searchModeSegments(autoRunOn)}
                 onSegmentChange={(segmentId) => {
                   if (isSearchType(segmentId)) {
                     handleSearchTypeChange(segmentId);
