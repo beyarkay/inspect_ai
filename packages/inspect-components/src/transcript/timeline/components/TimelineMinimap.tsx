@@ -4,6 +4,7 @@ import { FC, useCallback, useRef, useState } from "react";
 import { useProperty } from "@tsmono/react/hooks";
 import { formatDuration, formatDurationShort, formatTime } from "@tsmono/util";
 
+import { TurnMarkers } from "../../../pro-ux/turnMarkers";
 import type { TimelineSpan } from "../core";
 import { computeBarPosition, formatTokenCount } from "../swimlaneLayout";
 import type { MinimapSelection } from "../timelineEventNodes";
@@ -205,6 +206,7 @@ export const TimelineMinimap: FC<TimelineMinimapProps> = ({
       {/* Bar area */}
       <div className={styles.minimap}>
         <div className={styles.track} />
+        <TurnMarkers root={root} mapping={mapping} />
 
         {/* Selection region: anchored at bar start or end depending on
             which half of the timeline the bar sits in, so text expands
