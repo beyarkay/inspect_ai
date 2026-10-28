@@ -32,6 +32,8 @@ import {
   AutosizeTextareaConfig,
 } from "@tsmono/util";
 
+import { autoRunKey, useAutoRun } from "../pro-ux/useAutoRun";
+
 import styles from "./SearchPanel.module.css";
 import {
   applySearchTypeChange,
@@ -170,6 +172,12 @@ export const SearchPanel: FC<SearchPanelProps> = ({
   const loading =
     createSearchMutation.isPending || cachedSearchQuery.isFetching;
   const error = createSearchMutation.error || cachedSearchQuery.error;
+  const autoKey = autoRunKey(searchType, query, grepOptions);
+  const {
+    enabled: autoRunOn,
+    schedule: scheduleAutoRun,
+    ran: markAutoRun,
+  } = useAutoRun(autoKey, loading, () => formRef.current?.requestSubmit());
   const currentSearch: Result | null = cachedSearchQuery.data ?? null;
   const hasSearched =
     !!searchId ||
@@ -198,6 +206,7 @@ export const SearchPanel: FC<SearchPanelProps> = ({
       const text = query.trim();
       if (!text || loading) return;
 
+      markAutoRun(autoKey);
       clearSearchIdForCurrentType();
 
       const resolvedModel =
@@ -237,19 +246,23 @@ export const SearchPanel: FC<SearchPanelProps> = ({
             modelHistory.record(resolvedModel);
           }
         },
+        onSettled: () => scheduleAutoRun(),
       });
     },
     [
+      autoKey,
       cacheKey,
       clearSearchIdForCurrentType,
       createSearchMutation,
       defaultModel,
       grepOptions,
       loading,
+      markAutoRun,
       model,
       modelHistory,
       query,
       queryClient,
+      scheduleAutoRun,
       scope,
       searchType,
       setState,
@@ -266,10 +279,11 @@ export const SearchPanel: FC<SearchPanelProps> = ({
   const handleSelectRecent = useCallback(
     (search: SearchInput) => {
       createSearchMutation.reset();
+      scheduleAutoRun.cancel();
       setIsRecentOpen(false);
       setState((prev) => applyRecentSearch(prev, search));
     },
-    [createSearchMutation, setState]
+    [createSearchMutation, scheduleAutoRun, setState]
   );
 
   const handleNewSearch = useCallback(() => {
@@ -294,15 +308,17 @@ export const SearchPanel: FC<SearchPanelProps> = ({
           },
         },
       }));
+      scheduleAutoRun();
     },
-    [createSearchMutation, setState]
+    [createSearchMutation, scheduleAutoRun, setState]
   );
 
   const handleSearchTypeChange = useCallback(
     (type: SearchType) => {
       setState((prev) => applySearchTypeChange(prev, type));
+      scheduleAutoRun();
     },
-    [setState]
+    [scheduleAutoRun, setState]
   );
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -335,8 +351,9 @@ export const SearchPanel: FC<SearchPanelProps> = ({
           },
         },
       }));
+      scheduleAutoRun();
     },
-    [setState]
+    [scheduleAutoRun, setState]
   );
 
   const handleModelChange = useCallback(
@@ -480,13 +497,15 @@ export const SearchPanel: FC<SearchPanelProps> = ({
                 </div>
               )}
             </div>
-            <button
-              type="submit"
-              className={styles.runButton}
-              disabled={loading || !query.trim()}
-            >
-              Run
-            </button>
+            {!(autoRunOn && searchType === "grep") && (
+              <button
+                type="submit"
+                className={styles.runButton}
+                disabled={loading || !query.trim()}
+              >
+                Run
+              </button>
+            )}
           </div>
         </form>
         <LoadingBar loading={loading} />
