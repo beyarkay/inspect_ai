@@ -1,5 +1,3 @@
-import { useHtmlFlag } from "./useHtmlFlag";
-
 /** Longest command shown on the header line; longer ones keep the code block. */
 const kMaxLineCommand = 160;
 
@@ -27,6 +25,7 @@ export const shellCommand = (
     case "Bash":
     case "shell":
     case "shell_command":
+    case "run_shell_command":
       return asCommand(args.command);
     default:
       return undefined;
@@ -41,26 +40,4 @@ export const isSimpleCommand = (command: string): boolean => {
     trimmed.length <= kMaxLineCommand &&
     !trimmed.includes("\n")
   );
-};
-
-export interface ShellView {
-  /** A simple command, printed as the header line. */
-  line?: string;
-  /** A script or long command, shown as a highlighted block. */
-  block?: string;
-}
-
-/** How pro-ux shows a shell call; empty when pro-ux is off or the tool is
- *  not a shell, so the usual rendering applies. */
-export const useShellView = (
-  tool: string,
-  args: Record<string, unknown> | undefined
-): ShellView => {
-  const pro = useHtmlFlag("data-pro-ux");
-  if (!pro) return {};
-  const command = shellCommand(tool, args);
-  if (command === undefined) return {};
-  return isSimpleCommand(command)
-    ? { line: command.trim() }
-    : { block: command };
 };

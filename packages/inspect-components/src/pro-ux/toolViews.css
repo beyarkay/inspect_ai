@@ -1,0 +1,217 @@
+:root[data-pro-ux] {
+  --pro-diff-add-bg: color-mix(
+    in srgb,
+    var(--pro-role-assistant) 13%,
+    transparent
+  );
+  --pro-diff-del-bg: color-mix(in srgb, var(--pro-bad) 9%, transparent);
+  --pro-diff-add-ink: #00805d;
+  --pro-diff-del-ink: var(--pro-bad);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-diff-add-bg: color-mix(
+    in srgb,
+    var(--pro-role-assistant) 18%,
+    transparent
+  );
+  --pro-diff-del-bg: color-mix(in srgb, var(--pro-bad) 15%, transparent);
+  --pro-diff-add-ink: #3fcf9f;
+}
+
+/* ── Header line: the call's main argument stands in for the tool name ── */
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] {
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] > [class*="_title_"] {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: calc(100% - 2.5em);
+  font-weight: 400;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] > [class*="_summary_"] {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+/* ── A control pinned to the header's top right, so it never moves ── */
+
+:root[data-pro-ux] .pro-has-control {
+  position: relative;
+}
+
+:root[data-pro-ux] .pro-has-control > [class*="_header_"] {
+  padding-right: 84px;
+}
+
+:root[data-pro-ux] .pro-prettify {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  width: 68px;
+  padding: 0 6px;
+  font: 13px/1.35 var(--pro-font);
+  color: var(--pro-mute);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-prettify:hover {
+  color: var(--pro-fg);
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux] .pro-prettify.pro-prettify-on {
+  color: var(--pro-on-dark);
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+}
+
+/* ── Diffs ── */
+
+:root[data-pro-ux] .pro-diff {
+  padding: 2px 0 4px;
+  font-family: var(--bs-font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-diff-line {
+  display: flex;
+}
+
+:root[data-pro-ux] .pro-diff-sign {
+  flex: none;
+  width: 2ch;
+  text-align: center;
+  color: var(--pro-faint);
+  user-select: none;
+}
+
+:root[data-pro-ux] .pro-diff-text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-diff-add {
+  background: var(--pro-diff-add-bg);
+}
+
+:root[data-pro-ux] .pro-diff-add .pro-diff-sign {
+  color: var(--pro-diff-add-ink);
+}
+
+:root[data-pro-ux] .pro-diff-del {
+  background: var(--pro-diff-del-bg);
+}
+
+:root[data-pro-ux] .pro-diff-del .pro-diff-sign {
+  color: var(--pro-diff-del-ink);
+}
+
+:root[data-pro-ux] .pro-diff-hunk,
+:root[data-pro-ux] .pro-diff-note {
+  padding-left: 2ch;
+  color: var(--pro-mute);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-diff-note {
+  font-style: italic;
+}
+
+:root[data-pro-ux] .pro-diff-label {
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-diff-file:first-child .pro-diff-label {
+  margin-top: 2px;
+}
+
+:root[data-pro-ux] .pro-diff-op {
+  margin-left: 1ch;
+  font-family: var(--pro-font);
+  font-weight: 400;
+  color: var(--pro-mute);
+}
+
+/* ── File contents ── */
+
+:root[data-pro-ux] .pro-file-output {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+:root[data-pro-ux] .pro-file-output pre,
+:root[data-pro-ux] .pro-file-output pre[class*="language-"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font: inherit !important;
+  color: inherit;
+}
+
+:root[data-pro-ux] .pro-file-output code,
+:root[data-pro-ux] .pro-file-output code[class*="language-"],
+:root[data-pro-ux] .pro-file-output .token {
+  padding: 0;
+  font: inherit !important;
+  white-space: inherit !important;
+  background: transparent !important;
+}
+
+:root[data-pro-ux] .pro-file-grid {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1.5ch;
+}
+
+:root[data-pro-ux] .pro-file-gutter {
+  text-align: right;
+  color: var(--pro-faint) !important;
+  user-select: none;
+}
+
+:root[data-pro-ux] .pro-file-grid .pro-file-code {
+  white-space: pre;
+  overflow-x: auto;
+}
+
+:root[data-pro-ux] .pro-file-wrap,
+:root[data-pro-ux] .pro-file-note {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-file-note {
+  font-family: var(--pro-font);
+  color: var(--pro-mute) !important;
+}
+
+:root[data-pro-ux] .pro-file-label {
+  margin: 10px 0 2px;
+  font-weight: 600;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-file-section:first-child .pro-file-label {
+  margin-top: 0;
+}

@@ -300,7 +300,7 @@ const extractInputMetadata = (
 
 // Map a file path to a registered Prism language for body highlighting; returns
 // undefined (plain text) for extensions Prism isn't loaded for.
-const prismLanguageForPath = (path: unknown): string | undefined => {
+export const prismLanguageForPath = (path: unknown): string | undefined => {
   if (typeof path !== "string") {
     return undefined;
   }
