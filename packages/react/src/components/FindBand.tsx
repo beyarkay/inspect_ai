@@ -11,6 +11,7 @@ import { deepActiveElement, isEditableTarget } from "@tsmono/util";
 
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { useEventListener } from "../hooks/useEventListener";
+import { clearProFind, proFind, proFindEnabled } from "../pro-ux/proFind";
 
 import { useExtendedFind } from "./ExtendedFindContext";
 import { findScrollableParent, scrollRangeToCenter } from "./findBandDom";
@@ -68,6 +69,7 @@ export const FindBand: FC<FindBandProps> = ({ onClose, debounceMs = 100 }) => {
 
       const searchTerm = searchBoxRef.current?.value ?? "";
       if (!searchTerm) {
+        clearProFind();
         setMatchCount(null);
         setCurrentMatchIndex(0);
         setNoResults(false);
@@ -138,12 +140,14 @@ export const FindBand: FC<FindBandProps> = ({ onClose, debounceMs = 100 }) => {
         : null;
       const savedScrollTop = savedScrollParent?.scrollTop ?? 0;
 
-      const result = await findExtendedInDOM(
-        searchTerm,
-        back,
-        lastFoundItem.current,
-        extendedFindTerm
-      );
+      const result = proFindEnabled()
+        ? await proFind(searchTerm, back, total > 0)
+        : await findExtendedInDOM(
+            searchTerm,
+            back,
+            lastFoundItem.current,
+            extendedFindTerm
+          );
 
       if (searchIdRef.current !== thisSearchId) {
         return;
@@ -231,6 +235,7 @@ export const FindBand: FC<FindBandProps> = ({ onClose, debounceMs = 100 }) => {
         window.clearTimeout(focusTimeout);
       }
       setFindTarget(null);
+      clearProFind();
     };
   }, [setFindTarget]);
 

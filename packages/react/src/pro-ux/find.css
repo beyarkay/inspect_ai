@@ -1,0 +1,25 @@
+/* Find and grep matches: every match pale, the current one strong. Colours
+   are literal because highlight pseudo-elements resolve custom properties
+   inconsistently across browsers. */
+
+:root[data-pro-ux] ::highlight(pro-find),
+:root[data-pro-ux] ::highlight(pro-grep) {
+  background-color: #fbe8a0;
+}
+
+:root[data-pro-ux] ::highlight(pro-find-current),
+:root[data-pro-ux] ::highlight(pro-grep-current) {
+  background-color: #f2a43a;
+  color: #1a1a1a;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-find),
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-grep) {
+  background-color: #4b4122;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-find-current),
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-grep-current) {
+  background-color: #d08a1c;
+  color: #111;
+}
