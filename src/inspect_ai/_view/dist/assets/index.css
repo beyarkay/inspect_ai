@@ -1062,6 +1062,100 @@ button._segment_116ql_10._disabled_116ql_51:hover {
   font-size: var(--inspect-font-size-smallest);
   padding: 0.1em 0.5em;
 }
+/* Expandable panels: one centred more/less button that stays where it was
+   clicked, and a clickable fade. */
+
+:root[data-pro-ux] .pro-expand-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-expand-anchor {
+  position: absolute;
+  left: 50%;
+  height: 0;
+  z-index: 3;
+}
+
+:root[data-pro-ux] .pro-expand-btn {
+  position: absolute;
+  bottom: 4px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35em;
+  min-width: 9.5em;
+  padding: 1px 10px;
+  white-space: nowrap;
+  font: 14px/1.3 var(--pro-font);
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-expand-btn:hover,
+:root[data-pro-ux] .pro-expand-fade:hover + .pro-expand-anchor .pro-expand-btn {
+  background: var(--pro-tint);
+  border-color: #8a8f9c;
+}
+
+:root[data-pro-ux] .pro-expand-caret {
+  color: var(--pro-mute);
+  font-size: 11px;
+}
+
+/* Expanded, the button sits over the text: only its caret shows until it is
+   pointed at, so the words under it stay readable. */
+:root[data-pro-ux]
+  .pro-expand-btn[aria-expanded="true"]:not(.pro-expand-sticky) {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+:root[data-pro-ux]
+  .pro-expand-btn[aria-expanded="true"]:not(.pro-expand-sticky)
+  .pro-expand-caret {
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-expand-btn[aria-expanded="true"]:hover,
+:root[data-pro-ux] .pro-expand-btn[aria-expanded="true"]:focus-visible {
+  background: var(--pro-tint);
+  border-color: #8a8f9c;
+  color: var(--pro-fg);
+}
+
+/* The bottom "less" shown while the in-place one is scrolled away. */
+:root[data-pro-ux] [data-pro-sticky-less] {
+  align-items: center;
+}
+
+:root[data-pro-ux] .pro-expand-btn.pro-expand-sticky {
+  position: static;
+  transform: none;
+  opacity: 1;
+  box-shadow: var(--pro-shadow);
+}
+
+/* A collapsed event card's one-line summary (e.g. a tool call's command):
+   never wraps, so the header and its caret keep their height. */
+:root[data-pro-ux] .pro-panel-summary {
+  justify-self: stretch;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: 14px/1.4 var(--pro-font);
+  color: var(--pro-mute);
+  text-transform: none;
+}
 ._outer_i2ek3_1 {
   /* Positioned so the block-left sticky toggle's containing block is this
      wrapper — keeps sticky behavior scoped to the panel instead of leaking
@@ -17698,6 +17792,192 @@ a._citationLink_1gzkd_9:hover {
   columns: 2;
   column-gap: 2rem;
 }
+/* ── Tasks table: sample caret, readable task args, score histogram ── */
+
+.pro-task-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pro-task-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pro-task-cell small {
+  flex: none;
+  color: var(--pro-mute, #77777f);
+  font-size: 0.9em;
+}
+
+.pro-task-what {
+  margin-left: auto;
+  padding-left: 6px;
+}
+
+.pro-task-caret,
+.pro-task-caret-gap {
+  flex: none;
+  width: 16px;
+}
+
+.pro-task-caret {
+  all: unset;
+  display: inline-block;
+  flex: none;
+  width: 16px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--pro-mute, #77777f);
+  border-radius: 2px;
+}
+
+.pro-task-caret:hover {
+  color: var(--pro-fg, #2a2a2e);
+  background: var(--pro-tint, #eef1f6);
+}
+
+.pro-task-caret:focus-visible {
+  outline: 1px solid var(--pro-dark, #3a3a40);
+}
+
+.pro-task-sub {
+  padding-left: 21px;
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-task-sub .pro-task-name {
+  color: var(--pro-fg, #2a2a2e);
+}
+
+[role="row"]:has(.pro-task-sub) {
+  background: var(--pro-bg, #f4f4f6);
+}
+
+/* Score: value, then a fixed-size histogram on one y range for every row. */
+.pro-hist {
+  display: inline-flex;
+  flex: none;
+  margin-left: 8px;
+  line-height: 0;
+}
+
+.pro-hist-axis {
+  stroke: var(--pro-line, #d3d3d9);
+  stroke-width: 1;
+}
+
+/* Task args: one line until opened; the caret sits at the same spot either way. */
+[role="gridcell"]:has(> .pro-args) {
+  align-items: flex-start;
+}
+
+.pro-args {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  padding-top: 3px;
+  cursor: pointer;
+}
+
+.pro-args-caret {
+  flex: none;
+  width: 12px;
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-args:hover .pro-args-caret {
+  color: var(--pro-fg, #2a2a2e);
+}
+
+.pro-args-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.pro-args-key {
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-args-line .pro-args-value {
+  font-weight: 600;
+}
+
+.pro-args-sep {
+  color: var(--pro-faint, #a0a0a8);
+}
+
+.pro-args-full {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 10px;
+  row-gap: 2px;
+  min-width: 0;
+  padding-bottom: 4px;
+  cursor: text;
+  user-select: text;
+}
+
+.pro-args-row {
+  display: contents;
+}
+
+pre.pro-args-value {
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+[role="row"]:has(.pro-args.open) {
+  align-items: stretch;
+}
+
+[role="row"]:has(.pro-args.open) [role="gridcell"] {
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.pro-args-head {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pro-args-all {
+  all: unset;
+  display: inline-block;
+  flex: none;
+  width: 3.4em;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  color: var(--pro-mute, #77777f);
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 0 3px;
+}
+
+.pro-args-all:hover {
+  color: var(--pro-fg, #2a2a2e);
+  background: var(--pro-tint, #eef1f6);
+}
+
+/* Opening task args turns on row measuring for the grid. Rows without open
+   args keep their fixed height (min-height wins over height: 0), so nothing
+   above an opened row moves. */
+:root:not([data-pro-wrapcells])
+  [role="row"][style*="min-height"]:not(:has(.pro-args.open)) {
+  height: 0;
+}
 ._gridWrapper_nawgx_1 {
   height: 100%;
   width: 100%;
@@ -28457,10 +28737,11 @@ pre._value_8citi_25 {
   --pro-font: "EB Garamond", Garamond, Georgia, serif;
   --pro-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
+  /* Same hues as kKindColour in inspect-components pro-ux/kinds.ts. */
   --pro-role-user: #0072b2;
-  --pro-role-assistant: #d55e00;
-  --pro-role-system: #77777f;
-  --pro-role-tool: #009e73;
+  --pro-role-assistant: #009e73;
+  --pro-role-system: #56b4e9;
+  --pro-role-tool: #e69f00;
   --pro-role-reasoning: #cc79a7;
 
   --bs-body-font-family: var(--pro-font);
@@ -28885,81 +29166,6 @@ pre._value_8citi_25 {
   padding: 0 4px;
 }
 
-/* ── Data card: fixed position, away from the cursor ── */
-
-.pro-tip {
-  display: none;
-  position: fixed;
-  top: 60px;
-  z-index: 1400;
-  width: 380px;
-  max-height: calc(100vh - 80px);
-  overflow: hidden;
-  pointer-events: none;
-  background: var(--pro-surface);
-  color: var(--pro-fg);
-  border: 1px solid var(--pro-line);
-  border-radius: 2px;
-  box-shadow: var(--pro-shadow);
-  font:
-    15px/1.4 "EB Garamond",
-    Garamond,
-    Georgia,
-    serif;
-  font-variant-numeric: tabular-nums;
-}
-
-.pro-tip-info {
-  padding: 7px 12px 9px;
-}
-
-.pro-tip-head {
-  font-weight: 600;
-  margin-bottom: 1px;
-  overflow-wrap: anywhere;
-}
-
-.pro-tip-sub {
-  color: var(--pro-mute);
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.pro-tip table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.pro-tip td {
-  vertical-align: top;
-  padding: 1px 0;
-  border-top: 1px solid var(--pro-soft);
-}
-
-.pro-tip td:first-child {
-  color: var(--pro-mute);
-  padding-right: 12px;
-  white-space: nowrap;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.04em;
-}
-
-.pro-tip td:last-child {
-  text-align: right;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 8;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.pro-tip-note {
-  margin-top: 5px;
-  font-size: 13px;
-  color: var(--pro-mute);
-}
-
 /* ── Scores: diverging badge, value over its scale ── */
 
 :root[data-pro-ux][data-pro-scorebadges] [data-pro-badge] {
@@ -28981,65 +29187,30 @@ pre._value_8citi_25 {
   font-size: 0.85em;
 }
 
-/* ── Ranked quantities: sequential underline, with a key in the header ── */
+/* ── Ranked quantities: a bar after the number, taller and darker for more;
+   the header carries a wedge as the key ── */
 
-:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q] {
-  text-decoration: underline 2.5px var(--q);
-  text-underline-offset: 4px;
-  text-decoration-skip-ink: none;
+:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q]::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: calc(2px + var(--qt, 1) * (0.68em - 2px));
+  margin-left: 0.35em;
+  background: var(--q);
+  vertical-align: baseline;
 }
 
 :root[data-pro-ux][data-pro-quantityunderlines]
   [data-pro-ramp]
-  [class*="_headerText_"] {
-  border-bottom: 3px solid transparent;
-  border-image: var(--pro-ramp) 1;
-}
-
-.pro-tip td.pro-tip-long {
-  text-align: left;
-  display: table-cell;
-  padding: 1px 0 3px;
-  color: inherit;
-  white-space: normal;
-  font-variant-caps: normal;
-  letter-spacing: 0;
-}
-
-.pro-tip td.pro-tip-long > div:first-child {
-  color: var(--pro-mute);
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.04em;
-}
-
-.pro-tip td.pro-tip-long > div:last-child {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 10;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* ── Model-call captions: what the model saw, where its tool calls went ── */
-
-.pro-turn-caption {
-  font-size: 14px;
-  color: var(--bs-secondary-color);
-  font-style: italic;
-  padding: 2px 4px 6px;
-}
-
-.pro-turn-caption b {
-  font-style: normal;
-  font-weight: 600;
-  color: var(--bs-body-color);
-}
-
-.pro-turn-output {
-  padding-top: 6px;
-  border-top: 1px solid var(--bs-light-border-subtle);
-  margin-top: 4px;
+  [class*="_headerText_"]::after {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 0.68em;
+  margin-left: 0.4em;
+  background: var(--pro-ramp);
+  clip-path: polygon(0 calc(100% - 2px), 100% 0, 100% 100%, 0 100%);
+  vertical-align: baseline;
 }
 
 /* ── Structured score text: JSON / XML trees ── */
@@ -29171,65 +29342,45 @@ pre._value_8citi_25 {
   opacity: 0.6;
 }
 
-/* ── Turn ticks on the transcript minimap: one per model call ── */
+/* ── Left sidebar: hover the top-left button to float it open, click or b to dock it ── */
 
-.pro-turn-mark {
-  position: absolute;
-  top: 50%;
-  width: 7px;
-  height: 14px;
-  margin-left: -3px;
-  transform: translateY(-50%);
-  padding: 0;
-  border: none;
-  background: linear-gradient(
-    to right,
-    transparent 2px,
-    var(--pro-role-assistant, #d55e00) 2px,
-    var(--pro-role-assistant, #d55e00) 4px,
-    transparent 4px
-  );
-  opacity: 0.75;
-  cursor: pointer;
-  z-index: 3;
-}
-
-.pro-turn-mark:hover {
-  opacity: 1;
-  height: 20px;
-}
-
-.pro-turn-mark-order {
-  background: repeating-linear-gradient(
-      to bottom,
-      var(--pro-role-assistant, #d55e00) 0 3px,
-      transparent 3px 5px
-    )
-    center / 2px 100% no-repeat;
-}
-
-/* ── Left sidebar: hover the rail to float it open, b / pin to dock it ── */
-
-.pro-rail,
+.pro-sb-button,
 .pro-sidebar {
   display: none;
 }
 
-:root[data-pro-ux] .pro-rail {
-  display: block;
+:root[data-pro-ux] .pro-sb-button {
+  display: grid;
+  place-items: center;
   position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 8px;
-  z-index: 1200;
+  left: 5px;
+  top: 5px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  z-index: 1310;
+  border: 1px solid transparent;
+  border-radius: 2px;
   background: transparent;
-  border-left: 3px solid transparent;
-  transition: border-color 120ms;
+  color: var(--pro-mute);
 }
 
-:root[data-pro-ux] .pro-rail:hover {
-  border-left-color: var(--pro-line);
+:root[data-pro-ux] .pro-sb-button:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-sb-button[aria-pressed="true"] {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] nav[class*="_header_"] {
+  padding-left: 36px;
+}
+
+:root[data-pro-ux]:has(.pro-sidebar[data-docked]) nav[class*="_header_"] {
+  padding-left: 0.5em;
 }
 
 :root[data-pro-ux] .pro-sidebar {
@@ -29248,11 +29399,11 @@ pre._value_8citi_25 {
   font: 15px/1.35 var(--pro-font);
 }
 
-:root[data-pro-ux][data-pro-sidebar-pinned] .pro-sidebar {
+:root[data-pro-ux] .pro-sidebar[data-docked] {
   box-shadow: none;
 }
 
-:root[data-pro-ux][data-pro-sidebar-pinned] #app {
+:root[data-pro-ux]:has(.pro-sidebar[data-docked]) #app {
   margin-left: 300px;
 }
 
@@ -29260,7 +29411,7 @@ pre._value_8citi_25 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 8px 10px 6px;
+  padding: 8px 10px 6px 38px;
   border-bottom: 1px solid var(--pro-soft);
 }
 
@@ -29276,23 +29427,9 @@ pre._value_8citi_25 {
   color: var(--pro-faint);
 }
 
-.pro-sb-pin {
-  border: 1px solid var(--pro-line);
-  background: var(--pro-surface);
-  color: var(--pro-fg);
-  padding: 0 8px;
-  font: 14px var(--pro-font);
-  border-radius: 2px;
-}
-
-.pro-sb-pin.on {
-  background: var(--pro-dark);
-  color: var(--pro-on-dark);
-  border-color: var(--pro-dark);
-}
-
-.pro-sb-pin kbd {
-  margin-right: 5px;
+.pro-sb-state {
+  font-size: 14px;
+  color: var(--pro-mute);
 }
 
 .pro-sb-filter {
@@ -29462,6 +29599,131 @@ pre._value_8citi_25 {
   line-clamp: unset !important;
   max-height: none !important;
 }
+
+/* ── Transcript outline: one button in one place; hover floats the outline
+   over the transcript, click docks it, click again floats it ── */
+
+.pro-outline-bar {
+  display: none;
+}
+
+:root[data-pro-ux] .pro-outline-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  height: 26px;
+  margin-left: -0.6rem;
+  background: var(--pro-bg);
+}
+
+:root[data-pro-ux] .pro-outline-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-outline-button:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-outline-button[aria-pressed="true"] {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-outline-button[aria-disabled="true"] {
+  opacity: 0.4;
+}
+
+:root[data-pro-ux] .pro-outline-label {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--pro-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-pro-ux] .pro-outline-peek {
+  width: var(--outline-width, 300px);
+  z-index: 600 !important;
+  background: var(--pro-bg);
+  border-right: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+}
+
+.pro-sb-auto {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline 1px;
+  text-underline-offset: 2px;
+}
+
+.pro-sb-auto:hover {
+  color: var(--pro-fg);
+}
+
+.pro-sb-shared {
+  margin: -2px 10px 4px;
+  font-size: 13px;
+  color: var(--pro-mute);
+  overflow-wrap: anywhere;
+}
+
+.pro-sb-shared b {
+  font-weight: 600;
+  color: var(--pro-fg);
+}
+
+/* ── Swimlane expander: in the time-bar row, so expanding never moves it ── */
+
+:root[data-pro-ux] [class*="_swimlane_"]:has(> [class*="_collapseToggle_"]) {
+  padding-right: 24px;
+}
+
+:root[data-pro-ux] [class*="_collapseToggle_"] {
+  top: 3px;
+  bottom: auto;
+  left: auto;
+  right: 0;
+  transform: none;
+  width: 20px;
+  height: 18px;
+}
+
+/* ── Simple shell calls: the command is the header line ── */
+
+:root[data-pro-ux] .pro-shell-line [class*="_title_"] {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-weight: 400;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+/* ── Role colours mark edges and labels; tool text stays the text colour,
+   since orange text on white is too faint to read ── */
+
+:root[data-pro-ux][data-theme-variant="readable"],
+:root[data-pro-ux][data-theme-variant="readable"] body {
+  --inspect-tool-block-ink: var(--pro-fg);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] [data-message-role] .text-style-label {
+  filter: brightness(1.45);
+}
 /* pro-UX dark palette. A designed dark theme, not an inverted light one:
    near-black neutrals with a faint cool cast, light text that stops short of
    white, and Okabe–Ito role colours lifted for a dark ground.
@@ -29492,11 +29754,11 @@ pre._value_8citi_25 {
   --pro-bad: #ff6b81;
   --pro-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
 
-  --pro-role-user: #56b4e9;
-  --pro-role-assistant: #e69f00;
-  --pro-role-system: #8c8c96;
-  --pro-role-tool: #34c79a;
-  --pro-role-reasoning: #d891bf;
+  --pro-role-user: #0072b2;
+  --pro-role-assistant: #009e73;
+  --pro-role-system: #56b4e9;
+  --pro-role-tool: #e69f00;
+  --pro-role-reasoning: #cc79a7;
 
   --vscode-editor-background: var(--pro-bg);
   --vscode-sideBar-background: var(--pro-surface);
@@ -29617,7 +29879,7 @@ pre._value_8citi_25 {
   --inspect-tool-block-header-bg: var(--pro-code);
   --inspect-tool-block-input-bg: var(--pro-code);
   --inspect-tool-block-output-bg: var(--pro-bg);
-  --inspect-tool-block-ink: var(--pro-role-tool);
+  --inspect-tool-block-ink: var(--pro-fg);
   --inspect-turn-prose-edge: 3px solid var(--pro-role-assistant);
 }
 
@@ -29688,4 +29950,692 @@ pre._value_8citi_25 {
 :root[data-pro-ux][data-bs-theme="dark"] .token.entity,
 :root[data-pro-ux][data-bs-theme="dark"] .token.url {
   background: none;
+}
+/* ── Structured trees: fold depth control ── */
+
+.pro-st-depth {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.pro-st-step {
+  border: 1px solid var(--bs-light-border-subtle);
+  border-radius: 2px;
+  background: none;
+  padding: 0 5px;
+  line-height: 1.3;
+  color: var(--bs-body-color);
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.pro-st-step:hover:not(:disabled) {
+  background: var(--pro-tint, var(--bs-tertiary-bg));
+}
+
+.pro-st-step:disabled {
+  color: var(--bs-secondary-color);
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pro-st-level {
+  display: inline-block;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Copy a message's text exactly as sent ── */
+
+.pro-msg-copy {
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+  width: 20px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #a0a0a8;
+  vertical-align: middle;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 80ms;
+}
+
+.pro-msg-copy.pro-msg-copy-on,
+.pro-msg-copy:focus-visible,
+.pro-msg-copy.pro-msg-copied {
+  opacity: 1;
+}
+
+.pro-msg-copy:hover,
+.pro-msg-copy:focus-visible {
+  color: var(--bs-body-color);
+}
+
+.pro-msg-copy svg {
+  display: block;
+}
+
+.pro-msg-copy-done {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 2px;
+  font-size: 12px;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--bs-secondary-color);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pro-msg-copy-float {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  margin: 0;
+  z-index: 1;
+}
+/* ── Transcript time bar: one coloured span per stretch, with a key ── */
+
+:root[data-pro-ux] .pro-kind-span {
+  position: absolute;
+  top: 50%;
+  height: 8px;
+  min-width: 3px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  transform: translateY(-50%);
+  box-shadow: inset -1px 0 0 var(--pro-surface);
+  cursor: pointer;
+  z-index: 3;
+}
+
+:root[data-pro-ux] .pro-kind-span:hover {
+  height: 14px;
+  z-index: 4;
+  box-shadow: 0 0 0 1px var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-kind-key {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px 10px;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-right: 8px;
+  padding-left: 12px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--pro-sub);
+}
+
+/* The key sits inside the minimap row, so let that row take the free width. */
+:root[data-pro-ux] [class*="_container_"]:has(> .pro-kind-key) {
+  max-width: none;
+}
+
+:root[data-pro-ux] .pro-kind-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] .pro-kind-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+}
+
+:root[data-pro-ux] .pro-kind-key-axis {
+  color: var(--pro-mute);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] [class*="_stableLabel_"],
+:root[data-pro-ux] [class*="_sectionTimePill_"] {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pro-mute);
+  opacity: 1;
+}
+
+/* ── Activity tab: the pro-ux type scale on a chart laid out for 9px ── */
+
+:root[data-pro-ux] [class*="_container_"]:has(> [class*="_pickerRow_"]),
+:root[data-pro-ux] [class*="_container_"]:has(> [class*="_filterRow_"]) {
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] [class*="_pickerRow_"],
+:root[data-pro-ux] [class*="_pickerRow_"] [class*="_bandChip_"],
+:root[data-pro-ux] [class*="_filterRow_"] [class*="_filterPill_"] {
+  font-size: 14px;
+}
+
+:root[data-pro-ux] [class*="_pickerRow_"] [class*="_caption_"],
+:root[data-pro-ux] [class*="_filterRow_"] [class*="_caption_"] {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+:root[data-pro-ux] [class*="_chart_"] svg text {
+  font-family: var(--pro-font);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_bandLabel_"] {
+  font-size: 15.5px;
+  font-variant-caps: all-small-caps;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_bandHeadline_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_axisLabel_"] {
+  font-size: 13px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_yTickLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_legendName_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterName_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterExpand_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_stallLabel"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_compactionLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_retryBadge_"] {
+  font-size: 12px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterModel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_burstLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_ghostLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_blockedLabel_"] {
+  font-size: 10.5px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterModel_"] {
+  transform: translateY(2px);
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterName_"] {
+  fill: var(--bs-body-color);
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_headerRow_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_kindPill_"] {
+  font-size: 15px;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_time_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_mono_"] {
+  font-family: var(--pro-font);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_event_"] {
+  font-size: 15px;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_openEvent_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_by_"] {
+  font-size: 14px;
+}
+/* Navbar breadcrumb: the last segment whole, earlier ones shrink, and each
+   separator opens the folder it stands for. */
+
+:root[data-pro-ux] nav[class*="_header_"] [class*="_pathContainer_"] {
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumbs-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumbs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0 0.5em;
+  list-style: none;
+  border-left: 1px solid var(--pro-line);
+  font-family: var(--pro-font);
+}
+
+:root[data-pro-ux] .pro-crumb-item,
+:root[data-pro-ux] .pro-crumb-more-item {
+  display: flex;
+  align-items: baseline;
+  flex: 0 1 auto;
+  min-width: 3.5em;
+}
+
+:root[data-pro-ux] .pro-crumb-more-item {
+  flex: none;
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumb {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-crumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:root[data-pro-ux] .pro-crumb a:hover {
+  color: var(--pro-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The log dir's parent keeps its tail: "…/starter_kit". */
+:root[data-pro-ux] .pro-crumb-item:has(.pro-crumb-root) {
+  flex-shrink: 6;
+  min-width: 2.5em;
+}
+
+:root[data-pro-ux] .pro-crumb-root {
+  direction: rtl;
+  text-align: left;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-crumb-item:has(.pro-crumb-log) {
+  flex-shrink: 0.25;
+}
+
+:root[data-pro-ux] .pro-crumbs .pro-crumb-item-last {
+  flex: none;
+  min-width: 0;
+}
+
+/* No room for the whole last segment even with the rest folded: wrap it
+   rather than clip it. */
+:root[data-pro-ux] .pro-crumbs-tight .pro-crumb-item-last {
+  flex: 0 1 auto;
+}
+
+:root[data-pro-ux] .pro-crumb-last {
+  color: var(--pro-fg);
+  font-weight: 500;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
+/* A hidden full-length copy: if it overflows, the middle collapses to "…". */
+:root[data-pro-ux] .pro-crumbs-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+:root[data-pro-ux] .pro-crumbs-measure .pro-crumb-item-last {
+  flex: none;
+}
+
+:root[data-pro-ux] .pro-crumbs-measure .pro-crumb-last {
+  white-space: nowrap;
+}
+
+/* Takes only the room left over, so it never squeezes a crumb. */
+:root[data-pro-ux] .pro-crumb-info {
+  flex: 1 1 0;
+  min-width: 0;
+  text-indent: 0.75em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--pro-mute);
+  font-size: 14px;
+}
+
+:root[data-pro-ux] .pro-crumb-btn,
+:root[data-pro-ux] .pro-crumb-sep-plain {
+  flex: none;
+  margin: 0 0.15em;
+  padding: 0 0.35em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  color: var(--pro-faint);
+  font: inherit;
+  line-height: 1.25;
+}
+
+:root[data-pro-ux] .pro-crumb-btn {
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-crumb-btn:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-crumb-btn[aria-expanded="true"] {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+/* ── Menus ── */
+
+:root[data-pro-ux] .pro-crumb-menu {
+  position: fixed;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  max-height: min(70vh, 640px);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+  color: var(--pro-fg);
+  font: 15px/1.35 var(--pro-font);
+}
+
+:root[data-pro-ux] .pro-crumb-menu:focus {
+  outline: none;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-head {
+  padding: 6px 10px 4px;
+  color: var(--pro-mute);
+  font-size: 13px;
+  border-bottom: 1px solid var(--pro-soft);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-filter {
+  margin: 6px 8px 2px;
+  padding: 1px 8px;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  font: inherit;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-filter:focus {
+  outline: none;
+  border-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-focus {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-list {
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-item {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 10px 3px 8px;
+  border-left: 2px solid transparent;
+  color: var(--pro-fg);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-active {
+  background: var(--pro-tint);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-current {
+  border-left-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-current .pro-crumb-menu-primary {
+  font-weight: 600;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-static {
+  cursor: default;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-secondary {
+  color: var(--pro-mute);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-empty {
+  padding: 4px 10px;
+  color: var(--pro-mute);
+  font-style: italic;
+}
+:root[data-pro-ux] .pro-traj {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 1.4em;
+}
+
+:root[data-pro-ux] .pro-traj-strip {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 10px;
+  shape-rendering: crispEdges;
+}
+
+:root[data-pro-ux] .pro-traj-base {
+  fill: var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-traj-span {
+  stroke: var(--pro-surface);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+:root[data-pro-ux] .pro-traj-loading::before {
+  content: "";
+  flex: 1 1 auto;
+  border-top: 1px dashed var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-traj-total {
+  flex: 0 0 44px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--pro-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-traj-error {
+  flex: 0 0 4px;
+  height: 10px;
+}
+
+:root[data-pro-ux] .pro-traj-note {
+  color: var(--pro-faint);
+  font-size: 13px;
+}
+
+:root[data-pro-ux] .pro-traj-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+:root[data-pro-ux] .pro-traj-head .pro-traj-swatch:first-of-type {
+  margin-left: 5px;
+}
+
+:root[data-pro-ux] .pro-traj-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+}
+
+:root[data-pro-ux] .pro-traj-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--pro-soft);
+  background: var(--pro-surface);
+  font-size: 14px;
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-traj-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+:root[data-pro-ux] .pro-traj-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-traj-label {
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-traj-seg {
+  margin: 0;
+  font-size: 13px;
+}
+
+:root[data-pro-ux] .pro-traj-input {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-traj-input.open {
+  display: block;
+  white-space: pre-wrap;
+}
+
+:root[data-pro-ux] .pro-traj-input:hover .pro-traj-caret {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-traj-caret {
+  display: inline-block;
+  width: 1em;
+  color: var(--pro-mute);
+}
+/* Cmd-F find band: a floating panel under the top bar, not a borderless box
+   pasted over the breadcrumbs. */
+:root[data-pro-ux] .findBand {
+  position: fixed;
+  top: 38px;
+  right: 16px;
+  margin: 0;
+  padding: 4px 6px;
+  column-gap: 6px;
+  align-items: center;
+  font: 15px/1.4 var(--pro-font);
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+}
+
+:root[data-pro-ux] .findBand input {
+  width: 18em;
+  height: auto;
+  margin: 0;
+  padding: 1px 6px;
+  font: inherit;
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+}
+
+:root[data-pro-ux] .findBand input:focus {
+  border-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .findBand [data-testid="find-band-match-count"] {
+  min-width: 5.5em;
+  margin: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pro-mute);
+  opacity: 1;
+}
+
+:root[data-pro-ux] .findBand .btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  color: var(--pro-fg);
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+:root[data-pro-ux] .findBand .btn:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux] .findBand .btn[title="Close"]:hover {
+  color: var(--pro-bad);
 }
