@@ -128,7 +128,8 @@
   text-decoration: none;
 }
 
-:root[data-pro-ux] a:not(.nav-link):not(.btn):not([role="row"]):hover {
+:root[data-pro-ux]
+  a:not(.nav-link):not(.btn):not([role="row"]):not(.pro-sb-row):hover {
   text-decoration: underline 1px;
   text-underline-offset: 3px;
 }
