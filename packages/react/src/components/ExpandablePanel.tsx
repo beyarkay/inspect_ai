@@ -13,6 +13,14 @@ import {
 } from "react";
 
 import { useCollapsedState, useResizeObserver } from "../hooks";
+import {
+  hiddenLineCount,
+  lineHeightOf,
+  ProExpandControls,
+  ProStickyLess,
+  useProUx,
+  worthCollapsing,
+} from "../pro-ux/expand";
 
 import styles from "./ExpandablePanel.module.css";
 import { useFindTarget } from "./FindTargetContext";
@@ -71,6 +79,12 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
 
     const [showToggle, setShowToggle] = useState(false);
     const rootFontSizeRef = useRef<number>(0);
+    const pro = useProUx();
+    const [proMeasure, setProMeasure] = useState<{
+      hiddenPx: number;
+      linePx: number;
+      boundary: number;
+    } | null>(null);
 
     const nestedToggles = useRef(new Set<HTMLElement>());
     const [nestedToggleAtCorner, setNestedToggleAtCorner] = useState(false);
@@ -107,11 +121,22 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
         const maxCollapsedHeight = rootFontSizeRef.current * lines;
         const contentHeight = element.scrollHeight;
 
-        // 1px tolerance guards against sub-pixel rounding.
-        setShowToggle(contentHeight - maxCollapsedHeight > 1);
+        const hiddenPx = contentHeight - maxCollapsedHeight;
+        if (pro) {
+          const linePx = lineHeightOf(element);
+          setShowToggle(worthCollapsing(hiddenPx, linePx));
+          setProMeasure({
+            hiddenPx,
+            linePx,
+            boundary: element.offsetTop + maxCollapsedHeight,
+          });
+        } else {
+          // 1px tolerance guards against sub-pixel rounding.
+          setShowToggle(hiddenPx > 1);
+        }
         measureNestedToggles(element);
       },
-      [lines, measureNestedToggles]
+      [lines, measureNestedToggles, pro]
     );
     const contentRef = useResizeObserver(checkOverflow);
 
@@ -146,7 +171,9 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
       setContainsFindTarget(text.includes(findTarget.term.toLowerCase()));
     });
 
-    const effectiveCollapsed = containsFindTarget ? false : collapsed;
+    const effectiveCollapsed = containsFindTarget
+      ? false
+      : collapsed && !(pro && proMeasure && !showToggle);
 
     const nesting = useContext(PanelNestingContext);
     const parentRegister = nesting.registerNestedToggle;
@@ -187,6 +214,7 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
         ? { bottom: `calc(0.25em + ${togglesBelow * kNestedToggleStep}px)` }
         : undefined;
     const reserveNestedToggleStrip =
+      !pro &&
       showToggle &&
       layout === "inline-right" &&
       !effectiveCollapsed &&
@@ -270,7 +298,31 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
               style={{ height: kNestedToggleStep }}
             />
           )}
-          {showToggle && layout === "inline-right" && (
+          {showToggle && pro && proMeasure ? (
+            <ProExpandControls
+              collapsed={effectiveCollapsed}
+              boundary={proMeasure.boundary}
+              hiddenLines={hiddenLineCount(
+                proMeasure.hiddenPx,
+                proMeasure.linePx
+              )}
+              onToggle={() => setCollapsed(!effectiveCollapsed)}
+              renderStickyLess={() => (
+                <div
+                  className={styles.inlineToggleHolder}
+                  data-pro-sticky-less="true"
+                >
+                  <div
+                    className={styles.inlineToggleSticky}
+                    style={stickyStyle}
+                  >
+                    <ProStickyLess onToggle={handleToggle} />
+                  </div>
+                </div>
+              )}
+            />
+          ) : null}
+          {showToggle && !pro && layout === "inline-right" && (
             <div
               ref={parentRegister ?? undefined}
               className={styles.inlineToggleHolder}
@@ -286,7 +338,7 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
             </div>
           )}
         </div>
-        {showToggle && layout === "block-left" && (
+        {showToggle && !pro && layout === "block-left" && (
           <MoreToggle
             collapsed={collapsed}
             onToggle={handleToggle}
