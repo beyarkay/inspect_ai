@@ -21,6 +21,11 @@ import {
   useProUx,
   worthCollapsing,
 } from "../pro-ux/expand";
+import {
+  ExpandGroupContext,
+  memberState,
+  useExpandGroupMember,
+} from "../pro-ux/expandGroup";
 
 import styles from "./ExpandablePanel.module.css";
 import { useFindTarget } from "./FindTargetContext";
@@ -175,6 +180,13 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
       ? false
       : collapsed && !(pro && proMeasure && !showToggle);
 
+    const group = useContext(ExpandGroupContext);
+    useExpandGroupMember(
+      pro ? group : null,
+      proMeasure ? memberState(showToggle, effectiveCollapsed) : undefined,
+      { show: () => setCollapsed(false), reset: () => setCollapsed(collapse) }
+    );
+
     const nesting = useContext(PanelNestingContext);
     const parentRegister = nesting.registerNestedToggle;
     // Stable identity is a correctness requirement, not an optimization:
@@ -307,6 +319,7 @@ export const ExpandablePanel: FC<ExpandablePanelProps> = memo(
                 proMeasure.linePx
               )}
               onToggle={() => setCollapsed(!effectiveCollapsed)}
+              quiet={!!group}
               renderStickyLess={() => (
                 <div
                   className={styles.inlineToggleHolder}
@@ -389,5 +402,11 @@ const MoreToggle: FC<MoreToggleProps> = ({
 };
 
 ExpandablePanel.displayName = "ExpandablePanel";
+
+export {
+  ExpandGroup,
+  ExpandGroupContext,
+  type GroupLevel,
+} from "../pro-ux/expandGroup";
 
 export default ExpandablePanel;

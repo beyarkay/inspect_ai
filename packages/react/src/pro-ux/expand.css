@@ -9,6 +9,38 @@
   cursor: pointer;
 }
 
+/* Inside a card whose header caret shows more and less, the fade says how
+   much it hides but is not a button. */
+:root[data-pro-ux] .pro-expand-note {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: 13px/1.3 var(--pro-font);
+  color: var(--pro-mute);
+  pointer-events: none;
+}
+
+:root[data-pro-ux] .pro-expand-fade:hover .pro-expand-note {
+  color: var(--pro-fg);
+}
+
+/* Fade out a line early, so the note sits on clear space. */
+:root[data-pro-ux]
+  [class*="_expandableTruncated_"]:has(~ .pro-expand-fade > .pro-expand-note) {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 3rem),
+    transparent calc(100% - 1.2rem)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 3rem),
+    transparent calc(100% - 1.2rem)
+  );
+}
+
 :root[data-pro-ux] .pro-expand-anchor {
   position: absolute;
   left: 50%;

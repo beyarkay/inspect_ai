@@ -56,6 +56,9 @@ interface ProExpandControlsProps {
   onToggle: () => void;
   /** Rendered when the expanded panel's in-place button is off screen. */
   renderStickyLess: () => React.ReactNode;
+  /** The card's header caret shows more and less: keep only the clickable
+   *  fade and a note of how much it hides. */
+  quiet?: boolean;
 }
 
 /** "less" pinned to the bottom of the viewport while the in-place button is
@@ -86,6 +89,7 @@ export const ProExpandControls: FC<ProExpandControlsProps> = ({
   hiddenLines,
   onToggle,
   renderStickyLess,
+  quiet,
 }) => {
   const [inView, setInView] = useState(true);
   const watch = useCallback((el: HTMLButtonElement | null) => {
@@ -103,6 +107,19 @@ export const ProExpandControls: FC<ProExpandControlsProps> = ({
     height: kFade,
   };
   const lines = `${hiddenLines} more ${hiddenLines === 1 ? "line" : "lines"}`;
+  if (quiet) {
+    return collapsed ? (
+      <div
+        className="pro-expand-fade"
+        style={strip}
+        role="presentation"
+        title={`Show ${lines}`}
+        onClick={onToggle}
+      >
+        <span className="pro-expand-note">{lines}</span>
+      </div>
+    ) : null;
+  }
   return (
     <>
       {collapsed ? (

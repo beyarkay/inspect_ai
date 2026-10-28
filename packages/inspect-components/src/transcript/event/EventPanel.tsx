@@ -21,6 +21,7 @@ import { useProperty } from "@tsmono/react/hooks";
 import { Icon, IconName } from "@tsmono/react/icons";
 
 import { MessageLabel } from "../../chat/MessageLabel";
+import { useCardExpand } from "../../pro-ux/cardExpand";
 import { unstickBeforeCollapse } from "../../pro-ux/keepInPlace";
 import {
   RowSelectCheckbox,
@@ -271,6 +272,14 @@ export const EventPanel: FC<EventPanelProps> = ({
     onCollapse,
     scrollRef,
   ]);
+  const cardExpand = useCardExpand({
+    enabled: headerChevron,
+    collapsed: headerCollapsed,
+    toggle: toggleCollapse,
+    beforeFold: () =>
+      unstickBeforeCollapse(stickyRef.current, scrollRef?.current),
+    title,
+  });
 
   const [mouseOver, setMouseOver] = useState(false);
 
@@ -308,15 +317,19 @@ export const EventPanel: FC<EventPanelProps> = ({
           <button
             type="button"
             className={styles.collapseToggle}
-            onClick={toggleCollapse}
+            onClick={cardExpand.caret?.onClick ?? toggleCollapse}
+            title={cardExpand.caret?.hint}
             aria-expanded={!headerCollapsed}
             aria-label={
-              title
+              cardExpand.caret?.label ??
+              (title
                 ? `${headerCollapsed ? "Expand" : "Collapse"} ${title}`
-                : undefined
+                : undefined)
             }
           >
-            <Icon name={headerCollapsed ? "chevronRight" : "chevronDown"} />
+            {cardExpand.caret?.icon ?? (
+              <Icon name={headerCollapsed ? "chevronRight" : "chevronDown"} />
+            )}
           </button>
         ) : (
           ""
@@ -553,7 +566,7 @@ export const EventPanel: FC<EventPanelProps> = ({
       ) : undefined}
     </div>
   );
-  return card;
+  return cardExpand.wrap(card);
 };
 
 // Typeguard for reading default value from pills
