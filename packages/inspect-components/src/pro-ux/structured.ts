@@ -169,3 +169,42 @@ export const parseStructured = (text: string): Structured => {
   }
   return { kind: "text" };
 };
+
+const kInlineText = 80;
+
+/** An element whose only child is one short line of text renders on one row,
+ *  with no fold toggle. */
+export const isInlineElement = (
+  node: XmlNode & { type: "element" }
+): boolean => {
+  const only = node.children[0];
+  return (
+    node.children.length === 1 &&
+    only?.type === "text" &&
+    only.text.length <= kInlineText &&
+    !only.text.includes("\n")
+  );
+};
+
+/** Levels of foldable nesting in a JSON value: 0 for a scalar or an empty
+ *  container. */
+export const jsonDepth = (value: unknown): number => {
+  if (value === null || typeof value !== "object") return 0;
+  const children = Array.isArray(value) ? value : Object.values(value);
+  if (children.length === 0) return 0;
+  return 1 + Math.max(...children.map(jsonDepth));
+};
+
+/** Levels of foldable nesting in XML nodes: inline and empty elements do not
+ *  fold. */
+export const xmlDepth = (nodes: XmlNode[]): number =>
+  Math.max(
+    0,
+    ...nodes.map((node) =>
+      node.type === "text" ||
+      node.children.length === 0 ||
+      isInlineElement(node)
+        ? 0
+        : 1 + xmlDepth(node.children)
+    )
+  );

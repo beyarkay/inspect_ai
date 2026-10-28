@@ -1,10 +1,23 @@
-import { FC, ReactNode, useMemo, useState } from "react";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
-import { parseStructured, type XmlNode } from "./structured";
+import {
+  isInlineElement,
+  jsonDepth,
+  parseStructured,
+  xmlDepth,
+  type XmlNode,
+} from "./structured";
 import { useHtmlFlag } from "./useHtmlFlag";
 
-const kOpenDepth = 2;
-const kInlineText = 80;
+/** Nodes at this depth or deeper start folded. */
+const OpenLevel = createContext(Infinity);
 
 const Toggle: FC<{ open: boolean; onToggle: () => void }> = ({
   open,
@@ -28,7 +41,7 @@ const JsonValue: FC<{ value: unknown; depth: number }> = ({ value, depth }) => {
       ? value.map((v, i) => [String(i), v])
       : Object.entries(value)
     : [];
-  const [open, setOpen] = useState(depth < kOpenDepth || entries.length <= 4);
+  const [open, setOpen] = useState(depth < useContext(OpenLevel));
 
   if (!isObject) {
     if (typeof value === "string")
@@ -81,7 +94,7 @@ const XmlElement: FC<{
   node: XmlNode & { type: "element" };
   depth: number;
 }> = ({ node, depth }) => {
-  const [open, setOpen] = useState(depth < kOpenDepth);
+  const [open, setOpen] = useState(depth < useContext(OpenLevel));
   const attrs = node.attrs.map(([k, v]) => (
     <span key={k}>
       {" "}
@@ -116,12 +129,7 @@ const XmlElement: FC<{
       </span>
     );
   }
-  if (
-    node.children.length === 1 &&
-    only?.type === "text" &&
-    only.text.length <= kInlineText &&
-    !only.text.includes("\n")
-  ) {
+  if (isInlineElement(node) && only?.type === "text") {
     return (
       <span className="pro-st-row">
         {openTag}
@@ -170,6 +178,63 @@ const XmlNodes: FC<{ nodes: XmlNode[]; depth: number }> = ({
   </>
 );
 
+interface DepthControlProps {
+  level: number;
+  max: number;
+  disabled: boolean;
+  onLevel: (level: number) => void;
+}
+
+/** − depth n/max + all. Widths never change, so repeated clicks stay put. */
+const DepthControl: FC<DepthControlProps> = ({
+  level,
+  max,
+  disabled,
+  onLevel,
+}) => {
+  const shown = Math.min(level, max);
+  return (
+    <span className="pro-st-depth">
+      <button
+        type="button"
+        className="pro-st-step"
+        disabled={disabled || shown === 0}
+        title="Fold one more level"
+        aria-label="Fold one more level"
+        onClick={() => onLevel(shown - 1)}
+      >
+        −
+      </button>
+      <span
+        className="pro-st-level"
+        style={{ minWidth: `${String(max).length * 2 + 7}ch` }}
+        title="Levels of nesting shown open"
+      >
+        depth {shown}/{max}
+      </span>
+      <button
+        type="button"
+        className="pro-st-step"
+        disabled={disabled || shown === max}
+        title="Open one more level"
+        aria-label="Open one more level"
+        onClick={() => onLevel(shown + 1)}
+      >
+        +
+      </button>
+      <button
+        type="button"
+        className="pro-st-step"
+        disabled={disabled}
+        title="Open every level"
+        onClick={() => onLevel(max)}
+      >
+        all
+      </button>
+    </span>
+  );
+};
+
 interface StructuredTextProps {
   text: string;
   /** Rendered unchanged when the text is not JSON or XML, or the pref is off. */
@@ -183,7 +248,20 @@ export const StructuredText: FC<StructuredTextProps> = ({ text, fallback }) => {
     () => (enabled ? parseStructured(text) : null),
     [enabled, text]
   );
+  const max = useMemo(
+    () =>
+      parsed?.kind === "json"
+        ? jsonDepth(parsed.value)
+        : parsed?.kind === "xml"
+          ? xmlDepth(parsed.nodes)
+          : 0,
+    [parsed]
+  );
   const [raw, setRaw] = useState(false);
+  const [level, setLevel] = useState(Infinity);
+  // Remounts the tree on every depth click, so each node re-reads its open
+  // state from the new level and earlier hand toggles are discarded.
+  const [generation, setGeneration] = useState(0);
 
   if (!parsed || (parsed.kind === "text" && !parsed.note)) return fallback;
 
@@ -193,6 +271,17 @@ export const StructuredText: FC<StructuredTextProps> = ({ text, fallback }) => {
     <div className="pro-st">
       <div className="pro-st-bar">
         <span>{label}</span>
+        {max > 0 && (
+          <DepthControl
+            level={level}
+            max={max}
+            disabled={raw}
+            onLevel={(next) => {
+              setLevel(next);
+              setGeneration(generation + 1);
+            }}
+          />
+        )}
         {parsed.kind !== "text" && (
           <button
             type="button"
@@ -206,14 +295,16 @@ export const StructuredText: FC<StructuredTextProps> = ({ text, fallback }) => {
       </div>
       {raw || parsed.kind === "text" ? (
         <pre className="pro-st-raw">{text}</pre>
-      ) : parsed.kind === "json" ? (
-        <div className="pro-st-tree">
-          <JsonValue value={parsed.value} depth={0} />
-        </div>
       ) : (
-        <div className="pro-st-tree">
-          <XmlNodes nodes={parsed.nodes} depth={0} />
-        </div>
+        <OpenLevel.Provider value={level}>
+          <div className="pro-st-tree" key={generation}>
+            {parsed.kind === "json" ? (
+              <JsonValue value={parsed.value} depth={0} />
+            ) : (
+              <XmlNodes nodes={parsed.nodes} depth={0} />
+            )}
+          </div>
+        </OpenLevel.Provider>
       )}
     </div>
   );

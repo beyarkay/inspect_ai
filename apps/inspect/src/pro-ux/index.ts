@@ -1,6 +1,7 @@
 import "./fonts.css";
 import "./pro-ux.css";
 import "./dark.css";
+import "./content.css";
 
 import { installCells } from "./cells";
 import { closeHelp, installHelp, toggleHelp } from "./help";

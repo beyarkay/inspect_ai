@@ -1,6 +1,24 @@
 import { describe, expect, it } from "vitest";
 
-import { parseStructured, parseXml } from "./structured";
+import { jsonDepth, parseStructured, parseXml, xmlDepth } from "./structured";
+
+describe("fold depth", () => {
+  it("counts foldable JSON nesting", () => {
+    expect(jsonDepth(3)).toBe(0);
+    expect(jsonDepth({})).toBe(0);
+    expect(jsonDepth({ a: 1 })).toBe(1);
+    expect(jsonDepth({ a: [1, { b: [] }], c: "x" })).toBe(3);
+  });
+
+  it("counts foldable XML nesting, skipping inline and empty elements", () => {
+    const nodes = parseXml(
+      "<quotes><quote><quote_str>short</quote_str></quote><empty/></quotes>"
+    )?.nodes;
+    expect(nodes && xmlDepth(nodes)).toBe(2);
+    expect(xmlDepth(parseXml("<a>short</a>")?.nodes ?? [])).toBe(0);
+    expect(xmlDepth(parseXml(`<a>${"x".repeat(81)}</a>`)?.nodes ?? [])).toBe(1);
+  });
+});
 
 describe("parseStructured — JSON", () => {
   it("parses strict JSON objects and arrays", () => {
