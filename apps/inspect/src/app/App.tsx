@@ -148,16 +148,18 @@ export const App: FC = () => (
     </LogLocationGate>
     {/* navigator.webdriver: skip devtools under Playwright — the floating
         button is an extra img/button that trips strict-mode locators. */}
-    {import.meta.env.DEV && !navigator.webdriver && (
-      <TanStackDevtools
-        plugins={[
-          { name: "TanStack Query", render: <ReactQueryDevtoolsPanel /> },
-          {
-            name: "Zustand Inspector",
-            render: (_el, props) => <ZustandStorePanel theme={props.theme} />,
-          },
-        ]}
-      />
-    )}
+    {import.meta.env.DEV &&
+      import.meta.env.VITE_TANSTACK_DEVTOOLS === "1" &&
+      !navigator.webdriver && (
+        <TanStackDevtools
+          plugins={[
+            { name: "TanStack Query", render: <ReactQueryDevtoolsPanel /> },
+            {
+              name: "Zustand Inspector",
+              render: (_el, props) => <ZustandStorePanel theme={props.theme} />,
+            },
+          ]}
+        />
+      )}
   </QueryClientProvider>
 );
