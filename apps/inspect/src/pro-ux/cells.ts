@@ -29,7 +29,7 @@ const kindOf = (column: Column): Kind | null => {
 const kLetterScores: Record<string, number> = { C: 1, P: 0.5, I: 0, N: 0 };
 
 /** Infer the scale's top from the values seen: 1, 10 or 100. */
-const scaleTop = (values: number[]): number | null => {
+export const scaleTop = (values: number[]): number | null => {
   if (values.length === 0 || values.some((v) => v < 0)) return null;
   const max = Math.max(...values);
   if (max <= 1) return 1;

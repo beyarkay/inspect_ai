@@ -1,0 +1,25 @@
+# Hooks for the pro-ux branch: install with
+#   pre-commit install -c .pre-commit-config.pro-ux.yaml
+# Upstream's .pre-commit-config.yaml lints the whole monorepo; this one covers
+# the pro-ux layer and runs the full inspect app test suite (~20s).
+repos:
+  - repo: local
+    hooks:
+      - id: pro-ux-prettier
+        name: prettier --write (pro-ux)
+        entry: pnpm -C apps/inspect exec prettier --write src/pro-ux src/main.tsx
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: pro-ux-eslint
+        name: eslint --fix (pro-ux)
+        entry: env TSMONO_TYPED_LINT=1 pnpm -C apps/inspect exec eslint --fix --max-warnings 0 src/pro-ux src/main.tsx
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: inspect-vitest
+        name: vitest (apps/inspect, all tests)
+        entry: pnpm -C apps/inspect exec vitest run
+        language: system
+        pass_filenames: false
+        always_run: true
