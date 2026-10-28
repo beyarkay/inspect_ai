@@ -262,7 +262,7 @@ const CrumbList: FC<ProBreadcrumbsProps> = ({
       {open?.kind === "hidden" && (
         <CrumbMenu
           anchor={open.anchor}
-          heading="Hidden path"
+          heading="The rest of the path, folded for space"
           items={hidden.map((segment, i) => ({
             key: String(i),
             url: segment.url,
@@ -491,6 +491,9 @@ const CrumbMenu: FC<CrumbMenuProps> = ({
   );
 
   const rect = anchor.getBoundingClientRect();
+  // Below the whole bar, so a wrapped log name stays readable.
+  const top =
+    (anchor.closest("nav")?.getBoundingClientRect().bottom ?? rect.bottom) + 2;
   const width = Math.min(560, window.innerWidth - 16);
   const left = Math.max(
     8,
@@ -504,7 +507,7 @@ const CrumbMenu: FC<CrumbMenuProps> = ({
       role="menu"
       aria-label={heading}
       tabIndex={-1}
-      style={{ top: rect.bottom + 4, left, width }}
+      style={{ top, left, width }}
     >
       <div className="pro-crumb-menu-head">{heading}</div>
       {items.length > kFilterThreshold ? (
