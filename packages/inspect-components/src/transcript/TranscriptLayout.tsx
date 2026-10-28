@@ -671,143 +671,144 @@ export const TranscriptLayout: FC<TranscriptLayoutProps> = ({
   // Render
   // ---------------------------------------------------------------------------
 
-  return (
-    <TurnMarkersContext.Provider value={turnMarkers}>
-      <TimelineSelectContext.Provider value={selectBySpanId}>
-        <TimelineRowSelectContext.Provider value={selectByRowKey}>
-          <div className={clsx(styles.root, className)}>
-            <div className={styles.main}>
-              {showSwimlanes && (
-                <StickyScroll
-                  scrollRef={scrollRef}
-                  offsetTop={offsetTop}
-                  zIndex={500}
-                  preserveHeight={true}
-                  onStickyChange={handleSwimLaneStickyChange}
-                >
-                  <div ref={swimLaneStickyContentRef}>
-                    <TimelineSwimLanes
-                      layouts={timelineLayouts}
-                      timeline={swimlaneNav}
-                      header={swimlaneHeader}
-                      onMarkerNavigate={onMarkerNavigate}
-                      isSticky={isSwimLaneSticky}
-                      // NOT gated on stickiness: StickyScroll's first report is
-                      // async, which made the initial state timing-dependent.
-                      headroomCollapsed={!!headroomHidden}
-                      onLayoutShift={handleLayoutShift}
-                      defaultCollapsed={swimlanesDefaultCollapsed}
-                      regionCounts={regionCounts}
-                      highlightedKeys={highlightedKeys}
-                      onPunchDown={views.pushByRowKey}
-                    />
-                  </div>
-                </StickyScroll>
-              )}
-              <div
-                className={clsx(
-                  styles.container,
-                  embedded && styles.embedded,
-                  !outline && styles.noOutline,
-                  outline && isOutlineCollapsed && styles.outlineCollapsed
-                )}
-                style={cssVars({
-                  "--outline-top": `${effectiveOffsetTop}px`,
-                  "--scroller-height": scrollerHeight
-                    ? `${scrollerHeight}px`
-                    : "100vh",
-                })}
+  const content = (
+    <TimelineSelectContext.Provider value={selectBySpanId}>
+      <TimelineRowSelectContext.Provider value={selectByRowKey}>
+        <div className={clsx(styles.root, className)}>
+          <div className={styles.main}>
+            {showSwimlanes && (
+              <StickyScroll
+                scrollRef={scrollRef}
+                offsetTop={offsetTop}
+                zIndex={500}
+                preserveHeight={true}
+                onStickyChange={handleSwimLaneStickyChange}
               >
-                {outline && (
-                  <OutlineSidebar
-                    outline={outline}
-                    isCollapsed={isOutlineCollapsed}
-                    hasNodes={outlineHasNodes}
-                    onHasNodesChange={onOutlineHasNodesChange}
-                    listId={listId}
-                    eventNodes={eventNodes}
-                    defaultCollapsedIds={defaultCollapsedIds}
-                    scrollRef={scrollRef}
-                    running={running}
-                    backfilling={backfilling}
-                    agentName={
-                      outline.name ??
-                      (showSwimlanes ? selectedRowName : undefined)
-                    }
-                    offsetTop={effectiveOffsetTop}
-                    collapseState={collapseState}
-                    getEventUrl={getEventUrl}
+                <div ref={swimLaneStickyContentRef}>
+                  <TimelineSwimLanes
+                    layouts={timelineLayouts}
+                    timeline={swimlaneNav}
+                    header={swimlaneHeader}
+                    onMarkerNavigate={onMarkerNavigate}
+                    isSticky={isSwimLaneSticky}
+                    // NOT gated on stickiness: StickyScroll's first report is
+                    // async, which made the initial state timing-dependent.
+                    headroomCollapsed={!!headroomHidden}
+                    onLayoutShift={handleLayoutShift}
+                    defaultCollapsed={swimlanesDefaultCollapsed}
+                    regionCounts={regionCounts}
+                    highlightedKeys={highlightedKeys}
+                    onPunchDown={views.pushByRowKey}
                   />
-                )}
-                {hasMatchingEvents ? (
-                  <TranscriptViewNodes
-                    key={effectiveListId}
-                    ref={eventsListRef}
-                    id={effectiveListId}
-                    eventNodes={eventNodes}
-                    defaultCollapsedIds={defaultCollapsedIds}
-                    running={running}
-                    backfilling={backfilling}
-                    scrollToTopOnFinish={scrollToTopOnFinish}
-                    initialEventId={effectiveInitialEventId}
-                    initialMessageId={initialMessageId}
-                    followRequested={initialFollowRequested}
-                    offsetTop={effectiveOffsetTop}
-                    className={styles.eventsList}
-                    scrollRef={scrollRef}
-                    renderAgentCard={
-                      showSwimlanes ? renderAgentCard : undefined
-                    }
-                    getEventUrl={getEventUrl}
-                    linkingEnabled={linkingEnabled}
-                    getEventFocusUrl={getEventFocusUrl}
-                    onOpenEventFocus={onOpenEventFocus}
-                    collapsedTranscript={collapseState?.transcript}
-                    onCollapseTranscript={onCollapseTranscript}
-                    onExpandNodes={onExpandNodes}
-                    eventNodeContext={mergedEventNodeContext}
-                    onProgrammaticScroll={onHeadroomResetAnchor}
-                    onHeadroomSetHidden={onHeadroomSetHidden}
-                    // Wired only with real lanes so h/l aren't swallowed for a
-                    // no-op on single-lane transcripts.
-                    onPrevAgent={
-                      navLanes.lanes.length > 1 ? onLanePrev : undefined
-                    }
-                    onNextAgent={
-                      navLanes.lanes.length > 1 ? onLaneNext : undefined
-                    }
-                    onNavigatedToEvent={onNavigatedToEvent}
-                    keyboardNavDisabled={keyboardNavDisabled}
-                    selection={selection}
-                  />
-                ) : emptyText !== null ? (
-                  <NoContentsPanel text={emptyText} busy={emptyBusy} />
-                ) : null}
-              </div>
+                </div>
+              </StickyScroll>
+            )}
+            <div
+              className={clsx(
+                styles.container,
+                embedded && styles.embedded,
+                !outline && styles.noOutline,
+                outline && isOutlineCollapsed && styles.outlineCollapsed
+              )}
+              style={cssVars({
+                "--outline-top": `${effectiveOffsetTop}px`,
+                "--scroller-height": scrollerHeight
+                  ? `${scrollerHeight}px`
+                  : "100vh",
+              })}
+            >
+              {outline && (
+                <OutlineSidebar
+                  outline={outline}
+                  isCollapsed={isOutlineCollapsed}
+                  hasNodes={outlineHasNodes}
+                  onHasNodesChange={onOutlineHasNodesChange}
+                  listId={listId}
+                  eventNodes={eventNodes}
+                  defaultCollapsedIds={defaultCollapsedIds}
+                  scrollRef={scrollRef}
+                  running={running}
+                  backfilling={backfilling}
+                  agentName={
+                    outline.name ??
+                    (showSwimlanes ? selectedRowName : undefined)
+                  }
+                  offsetTop={effectiveOffsetTop}
+                  collapseState={collapseState}
+                  getEventUrl={getEventUrl}
+                />
+              )}
+              {hasMatchingEvents ? (
+                <TranscriptViewNodes
+                  key={effectiveListId}
+                  ref={eventsListRef}
+                  id={effectiveListId}
+                  eventNodes={eventNodes}
+                  defaultCollapsedIds={defaultCollapsedIds}
+                  running={running}
+                  backfilling={backfilling}
+                  scrollToTopOnFinish={scrollToTopOnFinish}
+                  initialEventId={effectiveInitialEventId}
+                  initialMessageId={initialMessageId}
+                  followRequested={initialFollowRequested}
+                  offsetTop={effectiveOffsetTop}
+                  className={styles.eventsList}
+                  scrollRef={scrollRef}
+                  renderAgentCard={showSwimlanes ? renderAgentCard : undefined}
+                  getEventUrl={getEventUrl}
+                  linkingEnabled={linkingEnabled}
+                  getEventFocusUrl={getEventFocusUrl}
+                  onOpenEventFocus={onOpenEventFocus}
+                  collapsedTranscript={collapseState?.transcript}
+                  onCollapseTranscript={onCollapseTranscript}
+                  onExpandNodes={onExpandNodes}
+                  eventNodeContext={mergedEventNodeContext}
+                  onProgrammaticScroll={onHeadroomResetAnchor}
+                  onHeadroomSetHidden={onHeadroomSetHidden}
+                  // Wired only with real lanes so h/l aren't swallowed for a
+                  // no-op on single-lane transcripts.
+                  onPrevAgent={
+                    navLanes.lanes.length > 1 ? onLanePrev : undefined
+                  }
+                  onNextAgent={
+                    navLanes.lanes.length > 1 ? onLaneNext : undefined
+                  }
+                  onNavigatedToEvent={onNavigatedToEvent}
+                  keyboardNavDisabled={keyboardNavDisabled}
+                  selection={selection}
+                />
+              ) : emptyText !== null ? (
+                <NoContentsPanel text={emptyText} busy={emptyBusy} />
+              ) : null}
             </div>
-            {/* The rail (and its optional resizable panel) render as a flex
+          </div>
+          {/* The rail (and its optional resizable panel) render as a flex
               region to the right of the timeline + content, so they run full
               height starting directly below the toolbar rather than below the
               swimlanes. */}
-            {rightRail && (
-              <RailDock
-                rail={rightRail.rail}
-                panel={rightRail.panel}
-                scrollRef={scrollRef}
-                scrollerHeight={scrollerHeight}
-                offsetTop={offsetTop}
-                panelScrollRef={railPanelScrollRef}
-                railWidth={rightRail.railWidth}
-                panelWidth={rightRail.panelWidth}
-                onPanelWidthChange={rightRail.onPanelWidthChange}
-                panelMinWidth={rightRail.panelMinWidth}
-                panelMaxWidth={rightRail.panelMaxWidth}
-                label={rightRail.label}
-              />
-            )}
-          </div>
-        </TimelineRowSelectContext.Provider>
-      </TimelineSelectContext.Provider>
+          {rightRail && (
+            <RailDock
+              rail={rightRail.rail}
+              panel={rightRail.panel}
+              scrollRef={scrollRef}
+              scrollerHeight={scrollerHeight}
+              offsetTop={offsetTop}
+              panelScrollRef={railPanelScrollRef}
+              railWidth={rightRail.railWidth}
+              panelWidth={rightRail.panelWidth}
+              onPanelWidthChange={rightRail.onPanelWidthChange}
+              panelMinWidth={rightRail.panelMinWidth}
+              panelMaxWidth={rightRail.panelMaxWidth}
+              label={rightRail.label}
+            />
+          )}
+        </div>
+      </TimelineRowSelectContext.Provider>
+    </TimelineSelectContext.Provider>
+  );
+  return (
+    <TurnMarkersContext.Provider value={turnMarkers}>
+      {content}
     </TurnMarkersContext.Provider>
   );
 };

@@ -139,6 +139,9 @@ const ZustandStorePanel: FC<{ theme: "light" | "dark" }> = ({ theme }) =>
     <div>Store not initialized</div>
   );
 
+const kShowDevtools =
+  import.meta.env.DEV && import.meta.env.VITE_TANSTACK_DEVTOOLS === "1";
+
 export const App: FC = () => (
   <QueryClientProvider client={queryClient}>
     <LogLocationGate>
@@ -148,18 +151,16 @@ export const App: FC = () => (
     </LogLocationGate>
     {/* navigator.webdriver: skip devtools under Playwright — the floating
         button is an extra img/button that trips strict-mode locators. */}
-    {import.meta.env.DEV &&
-      import.meta.env.VITE_TANSTACK_DEVTOOLS === "1" &&
-      !navigator.webdriver && (
-        <TanStackDevtools
-          plugins={[
-            { name: "TanStack Query", render: <ReactQueryDevtoolsPanel /> },
-            {
-              name: "Zustand Inspector",
-              render: (_el, props) => <ZustandStorePanel theme={props.theme} />,
-            },
-          ]}
-        />
-      )}
+    {kShowDevtools && !navigator.webdriver && (
+      <TanStackDevtools
+        plugins={[
+          { name: "TanStack Query", render: <ReactQueryDevtoolsPanel /> },
+          {
+            name: "Zustand Inspector",
+            render: (_el, props) => <ZustandStorePanel theme={props.theme} />,
+          },
+        ]}
+      />
+    )}
   </QueryClientProvider>
 );
