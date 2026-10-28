@@ -6,6 +6,7 @@ import {
   RecordTree,
   RenderedContent,
 } from "@tsmono/inspect-components/content";
+import { StructuredText } from "@tsmono/inspect-components/pro-ux";
 import { EmptyPanel } from "@tsmono/react/components";
 
 import { useEvalDescriptor } from "../../../state/hooks";
@@ -86,17 +87,24 @@ export const SampleScoresGrid: FC<SampleScoresGridProps> = ({
         return (
           <Fragment key={`${scorer}-row`}>
             <div className={clsx("text-size-base", styles.cell)}>{scorer}</div>
-            <div className={clsx(styles.cell, "text-size-base")}>{answer}</div>
+            <div className={clsx(styles.cell, "text-size-base")}>
+              <StructuredText text={answer ?? ""} fallback={answer} />
+            </div>
             <div className={clsx(styles.cell, "text-size-base")}>
               <SampleScores scores={evalSample.scores} scorer={scorer} />
             </div>
             <div className={clsx("text-size-base", styles.cell)}>
-              <RenderedContent
-                id={`${scorer}-explanation`}
-                entry={{
-                  name: "Explanation",
-                  value: explanation,
-                }}
+              <StructuredText
+                text={explanation}
+                fallback={
+                  <RenderedContent
+                    id={`${scorer}-explanation`}
+                    entry={{
+                      name: "Explanation",
+                      value: explanation,
+                    }}
+                  />
+                }
               />
             </div>
 

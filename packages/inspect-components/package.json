@@ -12,6 +12,7 @@
     "./chat/tools": "./src/chat/tools/tool.ts",
     "./columnFilter": "./src/columnFilter/index.ts",
     "./config": "./src/config/index.ts",
+    "./pro-ux": "./src/pro-ux/index.ts",
     "./content": "./src/content/index.ts",
     "./sample-activity": "./src/sample-activity/index.ts",
     "./selection": "./src/selection/index.ts",

@@ -5,6 +5,8 @@ import type { ScoreEvent } from "@tsmono/inspect-common/types";
 import { RecordTree, RenderedText } from "@tsmono/inspect-components/content";
 import { formatDateTime } from "@tsmono/util";
 
+import { StructuredText } from "../pro-ux/StructuredText";
+
 import { EventPanel } from "./event/EventPanel";
 import styles from "./ScoreEventView.module.css";
 import { ScoreValue } from "./ScoreValue";
@@ -61,12 +63,18 @@ export const ScoreEventView: FC<ScoreEventViewProps> = ({
         <div className={clsx(styles.separator)}></div>
         <div className={"text-style-label"}>Answer</div>
         <div className={clsx(styles.wrappingContent)}>
-          <RenderedText markdown={event.score.answer || ""} />
+          <StructuredText
+            text={event.score.answer || ""}
+            fallback={<RenderedText markdown={event.score.answer || ""} />}
+          />
         </div>
         <div className={clsx(styles.separator)}></div>
         <div className={"text-style-label"}>Explanation</div>
         <div className={clsx(styles.wrappingContent)}>
-          <RenderedText markdown={event.score.explanation || ""} />
+          <StructuredText
+            text={event.score.explanation || ""}
+            fallback={<RenderedText markdown={event.score.explanation || ""} />}
+          />
         </div>
         {event.score.reason ? (
           <Fragment>

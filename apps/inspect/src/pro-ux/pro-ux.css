@@ -602,3 +602,132 @@
   border-top: 1px solid var(--bs-light-border-subtle);
   margin-top: 4px;
 }
+
+/* ── Structured score text: JSON / XML trees ── */
+
+:root[data-pro-ux] {
+  --pro-st-key: #2f5f93;
+  --pro-st-str: #2e6b30;
+  --pro-st-num: #9a5400;
+  --pro-st-lit: #7b3fa0;
+  --pro-st-tag: #0d6f78;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-st-key: #8caaee;
+  --pro-st-str: #a6d189;
+  --pro-st-num: #e5c890;
+  --pro-st-lit: #c4a7e7;
+  --pro-st-tag: #81c8be;
+}
+
+.pro-st {
+  border: 1px solid var(--bs-light-border-subtle);
+  border-radius: 2px;
+  margin: 2px 0;
+}
+
+.pro-st-bar {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 1px 8px;
+  border-bottom: 1px solid var(--bs-light-border-subtle);
+  font-size: 13px;
+  color: var(--bs-secondary-color);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.pro-st-note {
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  font-style: italic;
+}
+
+.pro-st-mode {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--bs-body-color);
+  text-decoration: underline 1px;
+  text-underline-offset: 2px;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.pro-st-tree,
+.pro-st-raw {
+  padding: 5px 8px 6px;
+  margin: 0;
+  font-family: var(--pro-mono, monospace);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pro-st-block {
+  display: block;
+  padding-left: 1.4em;
+  border-left: 1px solid var(--bs-light-border-subtle);
+  margin-left: 0.35em;
+}
+
+.pro-st-row {
+  display: block;
+}
+
+.pro-st-toggle {
+  border: none;
+  background: none;
+  padding: 0 3px 0 0;
+  color: var(--bs-secondary-color);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.pro-st-more {
+  border: 1px solid var(--bs-light-border-subtle);
+  border-radius: 2px;
+  background: none;
+  margin: 0 4px;
+  padding: 0 5px;
+  font-size: 11px;
+  color: var(--bs-secondary-color);
+  cursor: pointer;
+}
+
+.pro-st-punct {
+  color: var(--bs-secondary-color);
+}
+
+.pro-st-key {
+  color: var(--pro-st-key);
+}
+
+.pro-st-str {
+  color: var(--pro-st-str);
+}
+
+.pro-st-num {
+  color: var(--pro-st-num);
+}
+
+.pro-st-lit {
+  color: var(--pro-st-lit);
+}
+
+.pro-st-tag {
+  color: var(--pro-st-tag);
+}
+
+.pro-st-text {
+  font-family: var(--pro-font, serif);
+  font-size: 15px;
+  color: var(--bs-body-color);
+}
+
+.pro-st-empty {
+  opacity: 0.6;
+}
