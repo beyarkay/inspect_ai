@@ -28344,3 +28344,1348 @@ pre._value_8citi_25 {
   height: 100%;
   min-height: 0;
 }
+/* EB Garamond (SIL Open Font License), vendored because the viewer's CSP is font-src 'self'. */
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./eb-garamond-latin-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./eb-garamond-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./eb-garamond-latin-500-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./eb-garamond-latin-ext-500-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url("./eb-garamond-latin-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url("./eb-garamond-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./eb-garamond-latin-400-italic.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./eb-garamond-latin-ext-400-italic.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* pro-UX skin. Everything is gated on <html data-pro-ux> so `T` flips back to
+   upstream for comparison. Upstream CSS-module classes are matched by their
+   stable `_name_` fragment; a rename upstream just drops that one rule. */
+
+:root[data-pro-ux] {
+  --pro-fg: #2a2a2e;
+  --pro-mute: #77777f;
+  --pro-faint: #a0a0a8;
+  --pro-sub: #55555c;
+  --pro-soft: #e2e2e6;
+  --pro-line: #d3d3d9;
+  --pro-bg: #f4f4f6;
+  --pro-surface: #fff;
+  --pro-code: #fbfbfc;
+  --pro-tint: #eef1f6;
+  --pro-hover-line: #b9bec9;
+  --pro-dark: #3a3a40;
+  --pro-on-dark: #fff;
+  --pro-on-dark-faint: #c8c8d0;
+  --pro-bad: #b00020;
+  --pro-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  --pro-font: "EB Garamond", Garamond, Georgia, serif;
+  --pro-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --pro-role-user: #0072b2;
+  --pro-role-assistant: #d55e00;
+  --pro-role-system: #77777f;
+  --pro-role-tool: #009e73;
+  --pro-role-reasoning: #cc79a7;
+
+  --bs-body-font-family: var(--pro-font);
+  --bs-font-sans-serif: var(--pro-font);
+  --bs-font-monospace: var(--pro-mono);
+  --bs-body-font-size: 16px;
+  --bs-border-radius: 2px;
+  --bs-border-radius-sm: 2px;
+  --bs-border-radius-lg: 2px;
+  --bs-border-radius-xl: 2px;
+  --bs-border-radius-xxl: 2px;
+
+  --inspect-font-size-title: 1.4rem;
+  --inspect-font-size-title-secondary: 1.25rem;
+  --inspect-font-size-largest: 1.2rem;
+  --inspect-font-size-larger: 1.1rem;
+  --inspect-font-size-large: 1.05rem;
+  --inspect-font-size-base: 1rem;
+  --inspect-font-size-small: 0.94rem;
+  --inspect-font-size-smaller: 0.9rem;
+  --inspect-font-size-smallest: 0.86rem;
+  --inspect-font-size-smallestest: 0.8rem;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) {
+  --bs-body-color: var(--pro-fg);
+  --bs-body-color-rgb: 42, 42, 46;
+  --bs-emphasis-color: #111;
+  --bs-secondary-color: var(--pro-mute);
+  --bs-secondary: var(--pro-mute);
+  --bs-tertiary-color: var(--pro-faint);
+  --bs-border-color: var(--pro-line);
+  --bs-light-border-subtle: var(--pro-soft);
+  --bs-border-color-translucent: var(--pro-soft);
+  --bs-tertiary-bg: var(--pro-bg);
+  --bs-secondary-bg: var(--pro-bg);
+  --bs-light-bg-subtle: #fff;
+  --bs-primary: var(--pro-dark);
+  --bs-primary-rgb: 58, 58, 64;
+  --bs-primary-bg-subtle: var(--pro-tint);
+  --bs-primary-text-emphasis: var(--pro-dark);
+  --bs-link-color: var(--pro-fg);
+  --bs-link-color-rgb: 42, 42, 46;
+  --bs-link-hover-color: #000;
+  --bs-link-hover-color-rgb: 0, 0, 0;
+  --bs-danger: var(--pro-bad);
+  --bs-code-color: var(--pro-fg);
+  --inspect-focus-border-color: var(--pro-dark);
+  --inspect-focus-border-shadow: 0 0 0 2px var(--pro-tint);
+  --inspect-active-selection-background: var(--pro-tint);
+  --inspect-tool-output-bg: #fbfbfc;
+  --inspect-tool-block-header-bg: #fbfbfc;
+  --inspect-msg-label-bg: #fff;
+  --inspect-msg-label-bg-hover: var(--pro-tint);
+  --inspect-msg-label-border: var(--pro-line);
+  --inspect-msg-label-text: var(--pro-mute);
+
+  /* Event Colors (the readable variant) becomes a hairline rule per role, no fills. */
+  --inspect-readable-user-bg: #fff;
+  --inspect-readable-user-border: var(--pro-role-user);
+  --inspect-readable-assistant-bg: #fff;
+  --inspect-readable-assistant-border: var(--pro-role-assistant);
+  --inspect-readable-thinking-bg: #fff;
+  --inspect-readable-thinking-border: var(--pro-role-reasoning);
+  --inspect-readable-tool-call-bg: #fbfbfc;
+  --inspect-readable-tool-call-border: var(--pro-role-tool);
+  --inspect-readable-system-bg: #fff;
+  --inspect-readable-system-border: var(--pro-role-system);
+  --inspect-readable-body-color: var(--pro-fg);
+}
+
+:root[data-pro-ux] body {
+  font-family: var(--pro-font);
+  font-size: 16px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] button,
+:root[data-pro-ux] input,
+:root[data-pro-ux] select,
+:root[data-pro-ux] textarea {
+  font-family: inherit;
+}
+
+/* ── Labels: small caps instead of shouty uppercase ── */
+
+:root[data-pro-ux] .text-style-label,
+:root[data-pro-ux] [class*="_headerCell_"],
+:root[data-pro-ux] [class*="_rotatedText_"] {
+  text-transform: none !important;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+/* ── Links: black, underline on hover ── */
+
+:root[data-pro-ux] a:not(.nav-link):not(.btn) {
+  color: var(--pro-fg);
+  text-decoration: none;
+}
+
+:root[data-pro-ux]
+  a:not(.nav-link):not(.btn):not([role="row"]):not(.pro-sb-row):hover {
+  text-decoration: underline 1px;
+  text-underline-offset: 3px;
+}
+
+/* ── Buttons: white, hairline, tint on hover ── */
+
+:root[data-pro-ux] .btn {
+  border-radius: 2px;
+  font-family: var(--pro-font);
+}
+
+:root[data-pro-ux] .btn-tools,
+:root[data-pro-ux] .btn-outline-secondary {
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  color: var(--pro-fg);
+  padding: 1px 10px;
+}
+
+:root[data-pro-ux] .btn-tools:hover,
+:root[data-pro-ux] .btn-outline-secondary:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux] .btn-primary {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+/* ── Tabs: active is dark ── */
+
+:root[data-pro-ux] .nav-link {
+  border-radius: 2px;
+  font-weight: 400;
+}
+
+:root[data-pro-ux] .nav-link {
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .nav-link:hover {
+  background: var(--pro-tint);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .nav-pills .nav-link.active,
+:root[data-pro-ux] .nav-link.active,
+:root[data-pro-ux] .nav-tabs .nav-link.active {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+:root[data-pro-ux] .nav-link.text-size-smallest {
+  font-size: 1rem !important;
+}
+
+/* ── Top bar ── */
+
+:root[data-pro-ux] nav[class*="_header_"] {
+  font-size: 15px !important;
+}
+
+:root[data-pro-ux] nav[class*="_header_"] {
+  background: var(--pro-surface);
+  border-bottom: 1px solid var(--pro-line);
+}
+
+/* ── Data grids ── */
+
+:root[data-pro-ux] [class*="_headerCell_"] {
+  font-size: 14px !important;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] [class*="_cell_"] {
+  font-size: 15px !important;
+}
+
+:root[data-pro-ux] [class*="_row_"] {
+  border-bottom-color: var(--pro-soft);
+}
+
+:root[data-pro-ux] [class*="_row_"]:hover,
+:root[data-pro-ux] [class*="_row_"]:hover [class*="_cellPinned_"] {
+  background: var(--pro-tint);
+}
+
+:root[data-pro-ux] [class*="_rowSelected_"],
+:root[data-pro-ux] [class*="_rowSelected_"] [class*="_cellPinned_"] {
+  background: var(--pro-tint) !important;
+  box-shadow: inset 3px 0 0 var(--pro-dark);
+}
+
+/* ── Inputs ── */
+
+:root[data-pro-ux] input.form-control,
+:root[data-pro-ux] .form-control {
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+}
+
+:root[data-pro-ux] .form-control:focus {
+  border-color: #8a8f9c;
+  box-shadow: 0 0 0 2px var(--pro-tint);
+}
+
+/* ── Messages: role is a coloured hairline rule + small-caps label, no fill ── */
+
+:root[data-pro-ux][data-theme-variant="readable"] [data-message-role] {
+  border-left-width: 3px;
+}
+
+:root[data-pro-ux] [data-message-role] .text-style-label,
+:root[data-pro-ux] [class*="_fieldLabel_"],
+:root[data-pro-ux] [class*="_columnLabel_"] {
+  font-size: 14px !important;
+}
+
+:root[data-pro-ux] [data-message-role="user"] .text-style-label {
+  color: var(--pro-role-user);
+}
+
+:root[data-pro-ux] [data-message-role="assistant"] .text-style-label {
+  color: var(--pro-role-assistant);
+}
+
+:root[data-pro-ux] [data-message-role="system"] .text-style-label {
+  color: var(--pro-role-system);
+}
+
+:root[data-pro-ux] [data-message-role="tool"] .text-style-label {
+  color: var(--pro-role-tool);
+}
+
+/* ── Identity text: serif, not monospace ── */
+
+:root[data-pro-ux] [class*="_metaId_"] {
+  font-family: var(--pro-font);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+:root[data-pro-ux] [class*="_taskText_"] {
+  font-size: 15px;
+}
+
+/* ── Floating things keep their shadow ── */
+
+:root[data-pro-ux] .popover,
+:root[data-pro-ux] .dropdown-menu,
+:root[data-pro-ux] .modal-content {
+  border-radius: 2px;
+  border: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+}
+
+/* ── Code stays monospace, a touch smaller than the serif body ── */
+
+:root[data-pro-ux] pre,
+:root[data-pro-ux] code,
+:root[data-pro-ux] kbd,
+:root[data-pro-ux] samp {
+  font-family: var(--pro-mono);
+  font-size: 0.82em;
+}
+
+:root[data-pro-ux] kbd {
+  font-family: var(--pro-font);
+  font-size: 0.85em;
+  color: var(--pro-faint);
+  background: none;
+  padding: 0;
+}
+
+/* ── Keys printed on the controls they drive ── */
+
+:root[data-pro-ux][data-pro-printedkeys] [data-pro-key]::before {
+  content: attr(data-pro-key);
+  font-family: var(--pro-font);
+  font-size: 12.5px;
+  color: var(--pro-faint);
+  margin-right: 6px;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+:root[data-pro-ux][data-pro-printedkeys]
+  .nav-link.active[data-pro-key]::before {
+  color: var(--pro-on-dark-faint);
+}
+
+/* ── Toast ── */
+
+.pro-toast {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2000;
+  display: none;
+  gap: 10px;
+  align-items: center;
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
+  padding: 6px 12px;
+  border-radius: 2px;
+  font:
+    15px/1.4 "EB Garamond",
+    Garamond,
+    Georgia,
+    serif;
+}
+
+/* ── Shortcut help ── */
+
+.pro-help-button {
+  display: none;
+}
+
+:root[data-pro-ux] .pro-help-button {
+  display: block;
+  position: fixed;
+  right: 12px;
+  bottom: 30px;
+  z-index: 1500;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--pro-line);
+  border-radius: 50%;
+  background: var(--pro-surface);
+  color: var(--pro-mute);
+  font: 15px/1 var(--pro-font);
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-help-button:hover {
+  background: var(--pro-tint);
+  color: var(--pro-fg);
+  border-color: #8a8f9c;
+}
+
+.pro-help {
+  display: none;
+  position: fixed;
+  right: 12px;
+  bottom: 62px;
+  z-index: 1500;
+  width: 380px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+  padding: 8px 12px 10px;
+  font:
+    15px/1.4 "EB Garamond",
+    Garamond,
+    Georgia,
+    serif;
+}
+
+.pro-help-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--pro-soft);
+  padding-bottom: 4px;
+}
+
+.pro-help-head b {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.pro-help-head span {
+  color: var(--pro-mute);
+  font-size: 13px;
+}
+
+.pro-help-group {
+  margin-top: 8px;
+  color: var(--pro-mute);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.pro-help table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.pro-help td {
+  padding: 1px 0;
+  vertical-align: baseline;
+}
+
+.pro-help td:first-child {
+  width: 92px;
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] .pro-help kbd,
+.pro-help kbd {
+  font:
+    13px "EB Garamond",
+    Garamond,
+    Georgia,
+    serif;
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  padding: 0 4px;
+}
+
+/* ── Data card: fixed position, away from the cursor ── */
+
+.pro-tip {
+  display: none;
+  position: fixed;
+  top: 60px;
+  z-index: 1400;
+  width: 380px;
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+  font:
+    15px/1.4 "EB Garamond",
+    Garamond,
+    Georgia,
+    serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.pro-tip-info {
+  padding: 7px 12px 9px;
+}
+
+.pro-tip-head {
+  font-weight: 600;
+  margin-bottom: 1px;
+  overflow-wrap: anywhere;
+}
+
+.pro-tip-sub {
+  color: var(--pro-mute);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.pro-tip table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.pro-tip td {
+  vertical-align: top;
+  padding: 1px 0;
+  border-top: 1px solid var(--pro-soft);
+}
+
+.pro-tip td:first-child {
+  color: var(--pro-mute);
+  padding-right: 12px;
+  white-space: nowrap;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.pro-tip td:last-child {
+  text-align: right;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pro-tip-note {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--pro-mute);
+}
+
+/* ── Scores: diverging badge, value over its scale ── */
+
+:root[data-pro-ux][data-pro-scorebadges] [data-pro-badge] {
+  display: inline-block;
+  min-width: 3.2em;
+  text-align: center;
+  padding: 0 5px;
+  background: var(--pro-badge-bg);
+  color: var(--pro-badge-fg);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+:root[data-pro-ux][data-pro-scorebadges] [data-pro-badge]::after {
+  content: attr(data-pro-of);
+  opacity: 0.75;
+  font-size: 0.85em;
+}
+
+/* ── Ranked quantities: sequential underline, with a key in the header ── */
+
+:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q] {
+  text-decoration: underline 2.5px var(--q);
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
+}
+
+:root[data-pro-ux][data-pro-quantityunderlines]
+  [data-pro-ramp]
+  [class*="_headerText_"] {
+  border-bottom: 3px solid transparent;
+  border-image: var(--pro-ramp) 1;
+}
+
+.pro-tip td.pro-tip-long {
+  text-align: left;
+  display: table-cell;
+  padding: 1px 0 3px;
+  color: inherit;
+  white-space: normal;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.pro-tip td.pro-tip-long > div:first-child {
+  color: var(--pro-mute);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.pro-tip td.pro-tip-long > div:last-child {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Model-call captions: what the model saw, where its tool calls went ── */
+
+.pro-turn-caption {
+  font-size: 14px;
+  color: var(--bs-secondary-color);
+  font-style: italic;
+  padding: 2px 4px 6px;
+}
+
+.pro-turn-caption b {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--bs-body-color);
+}
+
+.pro-turn-output {
+  padding-top: 6px;
+  border-top: 1px solid var(--bs-light-border-subtle);
+  margin-top: 4px;
+}
+
+/* ── Structured score text: JSON / XML trees ── */
+
+:root[data-pro-ux] {
+  --pro-st-key: #2f5f93;
+  --pro-st-str: #2e6b30;
+  --pro-st-num: #9a5400;
+  --pro-st-lit: #7b3fa0;
+  --pro-st-tag: #0d6f78;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-st-key: #8caaee;
+  --pro-st-str: #a6d189;
+  --pro-st-num: #e5c890;
+  --pro-st-lit: #c4a7e7;
+  --pro-st-tag: #81c8be;
+}
+
+.pro-st {
+  border: 1px solid var(--bs-light-border-subtle);
+  border-radius: 2px;
+  margin: 2px 0;
+}
+
+.pro-st-bar {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 1px 8px;
+  border-bottom: 1px solid var(--bs-light-border-subtle);
+  font-size: 13px;
+  color: var(--bs-secondary-color);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+.pro-st-note {
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  font-style: italic;
+}
+
+.pro-st-mode {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--bs-body-color);
+  text-decoration: underline 1px;
+  text-underline-offset: 2px;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+}
+
+.pro-st-tree,
+.pro-st-raw {
+  padding: 5px 8px 6px;
+  margin: 0;
+  font-family: var(--pro-mono, monospace);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pro-st-block {
+  display: block;
+  padding-left: 1.4em;
+  border-left: 1px solid var(--bs-light-border-subtle);
+  margin-left: 0.35em;
+}
+
+.pro-st-row {
+  display: block;
+}
+
+.pro-st-toggle {
+  border: none;
+  background: none;
+  padding: 0 3px 0 0;
+  color: var(--bs-secondary-color);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.pro-st-more {
+  border: 1px solid var(--bs-light-border-subtle);
+  border-radius: 2px;
+  background: none;
+  margin: 0 4px;
+  padding: 0 5px;
+  font-size: 11px;
+  color: var(--bs-secondary-color);
+  cursor: pointer;
+}
+
+.pro-st-punct {
+  color: var(--bs-secondary-color);
+}
+
+.pro-st-key {
+  color: var(--pro-st-key);
+}
+
+.pro-st-str {
+  color: var(--pro-st-str);
+}
+
+.pro-st-num {
+  color: var(--pro-st-num);
+}
+
+.pro-st-lit {
+  color: var(--pro-st-lit);
+}
+
+.pro-st-tag {
+  color: var(--pro-st-tag);
+}
+
+.pro-st-text {
+  font-family: var(--pro-font, serif);
+  font-size: 15px;
+  color: var(--bs-body-color);
+}
+
+.pro-st-empty {
+  opacity: 0.6;
+}
+
+/* ── Turn ticks on the transcript minimap: one per model call ── */
+
+.pro-turn-mark {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 14px;
+  margin-left: -3px;
+  transform: translateY(-50%);
+  padding: 0;
+  border: none;
+  background: linear-gradient(
+    to right,
+    transparent 2px,
+    var(--pro-role-assistant, #d55e00) 2px,
+    var(--pro-role-assistant, #d55e00) 4px,
+    transparent 4px
+  );
+  opacity: 0.75;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.pro-turn-mark:hover {
+  opacity: 1;
+  height: 20px;
+}
+
+.pro-turn-mark-order {
+  background: repeating-linear-gradient(
+      to bottom,
+      var(--pro-role-assistant, #d55e00) 0 3px,
+      transparent 3px 5px
+    )
+    center / 2px 100% no-repeat;
+}
+
+/* ── Left sidebar: hover the rail to float it open, b / pin to dock it ── */
+
+.pro-rail,
+.pro-sidebar {
+  display: none;
+}
+
+:root[data-pro-ux] .pro-rail {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  z-index: 1200;
+  background: transparent;
+  border-left: 3px solid transparent;
+  transition: border-color 120ms;
+}
+
+:root[data-pro-ux] .pro-rail:hover {
+  border-left-color: var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-sidebar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 1300;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border-right: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+  font: 15px/1.35 var(--pro-font);
+}
+
+:root[data-pro-ux][data-pro-sidebar-pinned] .pro-sidebar {
+  box-shadow: none;
+}
+
+:root[data-pro-ux][data-pro-sidebar-pinned] #app {
+  margin-left: 300px;
+}
+
+.pro-sb-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid var(--pro-soft);
+}
+
+.pro-sb-heading {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--pro-mute);
+  font-size: 15px;
+}
+
+.pro-sb-heading small {
+  font-variant-caps: normal;
+  color: var(--pro-faint);
+}
+
+.pro-sb-pin {
+  border: 1px solid var(--pro-line);
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  padding: 0 8px;
+  font: 14px var(--pro-font);
+  border-radius: 2px;
+}
+
+.pro-sb-pin.on {
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
+  border-color: var(--pro-dark);
+}
+
+.pro-sb-pin kbd {
+  margin-right: 5px;
+}
+
+.pro-sb-filter {
+  margin: 6px 10px;
+  padding: 2px 7px;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  font: 14px var(--pro-font);
+}
+
+.pro-sb-list {
+  flex: 1 1 auto;
+  overflow: auto;
+  border-top: 1px solid var(--pro-soft);
+}
+
+:root[data-pro-ux] a.pro-sb-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 8px;
+  padding: 4px 10px 5px;
+  border-bottom: 1px solid var(--pro-soft);
+  color: var(--pro-fg);
+  text-decoration: none;
+}
+
+:root[data-pro-ux] a.pro-sb-row:hover {
+  background: var(--pro-tint);
+  text-decoration: none;
+}
+
+:root[data-pro-ux] a.pro-sb-row.on {
+  background: var(--pro-tint);
+  box-shadow: inset 3px 0 0 var(--pro-dark);
+}
+
+.pro-sb-id {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pro-sb-id small {
+  font-weight: 400;
+  color: var(--pro-mute);
+}
+
+.pro-sb-score {
+  align-self: start;
+  min-width: 2.4em;
+  text-align: center;
+  padding: 0 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pro-sb-preview {
+  grid-column: 1 / -1;
+  font-size: 13.5px;
+  color: var(--pro-sub);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pro-sb-empty {
+  padding: 10px;
+  color: var(--pro-mute);
+  font-style: italic;
+  flex: 1 1 auto;
+}
+
+.pro-sb-prefs {
+  flex: 0 0 auto;
+  max-height: 55vh;
+  overflow: auto;
+  border-top: 1px solid var(--pro-line);
+  padding: 6px 10px 10px;
+}
+
+.pro-seg {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  margin: 4px 0 6px;
+  font-size: 14px;
+}
+
+.pro-seg > span {
+  padding: 0 8px;
+  color: var(--pro-mute);
+}
+
+.pro-seg button {
+  border: none;
+  border-left: 1px solid var(--pro-soft);
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  padding: 0 8px;
+  font: inherit;
+}
+
+.pro-seg button.on {
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+.pro-sb-pref {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.pro-sb-pref input {
+  accent-color: var(--pro-dark);
+}
+
+.pro-sb-pref small {
+  display: block;
+  color: var(--pro-mute);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.pro-sb-foot {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--pro-mute);
+}
+
+.pro-sb-toggle {
+  border: none;
+  background: none;
+  padding: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pro-sb-toggle:hover {
+  color: var(--pro-fg);
+}
+
+/* ── Soft-wrapped tables: whole cell contents, rows grow (measured) ── */
+
+:root[data-pro-ux][data-pro-wrapcells] [role="gridcell"] {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  align-items: flex-start;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+:root[data-pro-ux][data-pro-wrapcells] [role="gridcell"] * {
+  white-space: normal !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  line-clamp: unset !important;
+  max-height: none !important;
+}
+/* pro-UX dark palette. A designed dark theme, not an inverted light one:
+   near-black neutrals with a faint cool cast, light text that stops short of
+   white, and Okabe–Ito role colours lifted for a dark ground.
+
+   Standalone dark copies `--vscode-*` onto `--bs-*` on <body>
+   (base.css `body[class^="vscode-"]`), and those body values shadow anything
+   set on :root. So the `--vscode-*` sources are set on :root, and every
+   `--bs-*` / alias the bridge doesn't cover is set on body itself. */
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-fg: #d9d9de;
+  --pro-emph: #f0f0f3;
+  --pro-mute: #8c8c96;
+  --pro-faint: #66666f;
+  --pro-sub: #a6a6b0;
+  --pro-soft: #28282d;
+  --pro-line: #33333a;
+  --pro-bg: #141416;
+  --pro-surface: #1b1b1e;
+  --pro-raised: #222226;
+  --pro-code: #18181b;
+  --pro-tint: #232530;
+  --pro-select: #2d3340;
+  --pro-hover-line: #4a4d57;
+  --pro-dark: #d9d9de;
+  --pro-on-dark: #141416;
+  --pro-on-dark-faint: #55555c;
+  --pro-bad: #ff6b81;
+  --pro-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+
+  --pro-role-user: #56b4e9;
+  --pro-role-assistant: #e69f00;
+  --pro-role-system: #8c8c96;
+  --pro-role-tool: #34c79a;
+  --pro-role-reasoning: #d891bf;
+
+  --vscode-editor-background: var(--pro-bg);
+  --vscode-sideBar-background: var(--pro-surface);
+  --vscode-list-hoverBackground: var(--pro-tint);
+  --vscode-list-inactiveSelectionBackground: var(--pro-surface);
+  --vscode-editorHoverWidget-background: var(--pro-raised);
+  --vscode-peekViewTitle-background: var(--pro-surface);
+  --vscode-peekViewTitleDescription-foreground: var(--pro-sub);
+  --vscode-editorWidget-background: var(--pro-raised);
+  --vscode-editorWidget-foreground: var(--pro-fg);
+  --vscode-editorWidget-border: var(--pro-line);
+  --vscode-widget-border: var(--pro-line);
+  --vscode-input-background: var(--pro-surface);
+  --vscode-input-foreground: var(--pro-fg);
+  --vscode-input-border: var(--pro-line);
+  --vscode-notifications-background: var(--pro-dark);
+  --vscode-notifications-foreground: var(--pro-on-dark);
+  --vscode-editorGroup-border: var(--pro-line);
+  --vscode-sideBarSectionHeader-border: var(--pro-soft);
+  --vscode-editor-foreground: var(--pro-fg);
+  --vscode-foreground: var(--pro-fg);
+  --vscode-breadcrumb-foreground: var(--pro-mute);
+  --vscode-descriptionForeground: var(--pro-mute);
+  --vscode-textLink-foreground: var(--pro-fg);
+  --vscode-textLink-activeForeground: var(--pro-emph);
+  --vscode-notificationLink-foreground: var(--pro-sub);
+  --vscode-banner-iconForeground: var(--pro-fg);
+  --vscode-editorLink-activeForeground: var(--pro-emph);
+  --vscode-button-background: var(--pro-dark);
+  --vscode-button-foreground: var(--pro-on-dark);
+  --vscode-button-hoverBackground: var(--pro-emph);
+  --vscode-editor-selectionBackground: var(--pro-select);
+  --vscode-editor-inactiveSelectionBackground: #26282f;
+  --vscode-editor-selectionHighlightBackground: var(--pro-tint);
+  --vscode-editorInfo-foreground: var(--pro-fg);
+  --vscode-textCodeBlock-background: var(--pro-code);
+  --vscode-inputValidation-infoBackground: #1d2a36;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"],
+:root[data-pro-ux][data-bs-theme="dark"] body,
+:root[data-pro-ux][data-bs-theme="dark"] .modal {
+  --bs-body-bg: var(--pro-bg);
+  --bs-body-bg-rgb: 20, 20, 22;
+  --bs-body-color: var(--pro-fg);
+  --bs-body-color-rgb: 217, 217, 222;
+  --bs-emphasis-color: var(--pro-emph);
+  --bs-emphasis-color-rgb: 240, 240, 243;
+  --bs-secondary-color: var(--pro-mute);
+  --bs-tertiary-color: var(--pro-faint);
+  --bs-secondary: var(--pro-mute);
+  --bs-border-color: var(--pro-line);
+  --bs-border-color-translucent: var(--pro-soft);
+  --bs-light-border-subtle: var(--pro-soft);
+  --bs-light: var(--pro-surface);
+  --bs-light-bg-subtle: var(--pro-surface);
+  --bs-tertiary-bg: var(--pro-surface);
+  --bs-secondary-bg: var(--pro-surface);
+  --bs-primary: var(--pro-fg);
+  --bs-primary-rgb: 217, 217, 222;
+  --bs-primary-bg-subtle: var(--pro-tint);
+  --bs-primary-text-emphasis: var(--pro-emph);
+  --bs-link-color: var(--pro-fg);
+  --bs-link-color-rgb: 217, 217, 222;
+  --bs-link-hover-color: var(--pro-emph);
+  --bs-link-hover-color-rgb: 240, 240, 243;
+  --bs-code-color: var(--pro-fg);
+  --bs-danger: var(--pro-bad);
+
+  --inspect-hint-foreground: var(--pro-mute);
+  --inspect-focus-border-color: var(--pro-fg);
+  --inspect-focus-border-shadow: 0 0 0 2px var(--pro-select);
+  --inspect-jump-target-ring-color: var(--pro-mute);
+  --inspect-active-selection-background: var(--pro-select);
+  --inspect-inactive-selection-background: #26282f;
+
+  --inspect-tool-output-bg: var(--pro-code);
+  --inspect-tool-output-color: var(--pro-fg);
+  --inspect-tool-output-border: var(--pro-line);
+  --inspect-tool-description-color: var(--pro-mute);
+  --inspect-tool-block-header-bg: var(--pro-code);
+  --inspect-tool-block-input-bg: var(--pro-code);
+  --inspect-tool-block-output-bg: var(--pro-bg);
+  --inspect-tool-block-ink: var(--pro-mute);
+  --inspect-turn-prose-edge: 1px solid var(--pro-soft);
+
+  --inspect-msg-label-bg: var(--pro-surface);
+  --inspect-msg-label-bg-hover: var(--pro-tint);
+  --inspect-msg-label-border: var(--pro-line);
+  --inspect-msg-label-text: var(--pro-mute);
+
+  --inspect-readable-user-bg: transparent;
+  --inspect-readable-user-border: var(--pro-role-user);
+  --inspect-readable-assistant-bg: transparent;
+  --inspect-readable-assistant-border: var(--pro-role-assistant);
+  --inspect-readable-thinking-bg: transparent;
+  --inspect-readable-thinking-border: var(--pro-role-reasoning);
+  --inspect-readable-tool-call-bg: var(--pro-code);
+  --inspect-readable-tool-call-border: var(--pro-role-tool);
+  --inspect-readable-system-bg: transparent;
+  --inspect-readable-system-border: var(--pro-role-system);
+  --inspect-readable-body-color: var(--pro-fg);
+
+  --inspect-check-input-border: var(--pro-line);
+  --inspect-check-input-pill-bg: var(--pro-surface);
+  --inspect-check-result-border: var(--pro-line);
+  --inspect-check-result-pill-bg: var(--pro-surface);
+  --inspect-check-tree-guide: var(--pro-line);
+  --inspect-check-open-row-bg: var(--pro-tint);
+  --inspect-check-detail-before-bg: var(--pro-code);
+  --inspect-check-detail-after-bg: var(--pro-surface);
+  --inspect-check-chip-bg: var(--pro-surface);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"][data-theme-variant="readable"],
+:root[data-pro-ux][data-bs-theme="dark"][data-theme-variant="readable"] body {
+  --inspect-tool-block-edge: 3px solid var(--pro-role-tool);
+  --inspect-tool-block-header-bg: var(--pro-code);
+  --inspect-tool-block-input-bg: var(--pro-code);
+  --inspect-tool-block-output-bg: var(--pro-bg);
+  --inspect-tool-block-ink: var(--pro-role-tool);
+  --inspect-turn-prose-edge: 3px solid var(--pro-role-assistant);
+}
+
+/* ── Code blocks: replace upstream's brown prism-dark copy ── */
+
+:root[data-pro-ux][data-bs-theme="dark"] .vscode-dark pre[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] .vscode-dark code[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] pre[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] code[class*="language-"] {
+  background: var(--pro-code);
+  color: var(--pro-fg);
+  text-shadow: none;
+  font-family: var(--pro-mono);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.comment,
+:root[data-pro-ux][data-bs-theme="dark"] .token.prolog,
+:root[data-pro-ux][data-bs-theme="dark"] .token.doctype,
+:root[data-pro-ux][data-bs-theme="dark"] .token.cdata {
+  color: #6c6f80;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.punctuation,
+:root[data-pro-ux][data-bs-theme="dark"] .token.operator {
+  color: #8c8c96;
+  background: none;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.property,
+:root[data-pro-ux][data-bs-theme="dark"] .token.tag,
+:root[data-pro-ux][data-bs-theme="dark"] .token.attr-name {
+  color: #81c8be;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.string,
+:root[data-pro-ux][data-bs-theme="dark"] .token.char,
+:root[data-pro-ux][data-bs-theme="dark"] .token.attr-value,
+:root[data-pro-ux][data-bs-theme="dark"] .token.inserted {
+  color: #a6d189;
+  background: none;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.number,
+:root[data-pro-ux][data-bs-theme="dark"] .token.boolean,
+:root[data-pro-ux][data-bs-theme="dark"] .token.constant,
+:root[data-pro-ux][data-bs-theme="dark"] .token.symbol {
+  color: #e5c890;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.keyword,
+:root[data-pro-ux][data-bs-theme="dark"] .token.atrule,
+:root[data-pro-ux][data-bs-theme="dark"] .token.selector,
+:root[data-pro-ux][data-bs-theme="dark"] .token.builtin {
+  color: #c4a7e7;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.function,
+:root[data-pro-ux][data-bs-theme="dark"] .token.class-name {
+  color: #8caaee;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.deleted,
+:root[data-pro-ux][data-bs-theme="dark"] .token.important,
+:root[data-pro-ux][data-bs-theme="dark"] .token.regex {
+  color: #ef9f76;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.entity,
+:root[data-pro-ux][data-bs-theme="dark"] .token.url {
+  background: none;
+}
