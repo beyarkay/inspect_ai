@@ -21,6 +21,7 @@ import { useProperty } from "@tsmono/react/hooks";
 import { Icon, IconName } from "@tsmono/react/icons";
 
 import { MessageLabel } from "../../chat/MessageLabel";
+import { unstickBeforeCollapse } from "../../pro-ux/keepInPlace";
 import {
   RowSelectCheckbox,
   useSelectableRow,
@@ -43,6 +44,9 @@ interface EventPanelProps {
   childIds?: string[];
   collapsibleContent?: boolean;
   collapseControl?: "top" | "bottom";
+  /** Collapse the content from a header chevron under this id, apart from
+   *  the tree collapse of `childIds`. */
+  contentCollapseId?: string;
   /** Use the muted background style (for span/step collapsible regions). */
   muted?: boolean;
   /** Depth of the event in the tree (0 = root). */
@@ -81,6 +85,7 @@ export const EventPanel: FC<EventPanelProps> = ({
   childIds,
   collapsibleContent,
   collapseControl = "top",
+  contentCollapseId,
   muted,
   depth,
   turnNav,
@@ -117,6 +122,11 @@ export const EventPanel: FC<EventPanelProps> = ({
 
   const isCollapsible = (childIds || []).length > 0 || collapsibleContent;
   const useBottomDongle = isCollapsible && collapseControl === "bottom";
+  const contentCollapsed =
+    !!contentCollapseId && getCollapsed?.(contentCollapseId) === true;
+  const headerChevron =
+    (isCollapsible && !useBottomDongle) || !!contentCollapseId;
+  const headerCollapsed = contentCollapseId ? contentCollapsed : collapsed;
 
   const url =
     linkingEnabled && getEventUrl ? getEventUrl(eventNodeId) : undefined;
@@ -224,7 +234,7 @@ export const EventPanel: FC<EventPanelProps> = ({
   }
 
   // chevron
-  if (isCollapsible && !useBottomDongle) {
+  if (headerChevron) {
     gridColumns.push("minmax(0, max-content)");
   }
 
@@ -247,8 +257,20 @@ export const EventPanel: FC<EventPanelProps> = ({
   }
 
   const toggleCollapse = useCallback(() => {
-    setCollapsed(!collapsed);
-  }, [setCollapsed, collapsed]);
+    if (contentCollapseId) {
+      if (!contentCollapsed) {
+        unstickBeforeCollapse(stickyRef.current, scrollRef?.current);
+      }
+      onCollapse?.(contentCollapseId, !contentCollapsed);
+    } else setCollapsed(!collapsed);
+  }, [
+    setCollapsed,
+    collapsed,
+    contentCollapseId,
+    contentCollapsed,
+    onCollapse,
+    scrollRef,
+  ]);
 
   const [mouseOver, setMouseOver] = useState(false);
 
@@ -271,7 +293,7 @@ export const EventPanel: FC<EventPanelProps> = ({
           gridTemplateColumns: gridColumns.join(" "),
           columnGap: "0.3em",
           alignItems: "center",
-          cursor: isCollapsible && !useBottomDongle ? "pointer" : undefined,
+          cursor: headerChevron ? "pointer" : undefined,
           // Sticky pin position (the `.stickyWrapper` class supplies
           // `position: sticky`); offset comes from the StickyScrollContext.
           top: stickyTop,
@@ -282,19 +304,19 @@ export const EventPanel: FC<EventPanelProps> = ({
         {rowSelection ? (
           <RowSelectCheckbox selection={rowSelection} item="event" />
         ) : null}
-        {isCollapsible && !useBottomDongle ? (
+        {headerChevron ? (
           <button
             type="button"
             className={styles.collapseToggle}
             onClick={toggleCollapse}
-            aria-expanded={!collapsed}
+            aria-expanded={!headerCollapsed}
             aria-label={
               title
-                ? `${collapsed ? "Expand" : "Collapse"} ${title}`
+                ? `${headerCollapsed ? "Expand" : "Collapse"} ${title}`
                 : undefined
             }
           >
-            <Icon name={collapsed ? "chevronRight" : "chevronDown"} />
+            <Icon name={headerCollapsed ? "chevronRight" : "chevronDown"} />
           </button>
         ) : (
           ""
@@ -364,8 +386,14 @@ export const EventPanel: FC<EventPanelProps> = ({
               selectedNav={selectedNav || ""}
               setSelectedNav={setSelectedNav}
             />
-          ) : collapsed && text ? (
-            <span className={clsx("text-style-secondary", styles.label)}>
+          ) : headerCollapsed && text ? (
+            <span
+              className={clsx(
+                "text-style-secondary",
+                styles.label,
+                "pro-panel-summary"
+              )}
+            >
               {text}
             </span>
           ) : null}
@@ -482,7 +510,7 @@ export const EventPanel: FC<EventPanelProps> = ({
         className={clsx(
           "tab-content",
           styles.cardContent,
-          isCollapsible && collapsed && collapsibleContent
+          (isCollapsible && collapsed && collapsibleContent) || contentCollapsed
             ? styles.hidden
             : undefined
         )}

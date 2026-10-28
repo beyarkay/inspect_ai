@@ -20,7 +20,8 @@ import { computeMaxLabelLength } from "../chat/labelLength";
 import { MessageLabel } from "../chat/MessageLabel";
 import { GeneratingIndicator } from "../indicators/GeneratingIndicator";
 import { kToolHeaderHint, withHint } from "../pro-ux/hints";
-import { isHtmlFlagOn } from "../pro-ux/outline";
+import { argumentPreview, isHtmlFlagOn } from "../pro-ux/outline";
+import { useHtmlFlag } from "../pro-ux/useHtmlFlag";
 
 import { ApprovalInset } from "./ApprovalEventView";
 import { EventPanel } from "./event/EventPanel";
@@ -202,6 +203,7 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
   );
 
   const showError = !!event.error && event.error.type !== "approval";
+  const pro = useHtmlFlag("data-pro-ux");
 
   // The shared tool block grammar: collapsible header with the input zone and
   // output well stacked beneath.
@@ -241,6 +243,8 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
       icon="solverUseTools"
       childIds={childNodes.map((child) => child.id)}
       collapseControl="bottom"
+      contentCollapseId={pro ? `${eventNode.id}:content` : undefined}
+      text={pro ? argumentPreview(ran.arguments) : undefined}
       turnNav={turnNav}
       eventCallbacks={eventCallbacks}
     >

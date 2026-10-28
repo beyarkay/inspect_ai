@@ -88,7 +88,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font: 13px/1.4 var(--pro-mono);
+  font: 14px/1.4 var(--pro-font);
   color: var(--pro-mute);
   text-transform: none;
 }
