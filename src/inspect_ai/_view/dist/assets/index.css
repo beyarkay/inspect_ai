@@ -1073,6 +1073,38 @@ button._segment_116ql_10._disabled_116ql_51:hover {
   cursor: pointer;
 }
 
+/* Inside a card whose header caret shows more and less, the fade says how
+   much it hides but is not a button. */
+:root[data-pro-ux] .pro-expand-note {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: 13px/1.3 var(--pro-font);
+  color: var(--pro-mute);
+  pointer-events: none;
+}
+
+:root[data-pro-ux] .pro-expand-fade:hover .pro-expand-note {
+  color: var(--pro-fg);
+}
+
+/* Fade out a line early, so the note sits on clear space. */
+:root[data-pro-ux]
+  [class*="_expandableTruncated_"]:has(~ .pro-expand-fade > .pro-expand-note) {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 3rem),
+    transparent calc(100% - 1.2rem)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - 3rem),
+    transparent calc(100% - 1.2rem)
+  );
+}
+
 :root[data-pro-ux] .pro-expand-anchor {
   position: absolute;
   left: 50%;
@@ -1407,6 +1439,31 @@ button._segment_116ql_10._disabled_116ql_51:hover {
   border-top: 1px solid var(--bs-light-border-subtle);
   grid-column: span 3;
   width: 100%;
+}
+/* Find and grep matches: every match pale, the current one strong. Colours
+   are literal because highlight pseudo-elements resolve custom properties
+   inconsistently across browsers. */
+
+:root[data-pro-ux] ::highlight(pro-find),
+:root[data-pro-ux] ::highlight(pro-grep) {
+  background-color: #fbe8a0;
+}
+
+:root[data-pro-ux] ::highlight(pro-find-current),
+:root[data-pro-ux] ::highlight(pro-grep-current) {
+  background-color: #f2a43a;
+  color: #1a1a1a;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-find),
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-grep) {
+  background-color: #4b4122;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-find-current),
+:root[data-pro-ux][data-bs-theme="dark"] ::highlight(pro-grep-current) {
+  background-color: #d08a1c;
+  color: #111;
 }
 ._findBand_oh7be_1 {
   position: absolute;
@@ -16579,6 +16636,223 @@ a._citationLink_1gzkd_9:hover {
   display: grid;
   row-gap: 0.5em;
 }
+:root[data-pro-ux] {
+  --pro-diff-add-bg: color-mix(
+    in srgb,
+    var(--pro-role-assistant) 13%,
+    transparent
+  );
+  --pro-diff-del-bg: color-mix(in srgb, var(--pro-bad) 9%, transparent);
+  --pro-diff-add-ink: #00805d;
+  --pro-diff-del-ink: var(--pro-bad);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-diff-add-bg: color-mix(
+    in srgb,
+    var(--pro-role-assistant) 18%,
+    transparent
+  );
+  --pro-diff-del-bg: color-mix(in srgb, var(--pro-bad) 15%, transparent);
+  --pro-diff-add-ink: #3fcf9f;
+}
+
+/* ── Header line: the call's main argument stands in for the tool name ── */
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] {
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] > [class*="_title_"] {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: calc(100% - 2.5em);
+  font-weight: 400;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+:root[data-pro-ux] .pro-tool-line > [class*="_header_"] > [class*="_summary_"] {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+/* ── A control pinned to the header's top right, so it never moves ── */
+
+:root[data-pro-ux] .pro-has-control {
+  position: relative;
+}
+
+:root[data-pro-ux] .pro-has-control > [class*="_header_"] {
+  padding-right: 84px;
+}
+
+:root[data-pro-ux] .pro-prettify {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  width: 68px;
+  padding: 0 6px;
+  font: 13px/1.35 var(--pro-font);
+  color: var(--pro-mute);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-prettify:hover {
+  color: var(--pro-fg);
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux] .pro-prettify.pro-prettify-on {
+  color: var(--pro-on-dark);
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+}
+
+/* ── Diffs ── */
+
+:root[data-pro-ux] .pro-diff {
+  padding: 2px 0 4px;
+  font-family: var(--bs-font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-diff-line {
+  display: flex;
+}
+
+:root[data-pro-ux] .pro-diff-sign {
+  flex: none;
+  width: 2ch;
+  text-align: center;
+  color: var(--pro-faint);
+  user-select: none;
+}
+
+:root[data-pro-ux] .pro-diff-text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-diff-add {
+  background: var(--pro-diff-add-bg);
+}
+
+:root[data-pro-ux] .pro-diff-add .pro-diff-sign {
+  color: var(--pro-diff-add-ink);
+}
+
+:root[data-pro-ux] .pro-diff-del {
+  background: var(--pro-diff-del-bg);
+}
+
+:root[data-pro-ux] .pro-diff-del .pro-diff-sign {
+  color: var(--pro-diff-del-ink);
+}
+
+:root[data-pro-ux] .pro-diff-hunk,
+:root[data-pro-ux] .pro-diff-note {
+  padding-left: 2ch;
+  color: var(--pro-mute);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-diff-note {
+  font-style: italic;
+}
+
+:root[data-pro-ux] .pro-diff-label {
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-diff-file:first-child .pro-diff-label {
+  margin-top: 2px;
+}
+
+:root[data-pro-ux] .pro-diff-op {
+  margin-left: 1ch;
+  font-family: var(--pro-font);
+  font-weight: 400;
+  color: var(--pro-mute);
+}
+
+/* ── File contents ── */
+
+:root[data-pro-ux] .pro-file-output {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+:root[data-pro-ux] .pro-file-output pre,
+:root[data-pro-ux] .pro-file-output pre[class*="language-"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font: inherit !important;
+  color: inherit;
+}
+
+:root[data-pro-ux] .pro-file-output code,
+:root[data-pro-ux] .pro-file-output code[class*="language-"],
+:root[data-pro-ux] .pro-file-output .token {
+  padding: 0;
+  font: inherit !important;
+  white-space: inherit !important;
+  background: transparent !important;
+}
+
+:root[data-pro-ux] .pro-file-grid {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1.5ch;
+}
+
+:root[data-pro-ux] .pro-file-gutter {
+  text-align: right;
+  color: var(--pro-faint) !important;
+  user-select: none;
+}
+
+:root[data-pro-ux] .pro-file-grid .pro-file-code {
+  white-space: pre;
+  overflow-x: auto;
+}
+
+:root[data-pro-ux] .pro-file-wrap,
+:root[data-pro-ux] .pro-file-note {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-file-note {
+  font-family: var(--pro-font);
+  color: var(--pro-mute) !important;
+}
+
+:root[data-pro-ux] .pro-file-label {
+  margin: 10px 0 2px;
+  font-weight: 600;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-file-section:first-child .pro-file-label {
+  margin-top: 0;
+}
 /* Custom tool views (answer, submit, todo lists) own their full rendering —
    they get the block frame (accent edge + container border) without the
    header row. */
@@ -17858,12 +18132,77 @@ a._citationLink_1gzkd_9:hover {
   background: var(--pro-bg, #f4f4f6);
 }
 
-/* Score: value, then a fixed-size histogram on one y range for every row. */
+/* Score: a badge as wide as the column's widest, then a fixed-size
+   histogram on one y range, so histograms line up down the column. */
+.pro-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pro-score-value {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  width: calc(var(--pro-score-ch, 4) * 1ch + 12px);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux][data-pro-scorebadges] .pro-score-value > [data-pro-badge] {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
+
 .pro-hist {
   display: inline-flex;
   flex: none;
-  margin-left: 8px;
   line-height: 0;
+}
+
+/* Status: the icon alone, the header an icon with a hint. */
+[role="gridcell"]:has(> .pro-status-cell) {
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+}
+
+.pro-status-cell {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+[role="columnheader"]:has(.pro-status-head) {
+  padding-left: 0;
+}
+
+[class*="_headerContent_"]:has(.pro-status-head) {
+  justify-content: center;
+}
+
+.pro-status-head {
+  display: inline-flex;
+  color: var(--pro-mute, #77777f);
+}
+
+/* No room for the filter funnel beside the icon: it shows in the icon's
+   place on hover; the rest of the header still sorts. */
+[role="columnheader"]:has(.pro-status-head) [class*="_headerFilter_"] {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  pointer-events: none;
+}
+
+[role="columnheader"]:has(.pro-status-head) [class*="_headerFilter_"] > * {
+  pointer-events: auto;
+}
+
+[role="columnheader"]:has(.pro-status-head):hover .pro-status-head,
+[role="columnheader"]:has([class*="_headerFilterActive_"]) .pro-status-head {
+  visibility: hidden;
 }
 
 .pro-hist-axis {
@@ -22390,6 +22729,46 @@ a._turnButton_loteg_100 {
   display: grid;
   grid-template-columns: 1fr max-content;
   column-gap: 1em;
+}
+:root[data-pro-ux] .pro-call-facts {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--pro-soft);
+  font: 14px/1.45 var(--pro-font);
+  color: var(--pro-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-call-fact {
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] .pro-call-fact + .pro-call-fact::before {
+  content: "·";
+  margin: 0 0.45em;
+  color: var(--pro-faint);
+}
+
+:root[data-pro-ux] .pro-call-fact b {
+  font-weight: 600;
+  color: var(--pro-sub);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-call-fact code {
+  font: 13px var(--pro-mono);
+  color: var(--pro-sub);
+  background: none;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-call-fact-status {
+  margin-left: 0.35em;
+}
+
+:root[data-pro-ux] .pro-call-fact-failed {
+  color: var(--pro-bad);
 }
 ._container_1ww70_1 {
   margin: 1em 0 0 0;

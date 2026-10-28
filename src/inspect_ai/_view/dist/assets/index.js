@@ -18408,7 +18408,7 @@ var AutocompleteInput = (t0) => {
 		if (isBrowseMode) {
 			let t8;
 			if ($[0] !== suggestions) {
-				t8 = suggestions.filter(_temp$121);
+				t8 = suggestions.filter(_temp$128);
 				$[0] = suggestions;
 				$[1] = t8;
 			} else t8 = $[1];
@@ -18559,7 +18559,7 @@ var AutocompleteInput = (t0) => {
 					e_1.stopPropagation();
 					onCommit?.();
 				} else if (e_1.key === "ArrowDown" || e_1.key === "ArrowUp") {
-					const hasOptions = suggestions.some(_temp2$70);
+					const hasOptions = suggestions.some(_temp2$73);
 					if (filteredSuggestions.length > 0 || hasOptions) {
 						e_1.preventDefault();
 						e_1.stopPropagation();
@@ -18578,7 +18578,7 @@ var AutocompleteInput = (t0) => {
 				case "ArrowUp":
 					e_1.preventDefault();
 					e_1.stopPropagation();
-					setHighlightedIndex(_temp3$48);
+					setHighlightedIndex(_temp3$50);
 					break bb147;
 				case "Tab":
 					if (highlightedIndex >= 0 && filteredSuggestions[highlightedIndex] !== void 0) {
@@ -18752,13 +18752,13 @@ var AutocompleteInput = (t0) => {
 	} else t27 = $[73];
 	return t27;
 };
-function _temp$121(s) {
+function _temp$128(s) {
 	return s !== null;
 }
-function _temp2$70(s_1) {
+function _temp2$73(s_1) {
 	return s_1 !== null;
 }
-function _temp3$48(prev) {
+function _temp3$50(prev) {
 	return Math.max(prev - 1, -1);
 }
 //#endregion
@@ -18804,7 +18804,7 @@ var onDemandModule = (importer) => {
 			let cancelled = false;
 			module.load().then((loaded) => {
 				if (!cancelled) setValue(() => loaded);
-			}).catch(_temp$120);
+			}).catch(_temp$127);
 			return () => {
 				cancelled = true;
 			};
@@ -18826,7 +18826,7 @@ var onDemandModule = (importer) => {
 	(0, import_react.useEffect)(t2, t3);
 	return value;
 };
-function _temp$120(error) {
+function _temp$127(error) {
 	console.error("Unable to load module", error);
 }
 var ContentTrust_module_default = {
@@ -18979,7 +18979,7 @@ var ContentTrustProvider = (t0) => {
 */ var usePlainText = () => {
 	return useHasAllContentPermissions() ? {
 		trusted: true,
-		present: _temp$119,
+		present: _temp$126,
 		className: void 0
 	} : {
 		trusted: false,
@@ -19074,7 +19074,7 @@ var UntrustedText = (t0) => {
 	} else t2 = $[4];
 	return t2;
 };
-function _temp$119(text) {
+function _temp$126(text) {
 	return text;
 }
 //#endregion
@@ -31350,13 +31350,13 @@ var usePrismHighlight = (containerRef, contentLength) => {
 					if (!cancelled) highlightCodeBlocks(container, highlightElement);
 				});
 				observer = new MutationObserver((mutations) => {
-					if (mutations.some(_temp2$69)) highlightCodeBlocks(container, highlightElement);
+					if (mutations.some(_temp2$72)) highlightCodeBlocks(container, highlightElement);
 				});
 				observer.observe(container, {
 					childList: true,
 					subtree: true
 				});
-			}).catch(_temp3$47);
+			}).catch(_temp3$49);
 			return () => {
 				cancelled = true;
 				observer?.disconnect();
@@ -31378,15 +31378,15 @@ var usePrismHighlight = (containerRef, contentLength) => {
 	}
 	(0, import_react.useLayoutEffect)(t0, t1);
 };
-function _temp$118(node) {
+function _temp$125(node) {
 	if (node instanceof Element) return node.querySelector("pre code") || node.matches("pre code");
 	return false;
 }
-function _temp2$69(mutation) {
-	if (mutation.type === "childList") return Array.from(mutation.addedNodes).some(_temp$118);
+function _temp2$72(mutation) {
+	if (mutation.type === "childList") return Array.from(mutation.addedNodes).some(_temp$125);
 	return false;
 }
-function _temp3$47(error) {
+function _temp3$49(error) {
 	console.error("Unable to load syntax highlighting", error);
 }
 var JsonPanel_module_default = {
@@ -31756,7 +31756,7 @@ var RichMarkdownDiv = /*#__PURE__*/ (0, import_react.forwardRef)((t0, ref) => {
 				(0, import_react.startTransition)(() => {
 					setRenderedHtml(applyPostProcess(sanitizedResult));
 				});
-			}).catch(_temp$117);
+			}).catch(_temp$124);
 			return () => {
 				cancel();
 			};
@@ -31875,7 +31875,7 @@ var MarkdownRenderQueue = class {
 	}
 };
 var renderQueue = new MarkdownRenderQueue(10);
-function _temp$117(error) {
+function _temp$124(error) {
 	console.error("Markdown rendering error:", error);
 }
 var NoContentsPanel_module_default = {
@@ -42470,7 +42470,7 @@ var useBreadcrumbTruncation = (segments, containerRef) => {
 				testElement.style.margin = "0";
 				testElement.style.padding = "0";
 				container.appendChild(testElement);
-				replaceMeasurementItems(testElement, segments.map(_temp$116));
+				replaceMeasurementItems(testElement, segments.map(_temp$123));
 				if (testElement.scrollWidth <= containerWidth) {
 					container.removeChild(testElement);
 					setTruncatedData({
@@ -42496,7 +42496,7 @@ var useBreadcrumbTruncation = (segments, containerRef) => {
 					replaceMeasurementItems(testElement, [
 						firstSegment.text,
 						"...",
-						...segments.slice(segments.length - 1 - endCount, -1).map(_temp2$68),
+						...segments.slice(segments.length - 1 - endCount, -1).map(_temp2$71),
 						lastSegment.text
 					]);
 					if (testElement.scrollWidth <= containerWidth) {
@@ -42534,10 +42534,10 @@ var useBreadcrumbTruncation = (segments, containerRef) => {
 	(0, import_react.useEffect)(t1, t2);
 	return truncatedData;
 };
-function _temp$116(segment) {
+function _temp$123(segment) {
 	return segment.text;
 }
-function _temp2$68(segment_0) {
+function _temp2$71(segment_0) {
 	return segment_0.text;
 }
 //#endregion
@@ -42966,7 +42966,7 @@ var SCROLL_RELEASE_KEYS = /* @__PURE__ */ new Set([
 				setCopied(true);
 				window.clearTimeout(timer.current);
 				timer.current = window.setTimeout(() => setCopied(false), confirmMs);
-			}).catch(_temp$115);
+			}).catch(_temp$122);
 		};
 		$[1] = confirmMs;
 		$[2] = t2;
@@ -42984,7 +42984,7 @@ var SCROLL_RELEASE_KEYS = /* @__PURE__ */ new Set([
 	} else t3 = $[5];
 	return t3;
 }
-function _temp$115(error) {
+function _temp$122(error) {
 	console.error("Failed to copy:", error);
 }
 //#endregion
@@ -43945,7 +43945,7 @@ var TabSet = (t0) => {
 	return t12;
 };
 var Tab = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(23);
+	const $ = (0, import_compiler_runtime.c)(24);
 	const { type: t1, tab, index, className } = t0;
 	const type = t1 === void 0 ? "tabs" : t1;
 	let t2;
@@ -43972,30 +43972,30 @@ var Tab = (t0) => {
 	} else t4 = $[6];
 	const href = t4;
 	let t5;
-	if ($[7] !== className || $[8] !== href || $[9] !== isActive || $[10] !== tab.props.icon || $[11] !== tab.props.onSelected || $[12] !== tab.props.title || $[13] !== tabContentsId || $[14] !== tabId || $[15] !== type) {
+	if ($[7] !== className || $[8] !== href || $[9] !== isActive || $[10] !== tab.props.hint || $[11] !== tab.props.icon || $[12] !== tab.props.onSelected || $[13] !== tab.props.title || $[14] !== tabContentsId || $[15] !== tabId || $[16] !== type) {
 		const tabClassName = clsx("nav-link", className, isActive && "active", type === "pills-small" ? TabSet_module_default.pillSmall : type === "pills" ? void 0 : TabSet_module_default.tab, type === "pills-small" ? "text-size-smallest" : "text-size-small", "text-style-label");
 		let t6;
-		if ($[17] !== tab.props.icon) {
+		if ($[18] !== tab.props.icon) {
 			t6 = tab.props.icon && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
 				name: tab.props.icon,
 				className: TabSet_module_default.tabIcon
 			});
-			$[17] = tab.props.icon;
-			$[18] = t6;
-		} else t6 = $[18];
-		let t7;
-		if ($[19] !== t6 || $[20] !== tab.props.title) {
-			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [t6, tab.props.title] });
+			$[18] = tab.props.icon;
 			$[19] = t6;
-			$[20] = tab.props.title;
-			$[21] = t7;
-		} else t7 = $[21];
+		} else t6 = $[19];
+		let t7;
+		if ($[20] !== t6 || $[21] !== tab.props.title) {
+			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [t6, tab.props.title] });
+			$[20] = t6;
+			$[21] = tab.props.title;
+			$[22] = t7;
+		} else t7 = $[22];
 		const content = t7;
 		let t8;
-		if ($[22] === Symbol.for("react.memo_cache_sentinel")) {
+		if ($[23] === Symbol.for("react.memo_cache_sentinel")) {
 			t8 = clsx("nav-item", TabSet_module_default.tabItem);
-			$[22] = t8;
-		} else t8 = $[22];
+			$[23] = t8;
+		} else t8 = $[23];
 		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("li", {
 			role: "presentation",
 			className: t8,
@@ -44003,15 +44003,17 @@ var Tab = (t0) => {
 				id: tabId,
 				href,
 				className: clsx(tabClassName, TabSet_module_default.linkTab),
+				title: tab.props.hint,
 				role: "tab",
 				"aria-controls": tabContentsId,
 				"aria-selected": isActive,
 				onClick: inAppLinkClick(tab.props.onSelected),
-				onKeyDown: _temp$114,
+				onKeyDown: _temp$121,
 				children: content
 			}) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
 				id: tabId,
 				className: tabClassName,
+				title: tab.props.hint,
 				type: "button",
 				role: "tab",
 				"aria-controls": tabContentsId,
@@ -44023,14 +44025,15 @@ var Tab = (t0) => {
 		$[7] = className;
 		$[8] = href;
 		$[9] = isActive;
-		$[10] = tab.props.icon;
-		$[11] = tab.props.onSelected;
-		$[12] = tab.props.title;
-		$[13] = tabContentsId;
-		$[14] = tabId;
-		$[15] = type;
-		$[16] = t5;
-	} else t5 = $[16];
+		$[10] = tab.props.hint;
+		$[11] = tab.props.icon;
+		$[12] = tab.props.onSelected;
+		$[13] = tab.props.title;
+		$[14] = tabContentsId;
+		$[15] = tabId;
+		$[16] = type;
+		$[17] = t5;
+	} else t5 = $[17];
 	return t5;
 };
 var TabPanels = (t0) => {
@@ -44045,7 +44048,7 @@ var TabPanels = (t0) => {
 	const t2 = `${id}-content`;
 	let t3;
 	if ($[2] !== tabs) {
-		t3 = tabs.map(_temp2$67);
+		t3 = tabs.map(_temp2$70);
 		$[2] = tabs;
 		$[3] = t3;
 	} else t3 = $[3];
@@ -44137,13 +44140,13 @@ var flattenChildren$1 = (children) => {
 		return [];
 	});
 };
-function _temp$114(e) {
+function _temp$121(e) {
 	if (e.key === " ") {
 		e.preventDefault();
 		e.currentTarget.click();
 	}
 }
-function _temp2$67(tab, index) {
+function _temp2$70(tab, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 		...tab.props,
 		index
@@ -44167,7 +44170,7 @@ var subscribe$2 = (onChange) => {
 	return () => observer.disconnect();
 };
 /** Whether the pro-UX skin is on (`<html data-pro-ux>`). */ var useProUx = () => {
-	return (0, import_react.useSyncExternalStore)(subscribe$2, _temp$113, _temp2$66);
+	return (0, import_react.useSyncExternalStore)(subscribe$2, _temp$120, _temp2$69);
 };
 /** "less" pinned to the bottom of the viewport while the in-place button is
 *  scrolled away; collapsing from here scrolls the panel back into view. */ var ProStickyLess = (t0) => {
@@ -44201,8 +44204,8 @@ var kFade = "3rem";
 /** One button that never moves: centred where the collapsed box ends, reading
 *  "more" while collapsed and "less" while expanded. The faded strip above it
 *  expands too. */ var ProExpandControls = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(29);
-	const { collapsed, boundary, hiddenLines, onToggle, renderStickyLess } = t0;
+	const $ = (0, import_compiler_runtime.c)(34);
+	const { collapsed, boundary, hiddenLines, onToggle, renderStickyLess, quiet } = t0;
 	const [inView, setInView] = (0, import_react.useState)(true);
 	let t1;
 	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
@@ -44230,8 +44233,30 @@ var kFade = "3rem";
 	} else t3 = $[2];
 	const strip = t3;
 	const lines = `${hiddenLines} more ${hiddenLines === 1 ? "line" : "lines"}`;
+	if (quiet) {
+		let t4;
+		if ($[3] !== collapsed || $[4] !== lines || $[5] !== onToggle || $[6] !== strip) {
+			t4 = collapsed ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+				className: "pro-expand-fade",
+				style: strip,
+				role: "presentation",
+				title: `Show ${lines}`,
+				onClick: onToggle,
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+					className: "pro-expand-note",
+					children: lines
+				})
+			}) : null;
+			$[3] = collapsed;
+			$[4] = lines;
+			$[5] = onToggle;
+			$[6] = strip;
+			$[7] = t4;
+		} else t4 = $[7];
+		return t4;
+	}
 	let t4;
-	if ($[3] !== collapsed || $[4] !== lines || $[5] !== onToggle || $[6] !== strip) {
+	if ($[8] !== collapsed || $[9] !== lines || $[10] !== onToggle || $[11] !== strip) {
 		t4 = collapsed ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: "pro-expand-fade",
 			style: strip,
@@ -44239,34 +44264,34 @@ var kFade = "3rem";
 			title: `Show ${lines}`,
 			onClick: onToggle
 		}) : null;
-		$[3] = collapsed;
-		$[4] = lines;
-		$[5] = onToggle;
-		$[6] = strip;
-		$[7] = t4;
-	} else t4 = $[7];
+		$[8] = collapsed;
+		$[9] = lines;
+		$[10] = onToggle;
+		$[11] = strip;
+		$[12] = t4;
+	} else t4 = $[12];
 	let t5;
-	if ($[8] !== boundary) {
+	if ($[13] !== boundary) {
 		t5 = { top: boundary };
-		$[8] = boundary;
-		$[9] = t5;
-	} else t5 = $[9];
+		$[13] = boundary;
+		$[14] = t5;
+	} else t5 = $[14];
 	const t6 = !collapsed;
 	const t7 = collapsed ? `Show ${lines}` : "Collapse to the first lines";
 	const t8 = collapsed ? "▾" : "▴";
 	let t9;
-	if ($[10] !== t8) {
+	if ($[15] !== t8) {
 		t9 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 			"aria-hidden": "true",
 			className: "pro-expand-caret",
 			children: t8
 		});
-		$[10] = t8;
-		$[11] = t9;
-	} else t9 = $[11];
+		$[15] = t8;
+		$[16] = t9;
+	} else t9 = $[16];
 	const t10 = collapsed ? lines : "less";
 	let t11;
-	if ($[12] !== onToggle || $[13] !== t10 || $[14] !== t6 || $[15] !== t7 || $[16] !== t9) {
+	if ($[17] !== onToggle || $[18] !== t10 || $[19] !== t6 || $[20] !== t7 || $[21] !== t9) {
 		t11 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("button", {
 			ref: watch,
 			type: "button",
@@ -44276,51 +44301,120 @@ var kFade = "3rem";
 			onClick: onToggle,
 			children: [t9, t10]
 		});
-		$[12] = onToggle;
-		$[13] = t10;
-		$[14] = t6;
-		$[15] = t7;
-		$[16] = t9;
-		$[17] = t11;
-	} else t11 = $[17];
+		$[17] = onToggle;
+		$[18] = t10;
+		$[19] = t6;
+		$[20] = t7;
+		$[21] = t9;
+		$[22] = t11;
+	} else t11 = $[22];
 	let t12;
-	if ($[18] !== t11 || $[19] !== t5) {
+	if ($[23] !== t11 || $[24] !== t5) {
 		t12 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: "pro-expand-anchor",
 			style: t5,
 			children: t11
 		});
-		$[18] = t11;
-		$[19] = t5;
-		$[20] = t12;
-	} else t12 = $[20];
+		$[23] = t11;
+		$[24] = t5;
+		$[25] = t12;
+	} else t12 = $[25];
 	let t13;
-	if ($[21] !== collapsed || $[22] !== inView || $[23] !== renderStickyLess) {
+	if ($[26] !== collapsed || $[27] !== inView || $[28] !== renderStickyLess) {
 		t13 = !collapsed && !inView ? renderStickyLess() : null;
-		$[21] = collapsed;
-		$[22] = inView;
-		$[23] = renderStickyLess;
-		$[24] = t13;
-	} else t13 = $[24];
+		$[26] = collapsed;
+		$[27] = inView;
+		$[28] = renderStickyLess;
+		$[29] = t13;
+	} else t13 = $[29];
 	let t14;
-	if ($[25] !== t12 || $[26] !== t13 || $[27] !== t4) {
+	if ($[30] !== t12 || $[31] !== t13 || $[32] !== t4) {
 		t14 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 			t4,
 			t12,
 			t13
 		] });
-		$[25] = t12;
-		$[26] = t13;
-		$[27] = t4;
-		$[28] = t14;
-	} else t14 = $[28];
+		$[30] = t12;
+		$[31] = t13;
+		$[32] = t4;
+		$[33] = t14;
+	} else t14 = $[33];
 	return t14;
 };
-function _temp$113() {
+function _temp$120() {
 	return document.documentElement.hasAttribute("data-pro-ux");
 }
-function _temp2$66() {
+function _temp2$69() {
 	return false;
+}
+//#endregion
+//#region ../../packages/react/src/pro-ux/expandGroup.ts
+var groupLevel = (states) => {
+	let level = "none";
+	for (const state of states) {
+		if (state === "truncated") return "truncated";
+		if (state === "full") level = "full";
+	}
+	return level;
+};
+var memberState = (worthCollapsing, collapsed) => {
+	if (!worthCollapsing) return "short";
+	return collapsed ? "truncated" : "full";
+};
+/** The expandable panels inside one card, so the card's header caret can
+*  show and set how much of them is visible. */ var ExpandGroup = class {
+	members = /* @__PURE__ */ new Map();
+	listeners = /* @__PURE__ */ new Set();
+	level = "none";
+	subscribe = (listener) => {
+		this.listeners.add(listener);
+		return () => this.listeners.delete(listener);
+	};
+	getLevel = () => this.level;
+	set(key, member) {
+		if (member) this.members.set(key, member);
+		else this.members.delete(key);
+		const next = groupLevel([...this.members.values()].map((m) => m.state));
+		if (next === this.level) return;
+		this.level = next;
+		for (const listener of this.listeners) listener();
+	}
+	showAll() {
+		for (const member of this.members.values()) if (member.state === "truncated") member.actions.current.show();
+	}
+	resetAll() {
+		for (const member of this.members.values()) member.actions.current.reset();
+	}
+};
+var ExpandGroupContext = (0, import_react.createContext)(null);
+/** Report a panel's state to the card it sits in. `undefined` while it has
+*  not been measured. */ var useExpandGroupMember = (group, state, actions) => {
+	const $ = (0, import_compiler_runtime.c)(7);
+	const [key] = (0, import_react.useState)(_temp$119);
+	const actionsRef = useLatestRef(actions);
+	let t0;
+	if ($[0] !== actionsRef || $[1] !== group || $[2] !== key) {
+		t0 = (value) => group?.set(key, {
+			state: value,
+			actions: actionsRef
+		});
+		$[0] = actionsRef;
+		$[1] = group;
+		$[2] = key;
+		$[3] = t0;
+	} else t0 = $[3];
+	useMirrorToStore(group ? state : void 0, t0);
+	let t1;
+	if ($[4] !== group || $[5] !== key) {
+		t1 = () => group?.set(key, void 0);
+		$[4] = group;
+		$[5] = key;
+		$[6] = t1;
+	} else t1 = $[6];
+	useUnmount(t1);
+};
+function _temp$119() {
+	return {};
 }
 var ExpandablePanel_module_default = {
 	outer: "_outer_i2ek3_1",
@@ -44348,7 +44442,7 @@ var FindTargetContext = /*#__PURE__*/ (0, import_react.createContext)(null);
 	const ctx = (0, import_react.useContext)(FindTargetContext);
 	let t0;
 	if ($[0] !== ctx?.setTarget) {
-		t0 = ctx?.setTarget ?? _temp$112;
+		t0 = ctx?.setTarget ?? _temp$118;
 		$[0] = ctx?.setTarget;
 		$[1] = t0;
 	} else t0 = $[1];
@@ -44381,7 +44475,7 @@ var FindTargetProvider = (t0) => {
 	} else t2 = $[4];
 	return t2;
 };
-function _temp$112() {}
+function _temp$118() {}
 //#endregion
 //#region ../../packages/react/src/components/ExpandablePanel.tsx
 var kNestedToggleStep = 24;
@@ -44391,7 +44485,7 @@ var PanelNestingContext = /*#__PURE__*/ (0, import_react.createContext)({
 	registerNestedToggle: null
 });
 var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
-	const $ = (0, import_compiler_runtime.c)(79);
+	const $ = (0, import_compiler_runtime.c)(92);
 	const { id, collapse, border, lines: t1, children, className, togglePosition: t2 } = t0;
 	const lines = t1 === void 0 ? 15 : t1;
 	const layout = t2 === void 0 ? "inline-right" : t2;
@@ -44480,11 +44574,44 @@ var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 	} else t7 = $[9];
 	(0, import_react.useEffect)(t7);
 	const effectiveCollapsed = containsFindTarget ? false : collapsed && !(pro && proMeasure && !showToggle);
+	const group = (0, import_react.useContext)(ExpandGroupContext);
+	let t8;
+	if ($[10] !== effectiveCollapsed || $[11] !== proMeasure || $[12] !== showToggle) {
+		t8 = proMeasure ? memberState(showToggle, effectiveCollapsed) : void 0;
+		$[10] = effectiveCollapsed;
+		$[11] = proMeasure;
+		$[12] = showToggle;
+		$[13] = t8;
+	} else t8 = $[13];
+	let t9;
+	if ($[14] !== setCollapsed) {
+		t9 = () => setCollapsed(false);
+		$[14] = setCollapsed;
+		$[15] = t9;
+	} else t9 = $[15];
+	let t10;
+	if ($[16] !== collapse || $[17] !== setCollapsed) {
+		t10 = () => setCollapsed(collapse);
+		$[16] = collapse;
+		$[17] = setCollapsed;
+		$[18] = t10;
+	} else t10 = $[18];
+	let t11;
+	if ($[19] !== t10 || $[20] !== t9) {
+		t11 = {
+			show: t9,
+			reset: t10
+		};
+		$[19] = t10;
+		$[20] = t9;
+		$[21] = t11;
+	} else t11 = $[21];
+	useExpandGroupMember(pro ? group : null, t8, t11);
 	const nesting = (0, import_react.useContext)(PanelNestingContext);
 	const parentRegister = nesting.registerNestedToggle;
-	let t8;
-	if ($[10] !== contentRef || $[11] !== parentRegister) {
-		t8 = (holder_0) => {
+	let t12;
+	if ($[22] !== contentRef || $[23] !== parentRegister) {
+		t12 = (holder_0) => {
 			if (!holder_0) return;
 			const remeasure = () => {
 				if (contentRef.current) measureNestedToggles(contentRef.current);
@@ -44498,50 +44625,50 @@ var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 				unregisterParent?.();
 			};
 		};
-		$[10] = contentRef;
-		$[11] = parentRegister;
-		$[12] = t8;
-	} else t8 = $[12];
-	const registerNestedToggle = t8;
-	const t9 = nesting.rightToggles + (showToggle && layout === "inline-right" ? 1 : 0);
-	const t10 = nesting.leftToggles + (showToggle && layout === "block-left" ? 1 : 0);
-	let t11;
-	if ($[13] !== registerNestedToggle || $[14] !== t10 || $[15] !== t9) {
-		t11 = {
-			rightToggles: t9,
-			leftToggles: t10,
+		$[22] = contentRef;
+		$[23] = parentRegister;
+		$[24] = t12;
+	} else t12 = $[24];
+	const registerNestedToggle = t12;
+	const t13 = nesting.rightToggles + (showToggle && layout === "inline-right" ? 1 : 0);
+	const t14 = nesting.leftToggles + (showToggle && layout === "block-left" ? 1 : 0);
+	let t15;
+	if ($[25] !== registerNestedToggle || $[26] !== t13 || $[27] !== t14) {
+		t15 = {
+			rightToggles: t13,
+			leftToggles: t14,
 			registerNestedToggle
 		};
-		$[13] = registerNestedToggle;
-		$[14] = t10;
-		$[15] = t9;
-		$[16] = t11;
-	} else t11 = $[16];
-	const childNesting = t11;
+		$[25] = registerNestedToggle;
+		$[26] = t13;
+		$[27] = t14;
+		$[28] = t15;
+	} else t15 = $[28];
+	const childNesting = t15;
 	const togglesBelow = layout === "inline-right" ? nesting.rightToggles : nesting.leftToggles;
-	let t12;
-	if ($[17] !== togglesBelow) {
-		t12 = togglesBelow > 0 ? { bottom: `calc(0.25em + ${togglesBelow * kNestedToggleStep}px)` } : void 0;
-		$[17] = togglesBelow;
-		$[18] = t12;
-	} else t12 = $[18];
-	const stickyStyle = t12;
+	let t16;
+	if ($[29] !== togglesBelow) {
+		t16 = togglesBelow > 0 ? { bottom: `calc(0.25em + ${togglesBelow * kNestedToggleStep}px)` } : void 0;
+		$[29] = togglesBelow;
+		$[30] = t16;
+	} else t16 = $[30];
+	const stickyStyle = t16;
 	const reserveNestedToggleStrip = !pro && showToggle && layout === "inline-right" && !effectiveCollapsed && nestedToggleAtCorner;
-	let t13;
-	if ($[19] !== effectiveCollapsed || $[20] !== lines) {
-		t13 = effectiveCollapsed ? {
+	let t17;
+	if ($[31] !== effectiveCollapsed || $[32] !== lines) {
+		t17 = effectiveCollapsed ? {
 			overflow: "hidden",
 			maxHeight: `${lines}rem`,
 			contain: "layout paint"
 		} : {};
-		$[19] = effectiveCollapsed;
-		$[20] = lines;
-		$[21] = t13;
-	} else t13 = $[21];
-	const contentStyles = t13;
-	let t14;
-	if ($[22] !== collapsed || $[23] !== contentRef || $[24] !== setCollapsed) {
-		t14 = () => {
+		$[31] = effectiveCollapsed;
+		$[32] = lines;
+		$[33] = t17;
+	} else t17 = $[33];
+	const contentStyles = t17;
+	let t18;
+	if ($[34] !== collapsed || $[35] !== contentRef || $[36] !== setCollapsed) {
+		t18 = () => {
 			const tallerThanViewport = !collapsed && !!contentRef.current && contentRef.current.getBoundingClientRect().height > window.innerHeight;
 			setCollapsed(!collapsed);
 			if (tallerThanViewport) requestAnimationFrame(() => {
@@ -44551,75 +44678,76 @@ var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 				});
 			});
 		};
-		$[22] = collapsed;
-		$[23] = contentRef;
-		$[24] = setCollapsed;
-		$[25] = t14;
-	} else t14 = $[25];
-	const handleToggle = t14;
-	let t15;
-	if ($[26] !== className) {
-		t15 = clsx(ExpandablePanel_module_default.outer, className);
-		$[26] = className;
-		$[27] = t15;
-	} else t15 = $[27];
-	const t16 = border ? ExpandablePanel_module_default.expandableBordered : void 0;
-	let t17;
-	if ($[28] !== className || $[29] !== t16) {
-		t17 = clsx(ExpandablePanel_module_default.expandablePanel, t16, className);
-		$[28] = className;
-		$[29] = t16;
-		$[30] = t17;
-	} else t17 = $[30];
-	const t18 = effectiveCollapsed ? ExpandablePanel_module_default.collapsedContent : void 0;
-	const t19 = effectiveCollapsed && showToggle ? ExpandablePanel_module_default.expandableTruncated : void 0;
-	let t20;
-	if ($[31] !== t18 || $[32] !== t19) {
-		t20 = clsx(t18, t19);
-		$[31] = t18;
-		$[32] = t19;
-		$[33] = t20;
-	} else t20 = $[33];
+		$[34] = collapsed;
+		$[35] = contentRef;
+		$[36] = setCollapsed;
+		$[37] = t18;
+	} else t18 = $[37];
+	const handleToggle = t18;
+	let t19;
+	if ($[38] !== className) {
+		t19 = clsx(ExpandablePanel_module_default.outer, className);
+		$[38] = className;
+		$[39] = t19;
+	} else t19 = $[39];
+	const t20 = border ? ExpandablePanel_module_default.expandableBordered : void 0;
 	let t21;
-	if ($[34] !== childNesting || $[35] !== children) {
-		t21 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(PanelNestingContext.Provider, {
+	if ($[40] !== className || $[41] !== t20) {
+		t21 = clsx(ExpandablePanel_module_default.expandablePanel, t20, className);
+		$[40] = className;
+		$[41] = t20;
+		$[42] = t21;
+	} else t21 = $[42];
+	const t22 = effectiveCollapsed ? ExpandablePanel_module_default.collapsedContent : void 0;
+	const t23 = effectiveCollapsed && showToggle ? ExpandablePanel_module_default.expandableTruncated : void 0;
+	let t24;
+	if ($[43] !== t22 || $[44] !== t23) {
+		t24 = clsx(t22, t23);
+		$[43] = t22;
+		$[44] = t23;
+		$[45] = t24;
+	} else t24 = $[45];
+	let t25;
+	if ($[46] !== childNesting || $[47] !== children) {
+		t25 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(PanelNestingContext.Provider, {
 			value: childNesting,
 			children
 		});
-		$[34] = childNesting;
-		$[35] = children;
-		$[36] = t21;
-	} else t21 = $[36];
-	let t22;
-	if ($[37] !== contentRef || $[38] !== contentStyles || $[39] !== t20 || $[40] !== t21) {
-		t22 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+		$[46] = childNesting;
+		$[47] = children;
+		$[48] = t25;
+	} else t25 = $[48];
+	let t26;
+	if ($[49] !== contentRef || $[50] !== contentStyles || $[51] !== t24 || $[52] !== t25) {
+		t26 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			ref: contentRef,
 			style: contentStyles,
-			className: t20,
-			children: t21
+			className: t24,
+			children: t25
 		});
-		$[37] = contentRef;
-		$[38] = contentStyles;
-		$[39] = t20;
-		$[40] = t21;
-		$[41] = t22;
-	} else t22 = $[41];
-	let t23;
-	if ($[42] !== reserveNestedToggleStrip) {
-		t23 = reserveNestedToggleStrip && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+		$[49] = contentRef;
+		$[50] = contentStyles;
+		$[51] = t24;
+		$[52] = t25;
+		$[53] = t26;
+	} else t26 = $[53];
+	let t27;
+	if ($[54] !== reserveNestedToggleStrip) {
+		t27 = reserveNestedToggleStrip && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			"data-nested-toggle-strip": "true",
 			style: { height: kNestedToggleStep }
 		});
-		$[42] = reserveNestedToggleStrip;
-		$[43] = t23;
-	} else t23 = $[43];
-	let t24;
-	if ($[44] !== effectiveCollapsed || $[45] !== handleToggle || $[46] !== pro || $[47] !== proMeasure || $[48] !== setCollapsed || $[49] !== showToggle || $[50] !== stickyStyle) {
-		t24 = showToggle && pro && proMeasure ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ProExpandControls, {
+		$[54] = reserveNestedToggleStrip;
+		$[55] = t27;
+	} else t27 = $[55];
+	let t28;
+	if ($[56] !== effectiveCollapsed || $[57] !== group || $[58] !== handleToggle || $[59] !== pro || $[60] !== proMeasure || $[61] !== setCollapsed || $[62] !== showToggle || $[63] !== stickyStyle) {
+		t28 = showToggle && pro && proMeasure ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ProExpandControls, {
 			collapsed: effectiveCollapsed,
 			boundary: proMeasure.boundary,
 			hiddenLines: hiddenLineCount(proMeasure.hiddenPx, proMeasure.linePx),
 			onToggle: () => setCollapsed(!effectiveCollapsed),
+			quiet: !!group,
 			renderStickyLess: () => /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 				className: ExpandablePanel_module_default.inlineToggleHolder,
 				"data-pro-sticky-less": "true",
@@ -44630,18 +44758,19 @@ var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 				})
 			})
 		}) : null;
-		$[44] = effectiveCollapsed;
-		$[45] = handleToggle;
-		$[46] = pro;
-		$[47] = proMeasure;
-		$[48] = setCollapsed;
-		$[49] = showToggle;
-		$[50] = stickyStyle;
-		$[51] = t24;
-	} else t24 = $[51];
-	let t25;
-	if ($[52] !== border || $[53] !== collapsed || $[54] !== handleToggle || $[55] !== layout || $[56] !== parentRegister || $[57] !== pro || $[58] !== showToggle || $[59] !== stickyStyle) {
-		t25 = showToggle && !pro && layout === "inline-right" && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+		$[56] = effectiveCollapsed;
+		$[57] = group;
+		$[58] = handleToggle;
+		$[59] = pro;
+		$[60] = proMeasure;
+		$[61] = setCollapsed;
+		$[62] = showToggle;
+		$[63] = stickyStyle;
+		$[64] = t28;
+	} else t28 = $[64];
+	let t29;
+	if ($[65] !== border || $[66] !== collapsed || $[67] !== handleToggle || $[68] !== layout || $[69] !== parentRegister || $[70] !== pro || $[71] !== showToggle || $[72] !== stickyStyle) {
+		t29 = showToggle && !pro && layout === "inline-right" && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			ref: parentRegister ?? void 0,
 			className: ExpandablePanel_module_default.inlineToggleHolder,
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
@@ -44655,65 +44784,65 @@ var ExpandablePanel = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 				})
 			})
 		});
-		$[52] = border;
-		$[53] = collapsed;
-		$[54] = handleToggle;
-		$[55] = layout;
-		$[56] = parentRegister;
-		$[57] = pro;
-		$[58] = showToggle;
-		$[59] = stickyStyle;
-		$[60] = t25;
-	} else t25 = $[60];
-	let t26;
-	if ($[61] !== t17 || $[62] !== t22 || $[63] !== t23 || $[64] !== t24 || $[65] !== t25) {
-		t26 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+		$[65] = border;
+		$[66] = collapsed;
+		$[67] = handleToggle;
+		$[68] = layout;
+		$[69] = parentRegister;
+		$[70] = pro;
+		$[71] = showToggle;
+		$[72] = stickyStyle;
+		$[73] = t29;
+	} else t29 = $[73];
+	let t30;
+	if ($[74] !== t21 || $[75] !== t26 || $[76] !== t27 || $[77] !== t28 || $[78] !== t29) {
+		t30 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			"data-expandable-panel": "true",
-			className: t17,
+			className: t21,
 			children: [
-				t22,
-				t23,
-				t24,
-				t25
+				t26,
+				t27,
+				t28,
+				t29
 			]
 		});
-		$[61] = t17;
-		$[62] = t22;
-		$[63] = t23;
-		$[64] = t24;
-		$[65] = t25;
-		$[66] = t26;
-	} else t26 = $[66];
-	let t27;
-	if ($[67] !== border || $[68] !== collapsed || $[69] !== handleToggle || $[70] !== layout || $[71] !== pro || $[72] !== showToggle || $[73] !== stickyStyle) {
-		t27 = showToggle && !pro && layout === "block-left" && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MoreToggle, {
+		$[74] = t21;
+		$[75] = t26;
+		$[76] = t27;
+		$[77] = t28;
+		$[78] = t29;
+		$[79] = t30;
+	} else t30 = $[79];
+	let t31;
+	if ($[80] !== border || $[81] !== collapsed || $[82] !== handleToggle || $[83] !== layout || $[84] !== pro || $[85] !== showToggle || $[86] !== stickyStyle) {
+		t31 = showToggle && !pro && layout === "block-left" && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MoreToggle, {
 			collapsed,
 			onToggle: handleToggle,
 			border: !border,
 			position: "block-left",
 			style: stickyStyle
 		});
-		$[67] = border;
-		$[68] = collapsed;
-		$[69] = handleToggle;
-		$[70] = layout;
-		$[71] = pro;
-		$[72] = showToggle;
-		$[73] = stickyStyle;
-		$[74] = t27;
-	} else t27 = $[74];
-	let t28;
-	if ($[75] !== t15 || $[76] !== t26 || $[77] !== t27) {
-		t28 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: t15,
-			children: [t26, t27]
+		$[80] = border;
+		$[81] = collapsed;
+		$[82] = handleToggle;
+		$[83] = layout;
+		$[84] = pro;
+		$[85] = showToggle;
+		$[86] = stickyStyle;
+		$[87] = t31;
+	} else t31 = $[87];
+	let t32;
+	if ($[88] !== t19 || $[89] !== t30 || $[90] !== t31) {
+		t32 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: t19,
+			children: [t30, t31]
 		});
-		$[75] = t15;
-		$[76] = t26;
-		$[77] = t27;
-		$[78] = t28;
-	} else t28 = $[78];
-	return t28;
+		$[88] = t19;
+		$[89] = t30;
+		$[90] = t31;
+		$[91] = t32;
+	} else t32 = $[91];
+	return t32;
 });
 var MoreToggle = (t0) => {
 	const $ = (0, import_compiler_runtime.c)(11);
@@ -45176,6 +45305,255 @@ var useComponentNavigation = () => {
 	return navigation;
 };
 //#endregion
+//#region ../../packages/react/src/pro-ux/textFind.ts
+/** A match across consecutive text chunks: [chunk index, offset] at each end,
+*  the end exclusive, and its span in the joined text. */ var escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/** Chunk holding character `at` of the joined text; `atEnd` places a match
+*  end on the chunk it closes, not the next one. */ var locate = (starts, at, atEnd) => {
+	let lo = 0;
+	let hi = starts.length - 1;
+	while (lo < hi) {
+		const mid = lo + hi + 1 >> 1;
+		const start = starts[mid] ?? 0;
+		if (atEnd ? start < at : start <= at) lo = mid;
+		else hi = mid - 1;
+	}
+	return [lo, at - (starts[lo] ?? 0)];
+};
+/** Every occurrence of `pattern` (text, matched ignoring case, or a regular
+*  expression) in the chunks read as one text, so a match may cross element
+*  boundaries (syntax-highlighted code splits words into spans). Empty
+*  chunks are not allowed; empty matches are skipped. */ var findInChunks = (chunks, pattern) => {
+	if (!pattern || chunks.length === 0) return [];
+	const regex = typeof pattern === "string" ? new RegExp(escapeRegExp(pattern), "gi") : new RegExp(pattern.source, pattern.flags.includes("g") ? pattern.flags : `${pattern.flags}g`);
+	const starts = [];
+	let joined = "";
+	for (const chunk of chunks) {
+		starts.push(joined.length);
+		joined += chunk;
+	}
+	const matches = [];
+	for (const found of joined.matchAll(regex)) {
+		const from = found.index;
+		const to = from + found[0].length;
+		if (to === from) continue;
+		matches.push({
+			start: locate(starts, from, false),
+			end: locate(starts, to, true),
+			from,
+			to
+		});
+	}
+	return matches;
+};
+/** The match a find step lands on, or -1. `compare(i)` places match i
+*  against the reference: negative before, 0 on it, positive after. Forward
+*  takes the first match after; back the last before. `inclusive` also
+*  accepts a match on the reference. */ var stepIndex = (count, compare, back, inclusive = false) => {
+	if (back) {
+		for (let i = count - 1; i >= 0; i--) {
+			const c = compare(i);
+			if (c < 0 || inclusive && c === 0) return i;
+		}
+		return -1;
+	}
+	for (let i = 0; i < count; i++) {
+		const c = compare(i);
+		if (c > 0 || inclusive && c === 0) return i;
+	}
+	return -1;
+};
+//#endregion
+//#region ../../packages/react/src/pro-ux/findHighlight.ts
+/** Text that find skips: its own band, the sample sidebar (it has its own
+*  filter), form fields and anything marked unsearchable. */ var kSkip = "[data-unsearchable], .pro-sidebar, script, style, noscript, textarea, input, select";
+var highlightSupported = () => typeof CSS !== "undefined" && "highlights" in CSS && typeof Highlight === "function";
+/** The tallest scrolling ancestor: the page's main scroller, not a code
+*  block or panel that scrolls inside it. */ var scrollerOf = (node) => {
+	let best = document.documentElement;
+	let el = node instanceof Element ? node : node?.parentElement ?? null;
+	for (; el && el !== document.body; el = el.parentElement) {
+		const { overflowY } = getComputedStyle(el);
+		if ((overflowY === "auto" || overflowY === "scroll") && el.scrollHeight > el.clientHeight + 1 && el instanceof HTMLElement && (best === document.documentElement || el.clientHeight > best.clientHeight)) best = el;
+	}
+	return best;
+};
+/** Every rendered occurrence of `pattern` under `root`, in document order,
+*  with `radius` characters of text either side. */ var textMatchesIn = (root, pattern, radius = 0) => {
+	if (!pattern) return [];
+	const skipped = /* @__PURE__ */ new Map();
+	const skip = (el) => {
+		let hit = skipped.get(el);
+		if (hit === void 0) {
+			hit = el.closest(kSkip) !== null || el.getClientRects().length === 0 || getComputedStyle(el).userSelect === "none";
+			skipped.set(el, hit);
+		}
+		return hit;
+	};
+	const nodes = [];
+	const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (node) => node.nodeValue && node.parentElement && !skip(node.parentElement) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+	for (let node = walker.nextNode(); node; node = walker.nextNode()) if (node instanceof Text) nodes.push(node);
+	const texts = nodes.map((n) => n.data);
+	const joined = radius > 0 ? texts.join("") : "";
+	return findInChunks(texts, pattern).flatMap(({ start, end, from, to }) => {
+		const first = nodes[start[0]];
+		const last = nodes[end[0]];
+		if (!first || !last) return [];
+		const range = document.createRange();
+		range.setStart(first, start[1]);
+		range.setEnd(last, end[1]);
+		return [{
+			range,
+			before: joined.slice(Math.max(0, from - radius), from),
+			after: joined.slice(to, to + radius)
+		}];
+	});
+};
+/** Every rendered occurrence of `term` under `root`, in document order. */ var textMatches = (root, term) => textMatchesIn(root, term).map((m) => m.range);
+/** Paints matches with the CSS highlight API, so they show whatever the
+*  browser does with the selection (Firefox hides it while the find box has
+*  focus): every match pale under `name`, the current one strong under
+*  `name-current`. */ var createMarker = (name) => ({
+	paint: (all, current) => {
+		if (!highlightSupported()) return;
+		CSS.highlights.set(name, new Highlight(...all));
+		if (current) CSS.highlights.set(`${name}-current`, new Highlight(current));
+		else CSS.highlights.delete(`${name}-current`);
+	},
+	clear: () => {
+		if (!highlightSupported()) return;
+		CSS.highlights.delete(name);
+		CSS.highlights.delete(`${name}-current`);
+	}
+});
+//#endregion
+//#region ../../packages/react/src/pro-ux/proFind.ts
+/** Pro-UX Cmd-F: steps through rendered matches in document order and
+*  paints them, instead of `window.find`. Firefox's `window.find` matches
+*  the find box's own text once focus returns to it, so Enter alternated
+*  between the box and one page match, and it never paints the selection
+*  while the box has focus. Past the last rendered match it scrolls on a
+*  screen at a time, so a virtual list renders the rows beyond, and wraps
+*  at the end. */ var proFindEnabled = () => typeof document !== "undefined" && document.documentElement.hasAttribute("data-pro-ux") && highlightSupported();
+var kMaxScanSteps = 200;
+var marker$6 = createMarker("pro-find");
+var term = "";
+var current$4 = null;
+var generation = 0;
+var observer = null;
+var repaintTimer = 0;
+var collapseTimer = 0;
+var live = (range) => !!range && !range.collapsed && range.startContainer.isConnected;
+var same = (a, b) => a.compareBoundaryPoints(Range.START_TO_START, b) === 0 && a.compareBoundaryPoints(Range.END_TO_END, b) === 0;
+var collect$1 = () => textMatches(document.body, term);
+/** The page selection, or null when it sits in the find band or a field. */ var pageSelection = () => {
+	const selection = window.getSelection();
+	if (!selection || selection.rangeCount === 0) return null;
+	const range = selection.getRangeAt(0);
+	const node = range.startContainer;
+	const host = node instanceof Element ? node : node.parentElement;
+	if (!host || host.closest("[data-unsearchable], input, textarea")) return null;
+	return range;
+};
+/** The scroller of `node`, else the one under the middle of the window. */ var scrollerNear = (node) => scrollerOf(node ?? document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2));
+/** A range's top in its scroller's content, which stays comparable after a
+*  virtual list unrenders the row. */ var contentTop = (scroller, range) => range.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+var frames = (count) => new Promise((resolve) => {
+	const step = (left) => {
+		if (left <= 0) resolve();
+		else requestAnimationFrame(() => step(left - 1));
+	};
+	step(count);
+});
+/** Rows render and unrender as the list scrolls; keep the paint current. */ var watch = () => {
+	if (observer) return;
+	observer = new MutationObserver(() => {
+		if (repaintTimer) return;
+		repaintTimer = window.setTimeout(() => {
+			repaintTimer = 0;
+			if (term) marker$6.paint(collect$1(), live(current$4) ? current$4 : null);
+		}, 150);
+	});
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true,
+		characterData: true
+	});
+};
+/** FindBand reads the match from the selection, so it is selected; once it
+*  has, it is collapsed so the native selection colour does not cover the
+*  painted one. */ var select$1 = (range) => {
+	const selection = window.getSelection();
+	selection?.removeAllRanges();
+	selection?.addRange(range.cloneRange());
+	window.clearTimeout(collapseTimer);
+	collapseTimer = window.setTimeout(() => {
+		const now = window.getSelection();
+		if (now?.rangeCount && live(current$4) && same(now.getRangeAt(0), current$4)) now.collapseToEnd();
+	}, 160);
+};
+/** Find the next (or previous) match of `text`, select it and paint every
+*  match. `offscreen` says whether unrendered rows may hold matches (the
+*  search sources' count); without it the scan stays in the rendered page.
+*  Resolves false when there is none, or a newer search took over. */ var proFind = async (text, back, offscreen) => {
+	const mine = ++generation;
+	const fresh = text !== term || !live(current$4);
+	const anchor = fresh ? pageSelection() : current$4;
+	term = text;
+	if (fresh) current$4 = null;
+	let matches = collect$1();
+	const scroller = scrollerNear(anchor?.startContainer ?? matches[0]?.startContainer ?? null);
+	const anchorTop = anchor ? contentTop(scroller, anchor) : scroller.scrollTop + (back ? scroller.clientHeight : 0);
+	const order = (i) => {
+		const match = matches[i];
+		if (!match) return 0;
+		if (anchor?.startContainer.isConnected) return match.compareBoundaryPoints(Range.START_TO_START, anchor);
+		return Math.sign(contentTop(scroller, match) - anchorTop);
+	};
+	const startTop = scroller.scrollTop;
+	let pick = stepIndex(matches.length, order, back, fresh);
+	for (let step = 0; offscreen && pick === -1 && step < kMaxScanSteps; step++) {
+		const before = scroller.scrollTop;
+		const stride = Math.max(100, scroller.clientHeight - 60);
+		scroller.scrollTop = before + (back ? -stride : stride);
+		if (Math.abs(scroller.scrollTop - before) < 1) break;
+		await frames(3);
+		if (mine !== generation) return false;
+		matches = collect$1();
+		pick = stepIndex(matches.length, order, back, fresh);
+	}
+	if (pick === -1 && offscreen) {
+		scroller.scrollTop = back ? scroller.scrollHeight : 0;
+		await frames(3);
+		if (mine !== generation) return false;
+		matches = collect$1();
+	}
+	if (pick === -1) pick = matches.length === 0 ? -1 : back ? matches.length - 1 : 0;
+	const range = matches[pick];
+	if (!range) {
+		scroller.scrollTop = startTop;
+		current$4 = null;
+		marker$6.paint(matches, null);
+		return false;
+	}
+	current$4 = range;
+	select$1(range);
+	marker$6.paint(matches, range);
+	watch();
+	return true;
+};
+var clearProFind = () => {
+	generation++;
+	term = "";
+	current$4 = null;
+	observer?.disconnect();
+	observer = null;
+	window.clearTimeout(repaintTimer);
+	window.clearTimeout(collapseTimer);
+	repaintTimer = 0;
+	marker$6.clear();
+};
+//#endregion
 //#region ../../packages/react/src/components/findBandDom.ts
 /**
 * Finds the nearest scrollable ancestor with enough overflow to benefit from
@@ -45423,6 +45801,7 @@ var FindBand = ({ onClose, debounceMs = 100 }) => {
 		const thisSearchId = ++searchIdRef.current;
 		const searchTerm = searchBoxRef.current?.value ?? "";
 		if (!searchTerm) {
+			clearProFind();
 			setMatchCount(null);
 			setCurrentMatchIndex(0);
 			setNoResults(false);
@@ -45458,7 +45837,7 @@ var FindBand = ({ onClose, debounceMs = 100 }) => {
 		if (selection && selection.rangeCount > 0) savedRange = selection.getRangeAt(0).cloneRange();
 		const savedScrollParent = savedRange ? findScrollableParent(savedRange.startContainer.parentElement) : null;
 		const savedScrollTop = savedScrollParent?.scrollTop ?? 0;
-		const result = await findExtendedInDOM(searchTerm, back, lastFoundItem.current, extendedFindTerm);
+		const result = proFindEnabled() ? await proFind(searchTerm, back, total > 0) : await findExtendedInDOM(searchTerm, back, lastFoundItem.current, extendedFindTerm);
 		if (searchIdRef.current !== thisSearchId) return;
 		setNoResults(!result);
 		lastNoResult.current = result ? null : {
@@ -45515,6 +45894,7 @@ var FindBand = ({ onClose, debounceMs = 100 }) => {
 			if (scrollTimeoutRef.current !== null) window.clearTimeout(scrollTimeoutRef.current);
 			if (focusTimeout !== null) window.clearTimeout(focusTimeout);
 			setFindTarget(null);
+			clearProFind();
 		};
 	}, [setFindTarget]);
 	const handleKeyDown = (0, import_react.useCallback)((e) => {
@@ -45804,7 +46184,7 @@ var MarkdownDivWithReferences = /*#__PURE__*/ (0, import_react.forwardRef)((prop
 	const [visibleKey, setVisibleKey, clearVisibleKey] = useProperty("popover", "visibleKey");
 	let t0;
 	if ($[0] !== references) {
-		t0 = new Map(references?.map(_temp$111));
+		t0 = new Map(references?.map(_temp$117));
 		$[0] = references;
 		$[1] = t0;
 	} else t0 = $[1];
@@ -46006,7 +46386,7 @@ var findCiteLink = (target) => {
 	}
 	return emitted === 0 ? html : out + html.slice(emitted);
 }
-function _temp$111(r) {
+function _temp$117(r) {
 	return [r.id, r];
 }
 var NextPreviousNav_module_default = {
@@ -51135,7 +51515,7 @@ var TreeNode$1 = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 	let t4;
 	if ($[4] !== expandable) {
 		t4 = () => {
-			if (expandable) setExpanded(_temp$110);
+			if (expandable) setExpanded(_temp$116);
 		};
 		$[4] = expandable;
 		$[5] = t4;
@@ -51245,11 +51625,11 @@ var TreeNode$1 = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 					className: TreeNode_module_default.empty,
 					children: "empty"
 				}),
-				entries.slice(0, limit).map(_temp2$65),
+				entries.slice(0, limit).map(_temp2$68),
 				entries.length > limit && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("button", {
 					type: "button",
 					className: TreeNode_module_default.showMore,
-					onClick: () => setLimit(_temp3$46),
+					onClick: () => setLimit(_temp3$48),
 					children: [
 						"Show",
 						" ",
@@ -51276,16 +51656,16 @@ var TreeNode$1 = /*#__PURE__*/ (0, import_react.memo)((t0) => {
 	return t6;
 });
 TreeNode$1.displayName = "TreeNode";
-function _temp$110(e) {
+function _temp$116(e) {
 	return !e;
 }
-function _temp2$65(entry) {
+function _temp2$68(entry) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TreeNode$1, {
 		name: entry.key,
 		value: entry.value
 	}, entry.id);
 }
-function _temp3$46(l) {
+function _temp3$48(l) {
 	return l + CHUNK_SIZE;
 }
 //#endregion
@@ -57725,7 +58105,7 @@ var import_dexie = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((expo
 var DexieSymbol = Symbol.for("Dexie");
 var Dexie = globalThis[DexieSymbol] || (globalThis[DexieSymbol] = import_dexie.default);
 if (import_dexie.default.semVer !== Dexie.semVer) throw new Error(`Two different versions of Dexie loaded in the same app: ${import_dexie.default.semVer} and ${Dexie.semVer}`);
-var { liveQuery, mergeRanges, rangesOverlap, RangeSet: RangeSet$1, cmp, Entity, PropModification, replacePrefix, add: add$1, remove: remove$2, DexieYProvider } = Dexie;
+var { liveQuery, mergeRanges, rangesOverlap, RangeSet: RangeSet$1, cmp, Entity, PropModification, replacePrefix, add: add$2, remove: remove$2, DexieYProvider } = Dexie;
 //#endregion
 //#region src/client/database/schema.ts
 var toLogRecord = (log, id, cached_at) => {
@@ -58082,16 +58462,16 @@ var newRow$1 = (handle) => ({
 };
 //#endregion
 //#region src/log_data/databaseInstance.ts
-var current$2 = null;
+var current$3 = null;
 var opening = null;
 /**
 * Open the app database once and share the handle; concurrent callers
 * coalesce onto the in-flight open, and a failed open clears it so the next
 * acquisition retries (activation relies on this — see `engineReady`).
 */ async function acquireDatabase() {
-	if (current$2) return current$2;
+	if (current$3) return current$3;
 	opening ??= OpenDatabase.open().then((db) => {
-		current$2 = db;
+		current$3 = db;
 		opening = null;
 		return db;
 	}, (error) => {
@@ -58104,7 +58484,7 @@ var opening = null;
 * The shared open handle, or null when this session has none — before the
 * first successful open, and forever in single-file sessions (which never
 * open one; their reads miss and writes stay cache-only).
-*/ var currentDatabase = () => current$2;
+*/ var currentDatabase = () => current$3;
 //#endregion
 //#region src/log_data/listingSync.ts
 /**
@@ -59212,7 +59592,7 @@ var readLogsListing = async (logDir, prefix, toRow, plan) => {
 	let t2;
 	if ($[3] !== demand || $[4] !== logDir || $[5] !== logFile) {
 		t1 = () => {
-			if (logFile !== void 0) fetchLog(logDir, logFile, { passive: demand !== "active" }).catch(_temp$109);
+			if (logFile !== void 0) fetchLog(logDir, logFile, { passive: demand !== "active" }).catch(_temp$115);
 		};
 		t2 = [
 			logDir,
@@ -59301,7 +59681,7 @@ var readLogsListing = async (logDir, prefix, toRow, plan) => {
 	} else t0 = $[1];
 	return t0;
 };
-function _temp$109() {}
+function _temp$115() {}
 //#endregion
 //#region src/log_data/pendingSamples.ts
 var kDefaultRefreshSeconds = 2;
@@ -59406,7 +59786,7 @@ var logInfoSignature = (info) => `${info.size}:${info.etag ?? ""}`;
 		t4 = {
 			queryKey: t2,
 			queryFn: t3,
-			refetchInterval: _temp$108,
+			refetchInterval: _temp$114,
 			refetchIntervalInBackground: true,
 			staleTime: 0,
 			refetchOnWindowFocus: false,
@@ -59419,7 +59799,7 @@ var logInfoSignature = (info) => `${info.size}:${info.etag ?? ""}`;
 	const result = useAsyncDataFromQuery(t4);
 	let t5;
 	if ($[14] !== enabled || $[15] !== result) {
-		t5 = enabled ? map(result, _temp2$64) : data(void 0);
+		t5 = enabled ? map(result, _temp2$67) : data(void 0);
 		$[14] = enabled;
 		$[15] = result;
 		$[16] = t5;
@@ -59435,7 +59815,7 @@ var logInfoSignature = (info) => `${info.size}:${info.etag ?? ""}`;
 	const pending = usePendingSamples(logDir, logFile);
 	let t0;
 	if ($[0] !== pending) {
-		t0 = map(pending, _temp3$45);
+		t0 = map(pending, _temp3$47);
 		$[0] = pending;
 		$[1] = t0;
 	} else t0 = $[1];
@@ -59446,13 +59826,13 @@ var logInfoSignature = (info) => `${info.size}:${info.etag ?? ""}`;
 * finalize decision). Returns
 * `undefined` when there's no resolved dir.
 */ var getPendingSamples = (logDir, logFile) => logDir === void 0 ? void 0 : queryClient.getQueryData(pendingSamplesKey(logDir, logFile)) ?? void 0;
-function _temp$108(query) {
+function _temp$114(query) {
 	return query.state.status === "error" ? false : pendingSamplesIntervalMs(query.state.data);
 }
-function _temp2$64(data) {
+function _temp2$67(data) {
 	return data ?? void 0;
 }
-function _temp3$45(data) {
+function _temp3$47(data) {
 	return data?.metrics;
 }
 //#endregion
@@ -61104,7 +61484,7 @@ var mergeSampleSummaries = (logSamples, pendingSamples) => {
 		t3 = rows.data?.some((row_0) => row_0.logFile !== logKey) ? loading$2 : map(compose({
 			rows,
 			pending
-		}), _temp2$63);
+		}), _temp2$66);
 		$[8] = logKey;
 		$[9] = pending;
 		$[10] = rows;
@@ -61116,11 +61496,11 @@ var mergeSampleSummaries = (logSamples, pendingSamples) => {
 * Non-React snapshot of {@link useSampleSummaries} (for the running-sample
 * query's tick decisions). Empty when there's no resolved dir.
 */ var getSampleSummaries = async (logDir, logFile) => logDir === void 0 ? [] : mergeSampleSummaries(await readSettledSummaries(logDir, resolveLogKey(logDir, logFile)), getPendingSamples(logDir, logFile)?.samples ?? []);
-function _temp$107(row) {
+function _temp$113(row) {
 	return row.summary;
 }
-function _temp2$63(settled) {
-	return mergeSampleSummaries(settled.rows.map(_temp$107), settled.pending?.samples ?? []);
+function _temp2$66(settled) {
+	return mergeSampleSummaries(settled.rows.map(_temp$113), settled.pending?.samples ?? []);
 }
 //#endregion
 //#region src/log_data/runningSampleQuery.ts
@@ -61259,7 +61639,7 @@ var findLiveSummary = async (logDir, handle) => (await getSampleSummaries(logDir
 			queryKey: t2,
 			queryFn: t3,
 			structuralSharing: false,
-			refetchInterval: _temp$106,
+			refetchInterval: _temp$112,
 			refetchIntervalInBackground: true,
 			gcTime: kSampleGcTimeMs,
 			refetchOnWindowFocus: false,
@@ -61271,7 +61651,7 @@ var findLiveSummary = async (logDir, handle) => (await getSampleSummaries(logDir
 	} else t4 = $[13];
 	return useAsyncDataFromQuery(t4);
 };
-function _temp$106(query) {
+function _temp$112(query) {
 	return query.state.status === "error" || query.state.data?.finalized === true ? false : query.state.data?.catchup === true ? kCatchupIntervalMs : kRunningSampleIntervalMs;
 }
 //#endregion
@@ -65177,8 +65557,8 @@ var isNonEmptyObject = (v) => isRecord(v) && Object.keys(v).length > 0;
 	const depth = t1 === void 0 ? 0 : t1;
 	const baseId = id ?? "metadata-grid";
 	const allEntries = entryRecords(entries);
-	const scalars = allEntries.filter(_temp$105);
-	const groups = allEntries.filter(_temp2$62);
+	const scalars = allEntries.filter(_temp$111);
+	const groups = allEntries.filter(_temp2$65);
 	const [expanded, setExpanded] = (0, import_react.useState)(false);
 	const isCollapsible = maxRows != null && scalars.length > maxRows;
 	const visibleScalars = isCollapsible && !expanded ? scalars.slice(0, maxRows) : scalars;
@@ -65241,7 +65621,7 @@ var isNonEmptyObject = (v) => isRecord(v) && Object.keys(v).length > 0;
 		children: /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("button", {
 			type: "button",
 			className: clsx(MetaDataGrid_module_default.toggleButton, "text-size-smallest"),
-			onClick: () => setExpanded(_temp3$44),
+			onClick: () => setExpanded(_temp3$46),
 			children: [expanded ? "less" : `${scalars.length - visibleScalars.length} more`, "..."]
 		})
 	});
@@ -65305,13 +65685,13 @@ var entryRecords = (entries) => {
 	});
 	else return entries;
 };
-function _temp$105(e) {
+function _temp$111(e) {
 	return !isNonEmptyObject(e.value) || isHtmlEscape(e.value);
 }
-function _temp2$62(e_0) {
+function _temp2$65(e_0) {
 	return isNonEmptyObject(e_0.value) && !isHtmlEscape(e_0.value);
 }
-function _temp3$44(prev) {
+function _temp3$46(prev) {
 	return !prev;
 }
 var RenderedContent_module_default = {
@@ -65359,7 +65739,7 @@ var isWebSearchValue = (v) => isRecord(v) && isOptionalString(v.query) && Array.
 				$[7] = entry;
 				$[8] = t3;
 			} else t3 = $[8];
-			const renderer_0 = Object.keys(renderers).map((key) => renderers[key]).sort(_temp$104).find(t3);
+			const renderer_0 = Object.keys(renderers).map((key) => renderers[key]).sort(_temp$110).find(t3);
 			if (renderer_0) {
 				const { rendered } = renderer_0.render(id, entry, renderOptions, references);
 				if (rendered !== void 0 && /*#__PURE__*/ (0, import_react.isValidElement)(rendered)) {
@@ -65587,7 +65967,7 @@ var isWebSearchValue = (v) => isRecord(v) && isOptionalString(v.query) && Array.
 	};
 	return contentRenderers;
 };
-function _temp$104(a, b) {
+function _temp$110(a, b) {
 	if (!a || !b) return 0;
 	return a.bucket - b.bucket;
 }
@@ -66076,7 +66456,7 @@ var WebSearchResults$1 = (t0) => {
 	}
 	let t3;
 	if ($[2] !== results) {
-		t3 = results.map(_temp$103);
+		t3 = results.map(_temp$109);
 		$[2] = results;
 		$[3] = t3;
 	} else t3 = $[3];
@@ -66091,7 +66471,7 @@ var WebSearchResults$1 = (t0) => {
 	} else t4 = $[5];
 	return t4;
 };
-function _temp$103(result, index) {
+function _temp$109(result, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("li", {
 		className: clsx(WebSearchResults_module_default.result, "text-style-secondary"),
 		children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ExternalLink, {
@@ -66408,7 +66788,7 @@ var MessageCitations = (t0) => {
 	} else t1 = $[0];
 	let t2;
 	if ($[1] !== citations) {
-		t2 = citations.map(_temp$102);
+		t2 = citations.map(_temp$108);
 		$[1] = citations;
 		$[2] = t2;
 	} else t2 = $[2];
@@ -66482,7 +66862,7 @@ var OtherCitation = (t0) => {
 	} else t1 = $[1];
 	return t1;
 };
-function _temp$102(citation, index) {
+function _temp$108(citation, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { children: index + 1 }), /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MessageCitation, { citation })] }, index);
 }
 var MessageContent_module_default = {
@@ -66723,7 +67103,7 @@ var TodoWriteInput = (t0) => {
 			t2 = clsx(TodoWriteInput_module_default.todoList);
 			$[5] = t2;
 		} else t2 = $[5];
-		t3 = todoItems.map(_temp$101);
+		t3 = todoItems.map(_temp$107);
 		$[0] = contents;
 		$[1] = parentRef;
 		$[2] = t1;
@@ -66748,7 +67128,7 @@ var TodoWriteInput = (t0) => {
 	} else t4 = $[9];
 	return t4;
 };
-function _temp$101(todo) {
+function _temp$107(todo) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
 		name: todo.status === "completed" ? "checkboxChecked" : "checkboxUnchecked",
 		className: "text-size-smallest"
@@ -67090,7 +67470,7 @@ var WebSearchResults = (t0) => {
 	const t1 = `${id}-output`;
 	let t2;
 	if ($[0] !== results) {
-		t2 = results.map(_temp$100);
+		t2 = results.map(_temp$106);
 		$[0] = results;
 		$[1] = t2;
 	} else t2 = $[1];
@@ -67271,7 +67651,7 @@ var maybeListTools = (content) => {
 };
 /** Shallow: the list below renders title and url, and skips entries lacking them. */ var isWebResult = (value) => isRecord(value) && typeof value["title"] === "string" && typeof value["url"] === "string";
 /** Shallow: the list below keys on name and renders description. */ var isToolInfo = (value) => isRecord(value) && typeof value["name"] === "string";
-function _temp$100(result, index) {
+function _temp$106(result, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ExternalLink, {
 		href: result.url,
 		title: result.url,
@@ -67795,7 +68175,7 @@ function asCoordinate(value) {
 	const { contents, annotation } = t0;
 	let t1;
 	if ($[0] !== contents) {
-		t1 = contents.findLastIndex(_temp$99);
+		t1 = contents.findLastIndex(_temp$105);
 		$[0] = contents;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -67969,7 +68349,7 @@ function renderHtmlAnnotation(annotation) {
 	}
 	return null;
 }
-function _temp$99(c) {
+function _temp$105(c) {
 	return c.type === "image" && isRenderableImageSource(c.image);
 }
 var customToolRendering_module_default = { submitView: "_submitView_1ru17_1" };
@@ -67994,7 +68374,7 @@ var ToolSearchView_module_default = {
 	const { namespaces } = t0;
 	let t1;
 	if ($[0] !== namespaces) {
-		t1 = namespaces.map(_temp2$61);
+		t1 = namespaces.map(_temp2$64);
 		$[0] = namespaces;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -68009,7 +68389,7 @@ var ToolSearchView_module_default = {
 	} else t2 = $[3];
 	return t2;
 };
-function _temp$98(tool, toolIdx) {
+function _temp$104(tool, toolIdx) {
 	return tool.description ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("details", {
 		className: ToolSearchView_module_default.tool,
 		children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("summary", {
@@ -68024,7 +68404,7 @@ function _temp$98(tool, toolIdx) {
 		children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("code", { children: tool.signature })
 	}, `tool-${toolIdx}`);
 }
-function _temp2$61(namespace, nsIdx) {
+function _temp2$64(namespace, nsIdx) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 		className: ToolSearchView_module_default.namespace,
 		children: [namespace.name ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
@@ -68033,7 +68413,7 @@ function _temp2$61(namespace, nsIdx) {
 		}), namespace.description ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
 			className: ToolSearchView_module_default.namespaceDescription,
 			children: [" — ", namespace.description]
-		}) : null] }) : null, namespace.tools.map(_temp$98)]
+		}) : null] }) : null, namespace.tools.map(_temp$104)]
 	}, `ns-${nsIdx}`);
 }
 var ToolTitle_module_default = {
@@ -68217,7 +68597,7 @@ var ToolCallView_module_default = { toolCallView: "_toolCallView_x6cus_1" };
 	const normalizedContent = t6;
 	let t7;
 	if ($[8] !== normalizedContent) {
-		t7 = normalizedContent.find(_temp$97);
+		t7 = normalizedContent.find(_temp$103);
 		$[8] = normalizedContent;
 		$[9] = t7;
 	} else t7 = $[9];
@@ -68393,7 +68773,7 @@ var ToolCallView_module_default = { toolCallView: "_toolCallView_x6cus_1" };
 	const { contents } = t0;
 	let t1;
 	if ($[0] !== contents) {
-		t1 = contents.flatMap(_temp2$60).map(_temp3$43);
+		t1 = contents.flatMap(_temp2$63).map(_temp3$45);
 		$[0] = contents;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -68418,7 +68798,7 @@ var normalizeContent = (output) => {
 		}]
 	}];
 };
-function _temp$97(c) {
+function _temp$103(c) {
 	if (c.type === "tool") {
 		for (const t of c.content) if (t.type === "text") {
 			if (t.text) return true;
@@ -68426,13 +68806,745 @@ function _temp$97(c) {
 		return false;
 	} else return true;
 }
-function _temp2$60(c) {
+function _temp2$63(c) {
 	return c.type === "tool" ? c.content : [c];
 }
-function _temp3$43(item, i) {
+function _temp3$45(item, i) {
 	if (item.type === "text" && item.text) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDiv, { markdown: item.text }, `md-${i}`);
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MessageContent, { contents: [item] }, `content-${i}`);
 }
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/shellCommand.ts
+/** Longest command shown on the header line; longer ones keep the code block. */ var kMaxLineCommand = 160;
+var asCommand = (value) => {
+	if (typeof value === "string") return value;
+	if (Array.isArray(value) && value.every((v) => typeof v === "string")) return value.join(" ");
+};
+/** The shell command a tool call runs, for the shell tools we know. */ var shellCommand = (tool, args) => {
+	if (!args) return void 0;
+	switch (tool) {
+		case "bash_session": return args.action === "type_submit" || args.action === "type" ? asCommand(args.input) : void 0;
+		case "bash":
+		case "exec_command": return asCommand(args.cmd ?? args.command);
+		case "Bash":
+		case "shell":
+		case "shell_command":
+		case "run_shell_command": return asCommand(args.command);
+		default: return;
+	}
+};
+/** One line and short enough to read in the header at a glance. */ var isSimpleCommand = (command) => {
+	const trimmed = command.trim();
+	return trimmed.length > 0 && trimmed.length <= kMaxLineCommand && !trimmed.includes("\n");
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/shellSplit.ts
+/** A display line break after a top-level separator ending at `at`; the next
+*  line starts at `next`, past the spaces that followed the separator. */ var kWordEnd = /[\s;&|()<>]/;
+var kWord = /[a-z]+/y;
+/** Keywords after which the next word is again a command. */ var kKeepsCommand = /* @__PURE__ */ new Set([
+	"if",
+	"then",
+	"else",
+	"elif",
+	"do",
+	"while",
+	"until",
+	"time"
+]);
+/**
+* Where each top-level `;`, `&&` and `||` ends, skipping any inside quotes,
+* `$(...)`, backticks, braces, `[[ ]]`, `if … fi` and loops. Undefined when
+* the structure is unclear: unbalanced quotes or brackets, a heredoc, or a
+* case statement.
+*/ var topLevelBreaks = (command) => {
+	const n = command.length;
+	const stack = [];
+	const breaks = [];
+	const top = () => stack[stack.length - 1];
+	const atWordStart = (j) => j === 0 || kWordEnd.test(command[j - 1]);
+	const endsWord = (j) => j >= n || kWordEnd.test(command[j]);
+	let commandStart = true;
+	let i = 0;
+	const separator = (end) => {
+		commandStart = true;
+		if (stack.length > 0) return;
+		let next = end;
+		while (command[next] === " " || command[next] === "	") next++;
+		if (next < n && command[next] !== "\n") breaks.push({
+			at: end,
+			next
+		});
+	};
+	while (i < n) {
+		const c = command[i];
+		const d = command[i + 1];
+		if (top() === "\"") {
+			if (c === "\\") i += 2;
+			else if (c === "\"") {
+				stack.pop();
+				i++;
+			} else if (c === "`") {
+				stack.push("`");
+				commandStart = true;
+				i++;
+			} else if (c === "$" && (d === "(" || d === "{")) {
+				stack.push(d);
+				commandStart = d === "(";
+				i += 2;
+			} else i++;
+			continue;
+		}
+		if (c === "\\") {
+			commandStart = false;
+			i += 2;
+			continue;
+		}
+		if (c === "'" || c === "$" && d === "'") {
+			let j = c === "'" ? i + 1 : i + 2;
+			while (j < n && command[j] !== "'") j += c === "$" && command[j] === "\\" ? 2 : 1;
+			if (j >= n) return void 0;
+			commandStart = false;
+			i = j + 1;
+			continue;
+		}
+		if (c === "\"") {
+			stack.push("\"");
+			commandStart = false;
+			i++;
+			continue;
+		}
+		if (c === "`") {
+			if (top() === "`") {
+				stack.pop();
+				commandStart = false;
+			} else {
+				stack.push("`");
+				commandStart = true;
+			}
+			i++;
+			continue;
+		}
+		if (c === "#" && atWordStart(i)) {
+			const eol = command.indexOf("\n", i);
+			i = eol < 0 ? n : eol;
+			continue;
+		}
+		if (c === "$" && (d === "(" || d === "{")) {
+			stack.push(d);
+			commandStart = d === "(";
+			i += 2;
+			continue;
+		}
+		if (c === "(" || c === "{") {
+			commandStart = c === "(" || atWordStart(i) && /\s/.test(d ?? "");
+			stack.push(c);
+			i++;
+			continue;
+		}
+		if (c === ")" || c === "}") {
+			if (top() !== (c === ")" ? "(" : "{")) return void 0;
+			stack.pop();
+			commandStart = false;
+			i++;
+			continue;
+		}
+		if (c === "<" && d === "<") {
+			if (command[i + 2] !== "<") return void 0;
+			i += 3;
+			continue;
+		}
+		if (c === ";") {
+			if (d === ";" || d === "&") return void 0;
+			separator(i + 1);
+			i++;
+			continue;
+		}
+		if ((c === "&" || c === "|") && d === c) {
+			separator(i + 2);
+			i += 2;
+			continue;
+		}
+		if (c === "&" || c === "|" || c === "\n") {
+			commandStart = true;
+			i++;
+			continue;
+		}
+		if (atWordStart(i)) {
+			if (command.startsWith("[[", i) && endsWord(i + 2)) {
+				stack.push("[[");
+				commandStart = false;
+				i += 2;
+				continue;
+			}
+			if (command.startsWith("]]", i) && endsWord(i + 2)) {
+				if (top() !== "[[") return void 0;
+				stack.pop();
+				i += 2;
+				continue;
+			}
+			kWord.lastIndex = i;
+			const word = kWord.exec(command)?.[0];
+			if (word && commandStart && endsWord(i + word.length)) {
+				if (word === "case" || word === "esac") return void 0;
+				if (word === "if") stack.push("if");
+				if ([
+					"for",
+					"while",
+					"until",
+					"select"
+				].includes(word)) stack.push("loop");
+				if (word === "fi" || word === "done") {
+					if (top() !== (word === "fi" ? "if" : "loop")) return void 0;
+					stack.pop();
+				}
+				commandStart = kKeepsCommand.has(word);
+				i += word.length;
+				continue;
+			}
+		}
+		if (!/\s/.test(c)) commandStart = false;
+		i++;
+	}
+	return stack.length === 0 ? breaks : void 0;
+};
+/** The command with a line break after each top-level `;`, `&&` and `||`,
+*  operators kept at the line end. Undefined when there is nothing to split
+*  or splitting is unsafe. */ var prettifyShell = (command) => {
+	const breaks = topLevelBreaks(command);
+	if (!breaks?.length) return void 0;
+	let out = "";
+	let from = 0;
+	for (const b of breaks) {
+		out += `${command.slice(from, b.at)}\n`;
+		from = b.next;
+	}
+	return out + command.slice(from);
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/diff.ts
+var kBegin = "*** Begin Patch";
+/** Whether text is an `*** Begin Patch` patch or a unified diff. */ var looksLikePatch = (text) => text.includes(kBegin) || /^@@/m.test(text) && (/^diff --git /m.test(text) || /^--- .*\n\+\+\+ /m.test(text));
+/** The files an `*** Begin Patch` patch or unified diff changes; undefined
+*  when the text is neither. */ var parsePatch = (text) => {
+	if (!looksLikePatch(text)) return void 0;
+	const start = text.indexOf(kBegin);
+	const files = start >= 0 ? parseBeginPatch(text.slice(start)) : parseUnifiedDiff(text);
+	return files.length > 0 ? files : void 0;
+};
+var kFileOp = {
+	Update: "update",
+	Add: "add",
+	Delete: "delete"
+};
+var parseBeginPatch = (text) => {
+	const files = [];
+	let file;
+	for (const raw of text.split("\n")) {
+		const line = raw.replace(/\r$/, "");
+		if (line.startsWith("*** End Patch")) break;
+		if (line.startsWith(kBegin) || line === "*** End of File") continue;
+		const header = /^\*\*\* (Update|Add|Delete) File: (.+)$/.exec(line);
+		if (header) {
+			file = {
+				path: header[2].trim(),
+				op: kFileOp[header[1]],
+				lines: []
+			};
+			files.push(file);
+			continue;
+		}
+		if (!file) continue;
+		const move = /^\*\*\* Move to: (.+)$/.exec(line);
+		if (move) file.moveTo = move[1].trim();
+		else if (line.startsWith("@@")) file.lines.push({
+			kind: "hunk",
+			text: line
+		});
+		else file.lines.push(signedLine(line));
+	}
+	for (const f of files) while (f.lines.length > 0 && isBlankContext(f.lines[f.lines.length - 1])) f.lines.pop();
+	return files;
+};
+var isBlankContext = (line) => line.kind === "ctx" && line.text === "";
+/** A hunk body line; a line without a sign is context that lost its space. */ var signedLine = (line) => {
+	switch (line[0]) {
+		case "+": return {
+			kind: "add",
+			text: line.slice(1)
+		};
+		case "-": return {
+			kind: "del",
+			text: line.slice(1)
+		};
+		case " ": return {
+			kind: "ctx",
+			text: line.slice(1)
+		};
+		case "\\": return {
+			kind: "note",
+			text: line.slice(1).trim()
+		};
+		default: return {
+			kind: "ctx",
+			text: line
+		};
+	}
+};
+var diffPath = (raw) => {
+	const path = raw.split("	")[0].trim();
+	return /^[ab]\//.test(path) ? path.slice(2) : path;
+};
+var parseUnifiedDiff = (text) => {
+	const files = [];
+	const lines = text.split("\n").map((l) => l.replace(/\r$/, ""));
+	let file;
+	let oldLeft = 0;
+	let newLeft = 0;
+	let loose = false;
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		const next = lines[i + 1];
+		const fileHeader = line.startsWith("diff --git ") || line.startsWith("--- ") && next?.startsWith("+++ ");
+		if (file && (oldLeft > 0 || newLeft > 0)) {
+			const parsed = signedLine(line);
+			file.lines.push(parsed);
+			if (parsed.kind !== "add" && parsed.kind !== "note") oldLeft--;
+			if (parsed.kind !== "del" && parsed.kind !== "note") newLeft--;
+			continue;
+		}
+		if (file && (line.startsWith("\\") || loose && !fileHeader && /^[ +-]/.test(line))) {
+			file.lines.push(signedLine(line));
+			continue;
+		}
+		loose = false;
+		const git = /^diff --git a\/(.+?) b\/(.+)$/.exec(line);
+		if (git) {
+			file = {
+				path: git[2],
+				op: "update",
+				lines: []
+			};
+			files.push(file);
+			continue;
+		}
+		if (line.startsWith("--- ") && next?.startsWith("+++ ")) {
+			const from = diffPath(line.slice(4));
+			const to = diffPath(next.slice(4));
+			const op = from === "/dev/null" ? "add" : to === "/dev/null" ? "delete" : "update";
+			const path = to === "/dev/null" ? from : to;
+			if (file && file.lines.length === 0) {
+				file.path = path;
+				if (op !== "update") file.op = op;
+			} else {
+				file = {
+					path,
+					op,
+					lines: []
+				};
+				files.push(file);
+			}
+			i++;
+			continue;
+		}
+		if (!file) continue;
+		if (line.startsWith("new file mode")) file.op = "add";
+		else if (line.startsWith("deleted file mode")) file.op = "delete";
+		else if (line.startsWith("rename to ")) file.moveTo = line.slice(10);
+		else if (line.startsWith("@@")) {
+			file.lines.push({
+				kind: "hunk",
+				text: line
+			});
+			const counts = /^@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@/.exec(line);
+			if (counts) {
+				oldLeft = Number(counts[1] ?? 1);
+				newLeft = Number(counts[2] ?? 1);
+			} else loose = true;
+		}
+	}
+	return files;
+};
+var ctx = (text) => ({
+	kind: "ctx",
+	text
+});
+var del = (text) => ({
+	kind: "del",
+	text
+});
+var add$1 = (text) => ({
+	kind: "add",
+	text
+});
+/** Above this many cells the diff gives up on alignment: all old lines
+*  removed, then all new lines added. */ var kMaxCells = 4e6;
+/** A line diff of `before` → `after`: shared lines as context, removals
+*  before additions within each changed run. */ var lineDiff = (before, after) => {
+	if (before.endsWith("\n") && after.endsWith("\n")) {
+		before = before.slice(0, -1);
+		after = after.slice(0, -1);
+	}
+	const a = before.split("\n");
+	const b = after.split("\n");
+	let start = 0;
+	while (start < a.length && start < b.length && a[start] === b[start]) start++;
+	let endA = a.length;
+	let endB = b.length;
+	while (endA > start && endB > start && a[endA - 1] === b[endB - 1]) {
+		endA--;
+		endB--;
+	}
+	return [
+		...a.slice(0, start).map(ctx),
+		...alignedDiff(a.slice(start, endA), b.slice(start, endB)),
+		...a.slice(endA).map(ctx)
+	];
+};
+var alignedDiff = (a, b) => {
+	const n = a.length;
+	const m = b.length;
+	if (n * m > kMaxCells) return [...a.map(del), ...b.map(add$1)];
+	const w = m + 1;
+	const lcs = new Uint32Array((n + 1) * w);
+	for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) lcs[i * w + j] = a[i] === b[j] ? lcs[(i + 1) * w + j + 1] + 1 : Math.max(lcs[(i + 1) * w + j], lcs[i * w + j + 1]);
+	const out = [];
+	let i = 0;
+	let j = 0;
+	while (i < n && j < m) if (a[i] === b[j]) {
+		out.push(ctx(a[i]));
+		i++;
+		j++;
+	} else if (lcs[(i + 1) * w + j] >= lcs[i * w + j + 1]) out.push(del(a[i++]));
+	else out.push(add$1(b[j++]));
+	while (i < n) out.push(del(a[i++]));
+	while (j < m) out.push(add$1(b[j++]));
+	return out;
+};
+/** "+3 −1": lines added and removed, leaving out a zero count. */ var diffCounts = (lines) => {
+	const added = lines.filter((l) => l.kind === "add").length;
+	const removed = lines.filter((l) => l.kind === "del").length;
+	return [added ? `+${added}` : "", removed ? `−${removed}` : ""].filter(Boolean).join(" ") || "no change";
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/toolViews.ts
+var kExtraLanguages = {
+	ts: "javascript",
+	tsx: "javascript",
+	mts: "javascript",
+	cts: "javascript",
+	pyi: "python",
+	zsh: "bash",
+	jsonl: "json",
+	ipynb: "json"
+};
+/** The loaded Prism language for a file, by extension. */ var languageForPath = (path) => prismLanguageForPath(path) ?? kExtraLanguages[path.split(".").pop()?.toLowerCase() ?? ""];
+var str$2 = (args, ...keys) => {
+	for (const key of keys) {
+		const value = args[key];
+		if (typeof value === "string" && value !== "") return value;
+	}
+};
+var num$4 = (args, key) => {
+	const value = args[key];
+	return typeof value === "number" && Number.isFinite(value) ? value : void 0;
+};
+var strings = (value) => Array.isArray(value) && value.length > 0 && value.every((v) => typeof v === "string") ? value : void 0;
+/** "lines 10–40" from whichever range arguments the tool takes. */ var lineRange = (args) => {
+	const span = (from, to) => from === void 0 && to === void 0 ? void 0 : to === void 0 || to < 0 ? `from line ${from}` : `lines ${from ?? 1}–${to}`;
+	const view = args.view_range;
+	if (Array.isArray(view) && typeof view[0] === "number") return span(view[0], typeof view[1] === "number" ? view[1] : void 0);
+	const offset = num$4(args, "offset");
+	const limit = num$4(args, "limit");
+	if (offset !== void 0 || limit !== void 0) {
+		const from = offset ?? 1;
+		return limit === void 0 ? `from line ${from}` : span(from, from + limit - 1);
+	}
+	return span(num$4(args, "start_line") ?? num$4(args, "line_start"), num$4(args, "end_line") ?? num$4(args, "line_end"));
+};
+/** Other scalar arguments, as "key value · key value". */ var otherArgs = (args, shown) => {
+	const parts = Object.entries(args).filter(([key, value]) => !shown.includes(key) && value !== null).map(([key, value]) => {
+		return `${key} ${typeof value === "string" ? value : strings(value)?.join(", ") ?? JSON.stringify(value)}`;
+	});
+	return parts.length > 0 ? parts.join(" · ") : void 0;
+};
+var kReadVerbs = /^(cat|head|tail|nl|sed)$/;
+/** The files a simple read command (`cat a.py`, `head -n 20 a.py`,
+*  `sed -n '1,80p' a.py`, `nl -ba a.py`, after an optional `cd dir &&`)
+*  prints, when they share a language we can highlight. */ var catPaths = (command) => {
+	const m = /^\s*(?:cd\s+[\w./~-]+\s*&&\s*)?(\w+)\s+(.+?)\s*$/.exec(command);
+	if (!m || !kReadVerbs.test(m[1])) return void 0;
+	const verb = m[1];
+	let rest = m[2];
+	if (verb === "sed") {
+		const sed = /^-n\s+'?\d+(?:,\d+)?p'?\s+(.+)$/.exec(rest);
+		if (!sed) return void 0;
+		rest = sed[1];
+	}
+	if (/[|;&<>$`(){}*?"'\\\n]/.test(rest)) return void 0;
+	const words = rest.split(/\s+/);
+	const files = [];
+	for (let k = 0; k < words.length; k++) {
+		const word = words[k];
+		if (word.startsWith("-")) {
+			if (/^-[nc]$/.test(word) && (verb === "head" || verb === "tail")) k++;
+			continue;
+		}
+		files.push(word);
+	}
+	if (files.length === 0 || verb !== "cat" && files.length > 1) return;
+	const language = languageForPath(files[0]);
+	return language && files.every((f) => languageForPath(f) === language) ? files : void 0;
+};
+var kEditors = /* @__PURE__ */ new Set([
+	"text_editor",
+	"str_replace_editor",
+	"str_replace_based_edit_tool"
+]);
+var kPatchTools = /* @__PURE__ */ new Set([
+	"apply_patch",
+	"applypatch",
+	"apply_diff"
+]);
+var editorView = (args) => {
+	const path = str$2(args, "path");
+	if (!path) return void 0;
+	switch (str$2(args, "command", "action")) {
+		case "view": return {
+			kind: "read",
+			paths: [path],
+			range: lineRange(args)
+		};
+		case "str_replace": {
+			const lines = lineDiff(str$2(args, "old_str") ?? "", str$2(args, "new_str") ?? "");
+			return {
+				kind: "edit",
+				path,
+				lines,
+				note: diffCounts(lines)
+			};
+		}
+		case "insert": {
+			const text = str$2(args, "insert_text", "new_str") ?? "";
+			const at = num$4(args, "insert_line");
+			return {
+				kind: "edit",
+				path,
+				lines: text.split("\n").map((t) => ({
+					kind: "add",
+					text: t
+				})),
+				note: at === 0 ? "insert at the top" : `insert after line ${at}`
+			};
+		}
+		case "create": {
+			const text = str$2(args, "file_text") ?? "";
+			return {
+				kind: "write",
+				path,
+				text,
+				note: writeNote(text)
+			};
+		}
+		case "undo_edit": return {
+			kind: "line",
+			icon: "edit",
+			text: path,
+			note: "undo last edit"
+		};
+		default: return;
+	}
+};
+var writeNote = (text) => {
+	const lines = text.replace(/\n$/, "").split("\n").length;
+	return `new file · ${lines} line${lines === 1 ? "" : "s"}`;
+};
+/** What one file's patch does besides editing lines. */ var fileOp = (file) => file.op === "add" ? "new file" : file.op === "delete" ? "deleted" : file.moveTo ? `moved to ${file.moveTo}` : void 0;
+var patchNote = (files) => {
+	const lines = files.flatMap((f) => f.lines);
+	return [files.length === 1 ? fileOp(files[0]) : void 0, lines.some((l) => l.kind === "add" || l.kind === "del") ? diffCounts(lines) : void 0].filter((p) => p !== void 0).join(" · ");
+};
+/** What pro-ux shows for a tool call, or undefined to keep the usual
+*  rendering. */ var toolView = (tool, args) => {
+	if (!args) return void 0;
+	const command = shellCommand(tool, args);
+	if (command !== void 0) {
+		const files = /\bapply_patch\b/.test(command) ? parsePatch(command) : void 0;
+		if (files) return {
+			kind: "patch",
+			files,
+			note: patchNote(files)
+		};
+		return {
+			kind: "shell",
+			command,
+			reads: catPaths(command)
+		};
+	}
+	if (kPatchTools.has(tool)) {
+		const text = str$2(args, "input", "patch", "diff");
+		const files = text !== void 0 ? parsePatch(text) : void 0;
+		return files ? {
+			kind: "patch",
+			files,
+			note: patchNote(files)
+		} : void 0;
+	}
+	if (kEditors.has(tool)) return editorView(args);
+	switch (tool) {
+		case "Read":
+		case "read_file":
+		case "view_file": {
+			const path = str$2(args, "file_path", "path", "absolute_path", "target_file");
+			return path ? {
+				kind: "read",
+				paths: [path],
+				range: lineRange(args)
+			} : void 0;
+		}
+		case "read_files":
+		case "read_many_files": {
+			const paths = strings(args.paths);
+			return paths ? {
+				kind: "read",
+				paths
+			} : void 0;
+		}
+		case "Edit":
+		case "replace": {
+			const path = str$2(args, "file_path", "path");
+			if (!path) return void 0;
+			const lines = lineDiff(str$2(args, "old_string") ?? "", str$2(args, "new_string") ?? "");
+			return {
+				kind: "edit",
+				path,
+				lines,
+				note: (args.replace_all === true ? "every occurrence · " : "") + diffCounts(lines)
+			};
+		}
+		case "MultiEdit": {
+			const path = str$2(args, "file_path");
+			const edits = Array.isArray(args.edits) ? args.edits : void 0;
+			if (!path || !edits) return void 0;
+			const lines = edits.flatMap((edit, i) => {
+				const e = isRecord(edit) ? edit : {};
+				return [{
+					kind: "hunk",
+					text: `edit ${i + 1} of ${edits.length}`
+				}, ...lineDiff(str$2(e, "old_string") ?? "", str$2(e, "new_string") ?? "")];
+			});
+			return {
+				kind: "edit",
+				path,
+				lines,
+				note: diffCounts(lines)
+			};
+		}
+		case "Write":
+		case "write_file":
+		case "create_file": {
+			const path = str$2(args, "file_path", "path");
+			const text = str$2(args, "content", "file_text", "contents");
+			return path && text !== void 0 ? {
+				kind: "write",
+				path,
+				text,
+				note: writeNote(text)
+			} : void 0;
+		}
+		case "web_search":
+		case "WebSearch":
+		case "google_web_search": {
+			const query = str$2(args, "query", "q");
+			return query ? {
+				kind: "line",
+				icon: "search",
+				text: query,
+				note: otherArgs(args, ["query", "q"])
+			} : void 0;
+		}
+		case "web_fetch":
+		case "WebFetch":
+		case "fetch_url":
+		case "fetch":
+		case "web_browser_go": {
+			const urls = strings(args.urls) ?? (str$2(args, "url") ? [str$2(args, "url")] : void 0);
+			return urls ? {
+				kind: "line",
+				icon: "globe",
+				text: urls.join("\n"),
+				note: otherArgs(args, ["url", "urls"])
+			} : void 0;
+		}
+		case "Grep":
+		case "Glob":
+		case "grep":
+		case "glob":
+		case "grep_files":
+		case "search_file_content": {
+			const pattern = str$2(args, "pattern");
+			return pattern ? {
+				kind: "line",
+				icon: "search",
+				text: pattern,
+				note: otherArgs(args, ["pattern"])
+			} : void 0;
+		}
+		case "LS":
+		case "list_dir":
+		case "list_directory":
+		case "list_files": {
+			const path = str$2(args, "path", "dir_path", "directory");
+			return path ? {
+				kind: "line",
+				icon: "folder",
+				text: path,
+				note: otherArgs(args, [
+					"path",
+					"dir_path",
+					"directory"
+				])
+			} : void 0;
+		}
+		default: return;
+	}
+};
+var kNumbered = /^\s*(\d+)(?:\t|→)(.*)$/;
+/** Splits `cat -n` style output (`   12\tcode` or `12→code`) into line
+*  numbers and code; undefined without a run of at least two such lines. */ var numberedListing = (text) => {
+	const lines = text.split("\n");
+	const first = lines.findIndex((l) => kNumbered.test(l));
+	if (first < 0) return void 0;
+	let last = first;
+	while (last + 1 < lines.length && kNumbered.test(lines[last + 1])) last++;
+	if (last === first) return void 0;
+	const numbered = lines.slice(first, last + 1).map((l) => kNumbered.exec(l));
+	return {
+		before: lines.slice(0, first).join("\n").trim(),
+		numbers: numbered.map((m) => m[1]),
+		code: numbered.map((m) => m[2]).join("\n"),
+		after: lines.slice(last + 1).join("\n").trim()
+	};
+};
+/** Splits `--- path ---` delimited output into one section per file. */ var fileSections = (text, paths) => {
+	const sections = [];
+	let current = { text: "" };
+	for (const line of text.split("\n")) {
+		const header = /^--- (.+) ---$/.exec(line);
+		if (header && paths.includes(header[1])) {
+			if (current.path !== void 0 || current.text.trim() !== "") sections.push(current);
+			current = {
+				path: header[1],
+				text: ""
+			};
+		} else current.text += current.text === "" ? line : `\n${line}`;
+	}
+	sections.push(current);
+	return sections.map((s) => ({
+		...s,
+		text: s.text.replace(/\s+$/, "")
+	}));
+};
 //#endregion
 //#region ../../packages/inspect-components/src/pro-ux/useHtmlFlag.ts
 var subscribe$1 = (onChange) => {
@@ -68450,73 +69562,581 @@ var subscribe$1 = (onChange) => {
 		$[0] = name;
 		$[1] = t0;
 	} else t0 = $[1];
-	return (0, import_react.useSyncExternalStore)(subscribe$1, t0, _temp$96);
+	return (0, import_react.useSyncExternalStore)(subscribe$1, t0, _temp$102);
 };
-function _temp$96() {
+function _temp$102() {
 	return false;
 }
 //#endregion
-//#region ../../packages/inspect-components/src/pro-ux/shellCommand.ts
-/** Longest command shown on the header line; longer ones keep the code block. */ var kMaxLineCommand = 160;
-var asCommand = (value) => {
-	if (typeof value === "string") return value;
-	if (Array.isArray(value) && value.every((v) => typeof v === "string")) return value.join(" ");
-};
-/** The shell command a tool call runs, for the shell tools we know. */ var shellCommand = (tool, args) => {
-	if (!args) return void 0;
-	switch (tool) {
-		case "bash_session": return args.action === "type_submit" || args.action === "type" ? asCommand(args.input) : void 0;
-		case "bash":
-		case "exec_command": return asCommand(args.cmd ?? args.command);
-		case "Bash":
-		case "shell":
-		case "shell_command": return asCommand(args.command);
-		default: return;
-	}
-};
-/** One line and short enough to read in the header at a glance. */ var isSimpleCommand = (command) => {
-	const trimmed = command.trim();
-	return trimmed.length > 0 && trimmed.length <= kMaxLineCommand && !trimmed.includes("\n");
-};
-/** How pro-ux shows a shell call; empty when pro-ux is off or the tool is
-*  not a shell, so the usual rendering applies. */ var useShellView = (tool, args) => {
-	const $ = (0, import_compiler_runtime.c)(6);
-	if (!useHtmlFlag("data-pro-ux")) {
-		let t0;
-		if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-			t0 = {};
-			$[0] = t0;
-		} else t0 = $[0];
-		return t0;
-	}
+//#region ../../packages/inspect-components/src/pro-ux/ProToolCall.tsx
+/** How pro-ux shows a tool call; empty when pro-ux is off or the tool is not
+*  one it knows, so the usual rendering applies. */ var useProToolCall = (tool, args, id) => {
+	const $ = (0, import_compiler_runtime.c)(63);
+	const enabled = useHtmlFlag("data-pro-ux");
+	const rendered = useDisplayMode() === "rendered";
+	const [pretty, setPretty] = (0, import_react.useState)(false);
 	let t0;
-	let t1;
-	if ($[1] !== args || $[2] !== tool) {
-		t1 = Symbol.for("react.early_return_sentinel");
-		bb0: {
-			const command = shellCommand(tool, args);
-			if (command === void 0) {
-				let t2;
-				if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-					t2 = {};
-					$[5] = t2;
-				} else t2 = $[5];
-				t1 = t2;
-				break bb0;
-			}
-			t0 = isSimpleCommand(command) ? { line: command.trim() } : { block: command };
-		}
-		$[1] = args;
+	if ($[0] !== args || $[1] !== enabled || $[2] !== tool) {
+		t0 = enabled ? toolView(tool, args) : void 0;
+		$[0] = args;
+		$[1] = enabled;
 		$[2] = tool;
 		$[3] = t0;
-		$[4] = t1;
-	} else {
-		t0 = $[3];
-		t1 = $[4];
+	} else t0 = $[3];
+	const view = t0;
+	let t1;
+	if ($[4] !== view) {
+		t1 = view?.kind === "shell" ? view.command.trim() : void 0;
+		$[4] = view;
+		$[5] = t1;
+	} else t1 = $[5];
+	const command = t1;
+	let t2;
+	if ($[6] !== command) {
+		t2 = command !== void 0 ? prettifyShell(command) : void 0;
+		$[6] = command;
+		$[7] = t2;
+	} else t2 = $[7];
+	const prettified = t2;
+	if (!view) {
+		let t3;
+		if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
+			t3 = {};
+			$[8] = t3;
+		} else t3 = $[8];
+		return t3;
 	}
-	if (t1 !== Symbol.for("react.early_return_sentinel")) return t1;
-	return t0;
+	let t3;
+	if ($[9] !== id || $[10] !== rendered) {
+		t3 = (paths) => rendered ? (output) => {
+			const text = plainOutput(output);
+			if (text === void 0) return;
+			if (languageForPath(paths[0]) === "json" && parseJsonRecord(text)) return;
+			return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(FileOutput, {
+				id,
+				text,
+				paths
+			});
+		} : void 0;
+		$[9] = id;
+		$[10] = rendered;
+		$[11] = t3;
+	} else t3 = $[11];
+	const fileOutput = t3;
+	switch (view.kind) {
+		case "shell": {
+			const original = command;
+			const shown = pretty && prettified ? prettified : original;
+			let t4;
+			if ($[12] !== original || $[13] !== prettified || $[14] !== pretty || $[15] !== shown) {
+				t4 = prettified ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(PrettifyToggle, {
+					on: pretty,
+					onToggle: () => setPretty(_temp$101),
+					original,
+					shown
+				}) : void 0;
+				$[12] = original;
+				$[13] = prettified;
+				$[14] = pretty;
+				$[15] = shown;
+				$[16] = t4;
+			} else t4 = $[16];
+			const control = t4;
+			let t5;
+			if ($[17] !== fileOutput || $[18] !== view.reads) {
+				t5 = view.reads ? fileOutput(view.reads) : void 0;
+				$[17] = fileOutput;
+				$[18] = view.reads;
+				$[19] = t5;
+			} else t5 = $[19];
+			let t6;
+			if ($[20] !== control || $[21] !== t5) {
+				t6 = {
+					control,
+					output: t5
+				};
+				$[20] = control;
+				$[21] = t5;
+				$[22] = t6;
+			} else t6 = $[22];
+			const common = t6;
+			let t7;
+			if ($[23] !== common || $[24] !== control || $[25] !== original || $[26] !== shown) {
+				t7 = isSimpleCommand(original) ? {
+					...common,
+					line: shown,
+					className: clsx("pro-tool-line pro-shell-line", control && "pro-has-control")
+				} : {
+					...common,
+					className: clsx(control && "pro-has-control"),
+					input: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolInput, {
+						contentType: "bash",
+						contents: shown
+					}, shown === original ? "as-sent" : "prettified")
+				};
+				$[23] = common;
+				$[24] = control;
+				$[25] = original;
+				$[26] = shown;
+				$[27] = t7;
+			} else t7 = $[27];
+			return t7;
+		}
+		case "patch": {
+			let t4;
+			if ($[28] !== view.files) {
+				t4 = view.files.map(_temp2$62).join(", ");
+				$[28] = view.files;
+				$[29] = t4;
+			} else t4 = $[29];
+			let t5;
+			if ($[30] !== view.files) {
+				t5 = view.files.some(_temp3$44) ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DiffView, {
+					files: view.files,
+					labelled: view.files.length > 1
+				}) : void 0;
+				$[30] = view.files;
+				$[31] = t5;
+			} else t5 = $[31];
+			let t6;
+			if ($[32] !== t4 || $[33] !== t5 || $[34] !== view.note) {
+				t6 = {
+					icon: "edit",
+					line: t4,
+					summary: view.note,
+					className: "pro-tool-line",
+					input: t5
+				};
+				$[32] = t4;
+				$[33] = t5;
+				$[34] = view.note;
+				$[35] = t6;
+			} else t6 = $[35];
+			return t6;
+		}
+		case "read": {
+			let t4;
+			if ($[36] !== view.paths) {
+				t4 = view.paths.join(", ");
+				$[36] = view.paths;
+				$[37] = t4;
+			} else t4 = $[37];
+			const t5 = view.range;
+			let t6;
+			if ($[38] !== fileOutput || $[39] !== view.paths) {
+				t6 = fileOutput(view.paths);
+				$[38] = fileOutput;
+				$[39] = view.paths;
+				$[40] = t6;
+			} else t6 = $[40];
+			let t7;
+			if ($[41] !== t4 || $[42] !== t6 || $[43] !== view.range) {
+				t7 = {
+					icon: "fileText",
+					line: t4,
+					summary: t5,
+					className: "pro-tool-line",
+					output: t6
+				};
+				$[41] = t4;
+				$[42] = t6;
+				$[43] = view.range;
+				$[44] = t7;
+			} else t7 = $[44];
+			return t7;
+		}
+		case "edit": {
+			let t4;
+			if ($[45] !== view.lines || $[46] !== view.path) {
+				t4 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DiffView, {
+					files: [{
+						path: view.path,
+						op: "update",
+						lines: view.lines
+					}],
+					labelled: false
+				});
+				$[45] = view.lines;
+				$[46] = view.path;
+				$[47] = t4;
+			} else t4 = $[47];
+			let t5;
+			if ($[48] !== t4 || $[49] !== view.note || $[50] !== view.path) {
+				t5 = {
+					icon: "edit",
+					line: view.path,
+					summary: view.note,
+					className: "pro-tool-line",
+					input: t4
+				};
+				$[48] = t4;
+				$[49] = view.note;
+				$[50] = view.path;
+				$[51] = t5;
+			} else t5 = $[51];
+			return t5;
+		}
+		case "write": {
+			let t4;
+			if ($[52] !== view.path || $[53] !== view.text) {
+				t4 = view.text ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolInput, {
+					contentType: languageForPath(view.path),
+					contents: view.text
+				}) : void 0;
+				$[52] = view.path;
+				$[53] = view.text;
+				$[54] = t4;
+			} else t4 = $[54];
+			let t5;
+			if ($[55] !== t4 || $[56] !== view.note || $[57] !== view.path) {
+				t5 = {
+					icon: "edit",
+					line: view.path,
+					summary: view.note,
+					className: "pro-tool-line",
+					input: t4
+				};
+				$[55] = t4;
+				$[56] = view.note;
+				$[57] = view.path;
+				$[58] = t5;
+			} else t5 = $[58];
+			return t5;
+		}
+		case "line": {
+			let t4;
+			if ($[59] !== view.icon || $[60] !== view.note || $[61] !== view.text) {
+				t4 = {
+					icon: view.icon,
+					line: view.text,
+					summary: view.note,
+					className: "pro-tool-line"
+				};
+				$[59] = view.icon;
+				$[60] = view.note;
+				$[61] = view.text;
+				$[62] = t4;
+			} else t4 = $[62];
+			return t4;
+		}
+	}
 };
+/** The output's text, when it is only text. */ var plainOutput = (output) => {
+	if (typeof output === "string") return output;
+	if (typeof output !== "object") return void 0;
+	const texts = [];
+	for (const item of Array.isArray(output) ? output : [output]) if (item.type === "text") texts.push(item.text);
+	else if (item.type === "tool") for (const c of item.content) {
+		if (c.type !== "text") return void 0;
+		texts.push(c.text);
+	}
+	else return void 0;
+	return texts.length > 0 ? texts.join("\n") : void 0;
+};
+var PrettifyToggle = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(12);
+	const { on, onToggle, original, shown } = t0;
+	const ref = (0, import_react.useRef)(null);
+	let t1;
+	if ($[0] !== original || $[1] !== shown) {
+		t1 = (e) => {
+			const selection = document.getSelection();
+			const block = ref.current?.parentElement;
+			if (!selection?.anchorNode || !block?.contains(selection.anchorNode)) return;
+			if (selection.toString().trim() !== shown.trim()) return;
+			e.clipboardData?.setData("text/plain", original);
+			e.preventDefault();
+		};
+		$[0] = original;
+		$[1] = shown;
+		$[2] = t1;
+	} else t1 = $[2];
+	useEventListener(on ? document : null, "copy", t1);
+	const t2 = on && "pro-prettify-on";
+	let t3;
+	if ($[3] !== t2) {
+		t3 = clsx("pro-prettify", t2);
+		$[3] = t2;
+		$[4] = t3;
+	} else t3 = $[4];
+	const t4 = on ? "Showing one command per line. Click to show the command as sent." : "Show one command per line, breaking after each top-level ; && and ||. Display only: copying the whole command copies it as sent.";
+	let t5;
+	if ($[5] !== onToggle) {
+		t5 = (e_0) => {
+			e_0.stopPropagation();
+			onToggle();
+		};
+		$[5] = onToggle;
+		$[6] = t5;
+	} else t5 = $[6];
+	let t6;
+	if ($[7] !== on || $[8] !== t3 || $[9] !== t4 || $[10] !== t5) {
+		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
+			ref,
+			type: "button",
+			className: t3,
+			"aria-pressed": on,
+			title: t4,
+			onClick: t5,
+			children: "prettify"
+		});
+		$[7] = on;
+		$[8] = t3;
+		$[9] = t4;
+		$[10] = t5;
+		$[11] = t6;
+	} else t6 = $[11];
+	return t6;
+};
+var kSign = {
+	add: "+",
+	del: "−",
+	ctx: " "
+};
+var DiffRow$1 = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(14);
+	const { line } = t0;
+	if (line.kind === "hunk") {
+		let t1;
+		if ($[0] !== line.text) {
+			t1 = line.text === "@@" ? "⋯" : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: line.text });
+			$[0] = line.text;
+			$[1] = t1;
+		} else t1 = $[1];
+		let t2;
+		if ($[2] !== t1) {
+			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+				className: "pro-diff-hunk",
+				children: t1
+			});
+			$[2] = t1;
+			$[3] = t2;
+		} else t2 = $[3];
+		return t2;
+	}
+	if (line.kind === "note") {
+		let t1;
+		if ($[4] !== line.text) {
+			t1 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+				className: "pro-diff-note",
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: line.text })
+			});
+			$[4] = line.text;
+			$[5] = t1;
+		} else t1 = $[5];
+		return t1;
+	}
+	const t1 = `pro-diff-line pro-diff-${line.kind}`;
+	const t2 = kSign[line.kind];
+	let t3;
+	if ($[6] !== t2) {
+		t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-diff-sign",
+			"aria-hidden": true,
+			children: t2
+		});
+		$[6] = t2;
+		$[7] = t3;
+	} else t3 = $[7];
+	let t4;
+	if ($[8] !== line.text) {
+		t4 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-diff-text",
+			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: line.text })
+		});
+		$[8] = line.text;
+		$[9] = t4;
+	} else t4 = $[9];
+	let t5;
+	if ($[10] !== t1 || $[11] !== t3 || $[12] !== t4) {
+		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: t1,
+			children: [t3, t4]
+		});
+		$[10] = t1;
+		$[11] = t3;
+		$[12] = t4;
+		$[13] = t5;
+	} else t5 = $[13];
+	return t5;
+};
+/** Lines added on a green tint, removed on a red one; file paths as labels
+*  when the patch touches more than one file. */ var DiffView = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(7);
+	const { files, labelled } = t0;
+	let t1;
+	if ($[0] !== files || $[1] !== labelled) {
+		let t2;
+		if ($[3] !== labelled) {
+			t2 = (file, i) => /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+				className: "pro-diff-file",
+				children: [labelled ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+					className: "pro-diff-label",
+					children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: file.path }), fileOp(file) ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+						className: "pro-diff-op",
+						children: fileOp(file)
+					}) : null]
+				}) : null, file.lines.map(_temp4$34)]
+			}, i);
+			$[3] = labelled;
+			$[4] = t2;
+		} else t2 = $[4];
+		t1 = files.map(t2);
+		$[0] = files;
+		$[1] = labelled;
+		$[2] = t1;
+	} else t1 = $[2];
+	let t2;
+	if ($[5] !== t1) {
+		t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			className: "pro-diff tool-call-input",
+			children: t1
+		});
+		$[5] = t1;
+		$[6] = t2;
+	} else t2 = $[6];
+	return t2;
+};
+var FileSectionView = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(8);
+	const { section, language } = t0;
+	let t1;
+	if ($[0] !== language || $[1] !== section.path || $[2] !== section.text) {
+		const listing = numberedListing(section.text);
+		const t2 = language && `language-${language}`;
+		let t3;
+		if ($[4] !== t2) {
+			t3 = clsx("sourceCode", t2);
+			$[4] = t2;
+			$[5] = t3;
+		} else t3 = $[5];
+		const codeClass = t3;
+		let t4;
+		if ($[6] !== section.path) {
+			t4 = section.path !== void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+				className: "pro-file-label",
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: section.path })
+			}) : null;
+			$[6] = section.path;
+			$[7] = t4;
+		} else t4 = $[7];
+		t1 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: "pro-file-section",
+			children: [t4, listing ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				listing.before ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+					className: "pro-file-note",
+					children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: listing.before })
+				}) : null,
+				/*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+					className: "pro-file-grid",
+					children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+						className: "pro-file-gutter",
+						"aria-hidden": true,
+						children: listing.numbers.join("\n")
+					}), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+						className: "pro-file-code",
+						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentCode, {
+							className: codeClass,
+							text: listing.code
+						})
+					})]
+				}),
+				listing.after ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+					className: "pro-file-note",
+					children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentText, { text: listing.after })
+				}) : null
+			] }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+				className: "pro-file-code pro-file-wrap",
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ContentCode, {
+					className: codeClass,
+					text: section.text
+				})
+			})]
+		});
+		$[0] = language;
+		$[1] = section.path;
+		$[2] = section.text;
+		$[3] = t1;
+	} else t1 = $[3];
+	return t1;
+};
+/** A file's contents, highlighted by its extension, with `cat -n` style line
+*  numbers moved to a gutter. */ var FileOutput = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(16);
+	const { id, text, paths } = t0;
+	let t1;
+	if ($[0] !== text) {
+		t1 = cappedText(text);
+		$[0] = text;
+		$[1] = t1;
+	} else t1 = $[1];
+	const { text: capped, notice } = t1;
+	let t2;
+	if ($[2] !== capped || $[3] !== paths) {
+		t2 = fileSections(capped.replace(/^\s*\n/, ""), paths);
+		$[2] = capped;
+		$[3] = paths;
+		$[4] = t2;
+	} else t2 = $[4];
+	const sections = t2;
+	const ref = (0, import_react.useRef)(null);
+	usePrismHighlight(ref, capped.length);
+	const t3 = `${id}-tool-content`;
+	let t4;
+	if ($[5] !== paths || $[6] !== sections) {
+		let t5;
+		if ($[8] !== paths) {
+			t5 = (section, i) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)(FileSectionView, {
+				section,
+				language: languageForPath(section.path ?? paths[0])
+			}, i);
+			$[8] = paths;
+			$[9] = t5;
+		} else t5 = $[9];
+		t4 = sections.map(t5);
+		$[5] = paths;
+		$[6] = sections;
+		$[7] = t4;
+	} else t4 = $[7];
+	let t5;
+	if ($[10] !== t4) {
+		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			ref,
+			className: "pro-file-output",
+			children: t4
+		});
+		$[10] = t4;
+		$[11] = t5;
+	} else t5 = $[11];
+	let t6;
+	if ($[12] !== notice || $[13] !== t3 || $[14] !== t5) {
+		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(ExpandablePanel, {
+			id: t3,
+			collapse: true,
+			border: false,
+			lines: 15,
+			className: "text-size-small",
+			children: [t5, notice]
+		});
+		$[12] = notice;
+		$[13] = t3;
+		$[14] = t5;
+		$[15] = t6;
+	} else t6 = $[15];
+	return t6;
+};
+function _temp$101(p) {
+	return !p;
+}
+function _temp2$62(f) {
+	return f.path;
+}
+function _temp3$44(f_0) {
+	return f_0.lines.length > 0;
+}
+function _temp4$34(line, j) {
+	return j === 0 && line.kind === "hunk" && line.text === "@@" ? null : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DiffRow$1, { line }, j);
+}
 var ClientToolCall_module_default = { custom: "_custom_wwbdp_4" };
 //#endregion
 //#region ../../packages/inspect-components/src/chat/tools/ClientToolCall.tsx
@@ -68525,13 +70145,11 @@ var ClientToolCall_module_default = { custom: "_custom_wwbdp_4" };
 * header (terminal icon · mono tool name · args summary), the input zone
 * (e.g. code) and the output well stacked beneath.
 */ var ClientToolCall = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(65);
+	const $ = (0, import_compiler_runtime.c)(70);
 	const { id, tool, title, functionCall, input, description, contentType, view, output, selfAnnotation, inputScreenshot, error, args, className, getCustomToolView, afterInput, afterOutput, outputReplacement, headerLeading } = t0;
 	const customContent = useCustomContent();
-	const shell = useShellView(tool, args);
-	const shellLine = shell.line;
-	const shownInput = shell.block ?? input;
-	const shownType = shell.block !== void 0 ? "bash" : contentType;
+	const pro = useProToolCall(tool, args, id);
+	const proLine = pro.line;
 	let t1;
 	let viewProps;
 	if ($[0] !== contentType || $[1] !== customContent || $[2] !== description || $[3] !== functionCall || $[4] !== getCustomToolView || $[5] !== id || $[6] !== input || $[7] !== inputScreenshot || $[8] !== output || $[9] !== selfAnnotation || $[10] !== tool || $[11] !== view) {
@@ -68596,7 +70214,7 @@ var ClientToolCall_module_default = { custom: "_custom_wwbdp_4" };
 		} else t3 = $[22];
 		return t3;
 	}
-	const hasInput = !shellLine && (shownInput !== void 0 && shownInput !== null && shownInput !== "" || !!view?.content);
+	const hasInput = !!pro.input || !proLine && (input !== void 0 && input !== null && input !== "" || !!view?.content);
 	let argsBody;
 	let t2;
 	if ($[23] !== functionCall || $[24] !== hasInput || $[25] !== title || $[26] !== tool) {
@@ -68613,7 +70231,7 @@ var ClientToolCall_module_default = { custom: "_custom_wwbdp_4" };
 		t2 = $[28];
 	}
 	const argsSummary = t2;
-	const argsInInputZone = !shellLine && !!argsSummary && argsSummary.length > kMaxSummaryArgs;
+	const argsInInputZone = !proLine && !!argsSummary && argsSummary.length > kMaxSummaryArgs;
 	const showError = !!error;
 	const showAnnotation = !!selfAnnotation && !!inputScreenshot;
 	let t3;
@@ -68626,91 +70244,96 @@ var ClientToolCall_module_default = { custom: "_custom_wwbdp_4" };
 	} else t3 = $[32];
 	const showOutput = t3;
 	let t4;
-	if ($[33] !== tool) {
-		t4 = iconForTool(tool);
-		$[33] = tool;
-		$[34] = t4;
-	} else t4 = $[34];
-	const t5 = shellLine ?? (title || tool);
-	const t6 = shellLine ? description : description ?? (argsInInputZone ? void 0 : argsSummary);
-	const t7 = shellLine && "pro-shell-line";
+	if ($[33] !== pro.icon || $[34] !== tool) {
+		t4 = pro.icon ?? iconForTool(tool);
+		$[33] = pro.icon;
+		$[34] = tool;
+		$[35] = t4;
+	} else t4 = $[35];
+	const t5 = proLine ?? (title || tool);
+	const t6 = proLine ? pro.summary ?? description : description ?? (argsInInputZone ? void 0 : argsSummary);
+	let t7;
+	if ($[36] !== className || $[37] !== pro.className) {
+		t7 = clsx(className, pro.className);
+		$[36] = className;
+		$[37] = pro.className;
+		$[38] = t7;
+	} else t7 = $[38];
 	let t8;
-	if ($[35] !== className || $[36] !== t7) {
-		t8 = clsx(className, t7);
-		$[35] = className;
-		$[36] = t7;
-		$[37] = t8;
-	} else t8 = $[37];
-	let t9;
-	if ($[38] !== argsBody || $[39] !== argsInInputZone || $[40] !== hasInput || $[41] !== id || $[42] !== shownInput || $[43] !== shownType || $[44] !== view) {
-		t9 = hasInput || argsInInputZone ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolBlockInput, { children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ExpandablePanel, {
+	if ($[39] !== argsBody || $[40] !== argsInInputZone || $[41] !== contentType || $[42] !== hasInput || $[43] !== id || $[44] !== input || $[45] !== pro.input || $[46] !== view) {
+		t8 = hasInput || argsInInputZone ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolBlockInput, { children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ExpandablePanel, {
 			id: `${id}-tool-input`,
 			collapse: true,
 			border: false,
 			lines: 20,
 			className: clsx("text-size-small"),
-			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolInput, {
-				contentType: hasInput ? shownType : void 0,
-				contents: hasInput ? shownInput : argsBody,
+			children: pro.input ?? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolInput, {
+				contentType: hasInput ? contentType : void 0,
+				contents: hasInput ? input : argsBody,
 				toolCallView: hasInput ? view : void 0
 			})
 		}) }) : null;
-		$[38] = argsBody;
-		$[39] = argsInInputZone;
-		$[40] = hasInput;
-		$[41] = id;
-		$[42] = shownInput;
-		$[43] = shownType;
-		$[44] = view;
-		$[45] = t9;
-	} else t9 = $[45];
-	let t10;
-	if ($[46] !== error || $[47] !== inputScreenshot || $[48] !== outputReplacement || $[49] !== selfAnnotation || $[50] !== showError || $[51] !== showOutput || $[52] !== viewProps) {
-		t10 = outputReplacement ? outputReplacement : showError ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(ToolBlockOutput, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolCallErrorView, { error }), selfAnnotation && inputScreenshot ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(AnnotatedScreenshotOutput, {
+		$[39] = argsBody;
+		$[40] = argsInInputZone;
+		$[41] = contentType;
+		$[42] = hasInput;
+		$[43] = id;
+		$[44] = input;
+		$[45] = pro.input;
+		$[46] = view;
+		$[47] = t8;
+	} else t8 = $[47];
+	let t9;
+	if ($[48] !== error || $[49] !== inputScreenshot || $[50] !== output || $[51] !== outputReplacement || $[52] !== pro || $[53] !== selfAnnotation || $[54] !== showError || $[55] !== showOutput || $[56] !== viewProps) {
+		t9 = outputReplacement ? outputReplacement : showError ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(ToolBlockOutput, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolCallErrorView, { error }), selfAnnotation && inputScreenshot ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(AnnotatedScreenshotOutput, {
 			contents: inputScreenshot,
 			annotation: selfAnnotation
-		}) : null] }) : showOutput ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolBlockOutput, { children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolCallView, {
+		}) : null] }) : showOutput ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolBlockOutput, { children: pro.output?.(output) ?? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolCallView, {
 			...viewProps,
 			section: "output"
 		}) }) : null;
-		$[46] = error;
-		$[47] = inputScreenshot;
-		$[48] = outputReplacement;
-		$[49] = selfAnnotation;
-		$[50] = showError;
-		$[51] = showOutput;
-		$[52] = viewProps;
-		$[53] = t10;
-	} else t10 = $[53];
-	let t11;
-	if ($[54] !== afterInput || $[55] !== afterOutput || $[56] !== headerLeading || $[57] !== id || $[58] !== t10 || $[59] !== t4 || $[60] !== t5 || $[61] !== t6 || $[62] !== t8 || $[63] !== t9) {
-		t11 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(ToolBlock, {
+		$[48] = error;
+		$[49] = inputScreenshot;
+		$[50] = output;
+		$[51] = outputReplacement;
+		$[52] = pro;
+		$[53] = selfAnnotation;
+		$[54] = showError;
+		$[55] = showOutput;
+		$[56] = viewProps;
+		$[57] = t9;
+	} else t9 = $[57];
+	let t10;
+	if ($[58] !== afterInput || $[59] !== afterOutput || $[60] !== headerLeading || $[61] !== id || $[62] !== pro.control || $[63] !== t4 || $[64] !== t5 || $[65] !== t6 || $[66] !== t7 || $[67] !== t8 || $[68] !== t9) {
+		t10 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(ToolBlock, {
 			id,
 			icon: t4,
 			title: t5,
 			summary: t6,
-			className: t8,
+			className: t7,
 			headerLeading,
 			children: [
-				t9,
+				pro.control,
+				t8,
 				afterInput,
-				t10,
+				t9,
 				afterOutput
 			]
 		});
-		$[54] = afterInput;
-		$[55] = afterOutput;
-		$[56] = headerLeading;
-		$[57] = id;
-		$[58] = t10;
-		$[59] = t4;
-		$[60] = t5;
-		$[61] = t6;
-		$[62] = t8;
-		$[63] = t9;
-		$[64] = t11;
-	} else t11 = $[64];
-	return t11;
+		$[58] = afterInput;
+		$[59] = afterOutput;
+		$[60] = headerLeading;
+		$[61] = id;
+		$[62] = pro.control;
+		$[63] = t4;
+		$[64] = t5;
+		$[65] = t6;
+		$[66] = t7;
+		$[67] = t8;
+		$[68] = t9;
+		$[69] = t10;
+	} else t10 = $[69];
+	return t10;
 };
 /** Args longer than this can't meaningfully summarize on the single header
 * line; they render in the input zone instead. */ var kMaxSummaryArgs = 120;
@@ -68864,7 +70487,7 @@ var CopyButton = (t0) => {
 			writeClipboard(copy.text).then(() => {
 				setCopied(true);
 				setTimeout(() => setCopied(false), 900);
-			}).catch(_temp$95);
+			}).catch(_temp$100);
 		};
 		$[3] = copy.text;
 		$[4] = t5;
@@ -68927,7 +70550,7 @@ var CopyButton = (t0) => {
 	} else t1 = $[5];
 	return t1;
 };
-function _temp$95() {}
+function _temp$100() {}
 var ChatMessage_module_default = {
 	message: "_message_a3ae9_1",
 	systemRole: "_systemRole_a3ae9_9",
@@ -69188,7 +70811,7 @@ var ChatMessage = /*#__PURE__*/ (0, import_react.memo)(function ChatMessage(t0) 
 	const t16 = message.role === "tool" ? 30 : message.role === "assistant" ? 25 : 15;
 	let t17;
 	if ($[59] !== id || $[60] !== isNonSubagentTool || $[61] !== message || $[62] !== references || $[63] !== subagentNotifications || $[64] !== toolMarkdown || $[65] !== toolSearchNamespaces) {
-		t17 = isNonSubagentTool ? toolSearchNamespaces ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolSearchView, { namespaces: toolSearchNamespaces }) : toolMarkdown !== void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDiv, { markdown: toolMarkdown }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolOutput, { output: typeof message.content === "string" ? message.content : message.content.filter(_temp$94) }) : subagentNotifications !== void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDiv, { markdown: subagentNotifications }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MessageContents, {
+		t17 = isNonSubagentTool ? toolSearchNamespaces ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolSearchView, { namespaces: toolSearchNamespaces }) : toolMarkdown !== void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDiv, { markdown: toolMarkdown }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolOutput, { output: typeof message.content === "string" ? message.content : message.content.filter(_temp$99) }) : subagentNotifications !== void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDiv, { markdown: subagentNotifications }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MessageContents, {
 			message,
 			references
 		}, `${id}-contents`);
@@ -69264,7 +70887,7 @@ var ChatMessage = /*#__PURE__*/ (0, import_react.memo)(function ChatMessage(t0) 
 	}
 	return segments;
 };
-function _temp$94(c) {
+function _temp$99(c) {
 	return c.type === "text" || c.type === "image";
 }
 var RowSelectCheckbox_module_default = {
@@ -69369,7 +70992,7 @@ var RowSelectCheckbox_module_default = {
 			"aria-label": label,
 			title: label,
 			className: t2,
-			onMouseDown: _temp$93,
+			onMouseDown: _temp$98,
 			onClick: t3,
 			children: t4
 		});
@@ -69382,7 +71005,7 @@ var RowSelectCheckbox_module_default = {
 	} else t5 = $[12];
 	return t5;
 };
-function _temp$93(e) {
+function _temp$98(e) {
 	if (e.shiftKey) e.preventDefault();
 }
 var ChatMessageRow_module_default = {
@@ -69636,7 +71259,7 @@ var MessageLabel_module_default = {
 		viewKinds = $[18];
 		views = $[19];
 	}
-	const hasTools = viewKinds.some(_temp$92);
+	const hasTools = viewKinds.some(_temp$97);
 	if (useLabels || hasTools) {
 		let t2;
 		if ($[42] !== hasTools || $[43] !== highlightLabeled || $[44] !== highlightUserMessage || $[45] !== index || $[46] !== messageChip || $[47] !== resolvedMessage || $[48] !== viewChips || $[49] !== viewKinds || $[50] !== views) {
@@ -69799,7 +71422,7 @@ var ToolCallViewCompact = (t0) => {
 	} else t4 = $[5];
 	return t4;
 };
-function _temp$92(k) {
+function _temp$97(k) {
 	return k !== "message";
 }
 //#endregion
@@ -70245,7 +71868,7 @@ var kLoadMoreMarginRows = 20;
 	useListKeyboardNavigation(t5);
 	let t6;
 	if ($[8] !== rows) {
-		t6 = () => rows.map(_temp$91).filter(_temp2$59);
+		t6 = () => rows.map(_temp$96).filter(_temp2$61);
 		$[8] = rows;
 		$[9] = t6;
 	} else t6 = $[9];
@@ -70342,7 +71965,7 @@ var kLoadMoreMarginRows = 20;
 		$[33] = t11;
 	} else t11 = $[33];
 	const renderRow = t11;
-	const rowSearchText = _temp3$42;
+	const rowSearchText = _temp3$43;
 	if (rows.length === 0) {
 		if (backfilling) {
 			let t12;
@@ -70418,13 +72041,13 @@ var kLoadMoreMarginRows = 20;
 	} else t16 = $[54];
 	return t16;
 });
-function _temp$91(row) {
+function _temp$96(row) {
 	return row.resolved.message.id;
 }
-function _temp2$59(rowId) {
+function _temp2$61(rowId) {
 	return typeof rowId === "string";
 }
-function _temp3$42(item_0) {
+function _temp3$43(item_0) {
 	return messageSearchText(item_0.resolved);
 }
 //#endregion
@@ -70858,7 +72481,7 @@ var kLoadingFeed = unpagedFeed(loading$2);
 			queryKey: t4,
 			queryFn: t5,
 			initialPageParam: 0,
-			getNextPageParam: _temp$90,
+			getNextPageParam: _temp$95,
 			gcTime: kSampleGcTimeMs,
 			staleTime: Infinity,
 			retry: false,
@@ -70874,7 +72497,7 @@ var kLoadingFeed = unpagedFeed(loading$2);
 	const pages = data?.pages;
 	let t7;
 	if ($[14] !== pages) {
-		t7 = pages?.flatMap(_temp2$58);
+		t7 = pages?.flatMap(_temp2$60);
 		$[14] = pages;
 		$[15] = t7;
 	} else t7 = $[15];
@@ -70882,7 +72505,7 @@ var kLoadingFeed = unpagedFeed(loading$2);
 	let t8;
 	if ($[16] !== fetchNextPage || $[17] !== hasNextPage || $[18] !== isFetchingNextPage) {
 		t8 = () => {
-			if (hasNextPage && !isFetchingNextPage) fetchNextPage({ cancelRefetch: false }).catch(_temp3$41);
+			if (hasNextPage && !isFetchingNextPage) fetchNextPage({ cancelRefetch: false }).catch(_temp3$42);
 		};
 		$[16] = fetchNextPage;
 		$[17] = hasNextPage;
@@ -70982,13 +72605,13 @@ var kLoadingFeed = unpagedFeed(loading$2);
 	}
 	return t12;
 };
-function _temp$90(last) {
+function _temp$95(last) {
 	return last.nextCursor?.offset;
 }
-function _temp2$58(page) {
+function _temp2$60(page) {
 	return page.rows;
 }
-function _temp3$41() {}
+function _temp3$42() {}
 //#endregion
 //#region src/log_data/sampleMessages.ts
 var kNoRows$2 = [];
@@ -71213,7 +72836,7 @@ var useScoreSchema = (logDir, scopeDir) => {
 	if ($[0] !== config) {
 		t0 = () => {
 			activateFetchEngine(config);
-			return _temp$89;
+			return _temp$94;
 		};
 		t1 = [config];
 		$[0] = config;
@@ -71226,7 +72849,7 @@ var useScoreSchema = (logDir, scopeDir) => {
 	(0, import_react.useEffect)(t0, t1);
 	return null;
 };
-function _temp$89() {
+function _temp$94() {
 	return deactivateFetchEngine();
 }
 //#endregion
@@ -71761,7 +73384,7 @@ var Immer2 = class {
 	}
 	createDraft(base) {
 		if (!isDraftable(base)) die(8);
-		if (isDraft(base)) base = current$1(base);
+		if (isDraft(base)) base = current$2(base);
 		const scope = enterScope(this);
 		const proxy = createProxy(scope, base, void 0);
 		proxy[DRAFT_STATE].isManual_ = true;
@@ -71831,7 +73454,7 @@ function createProxy(rootScope, value, parent, key) {
 	});
 	return draft;
 }
-function current$1(value) {
+function current$2(value) {
 	if (!isDraft(value)) die(10, value);
 	return currentImpl(value);
 }
@@ -73103,6 +74726,407 @@ var initializeSampleSlice = (set) => {
 		if (!state.sample) state.sample = initialState;
 	});
 };
+/** Pixels to scroll so the target lands: a header on its pin line, a message
+*  just under the pinned header, a text match midway down the clear space. */ var landingDelta = (g, mode) => {
+	if (mode === "header") return g.targetTop - g.pinTop;
+	const clear = g.pinTop + g.headerHeight;
+	if (mode === "top") return g.targetTop - (clear + 8);
+	return g.targetTop + g.targetHeight / 2 - (clear + g.viewBottom) / 2;
+};
+var eventRow$1 = (scroller, eventId) => scroller.querySelector(`[id="${CSS.escape(eventId)}"]`);
+var headerOf = (row) => row.querySelector("[class*=\"_stickyWrapper_\"]");
+/** Viewport top of a sticky element where it would sit unpinned. */ var unpinnedTop = (el) => {
+	const position = el.style.position;
+	el.style.position = "static";
+	const top = el.getBoundingClientRect().top;
+	el.style.position = position;
+	return top;
+};
+var measure = (scroller, landing) => {
+	const box = scroller.getBoundingClientRect();
+	const header = headerOf(landing.row);
+	const stickyTop = header ? parseFloat(getComputedStyle(header).top) : NaN;
+	const pinTop = box.top + (Number.isFinite(stickyTop) ? stickyTop : 0);
+	const headerHeight = header?.getBoundingClientRect().height ?? 0;
+	const geometry = {
+		pinTop,
+		headerHeight,
+		viewBottom: box.bottom
+	};
+	if (landing.target === null || landing.mode === "header") {
+		const top = header ? unpinnedTop(header) : landing.row.getBoundingClientRect().top;
+		return {
+			...geometry,
+			targetTop: top,
+			targetHeight: headerHeight
+		};
+	}
+	const rect = landing.target.getBoundingClientRect();
+	return {
+		...geometry,
+		targetTop: rect.top,
+		targetHeight: rect.height
+	};
+};
+var kUserInput = [
+	"wheel",
+	"touchmove",
+	"mousedown",
+	"keydown"
+];
+/** Re-aim the scroll each frame until the landing holds still: rows above
+*  are still being measured, markdown reflows and the chrome collapses
+*  while it runs. `locate` returns null while the row is not rendered yet.
+*  User input stops it. Returns a stop function. */ var settleLanding = (scroller, locate, maxFrames = 90) => {
+	let frames = 0;
+	let still = 0;
+	let raf = 0;
+	let stopped = false;
+	const stop = () => {
+		if (stopped) return;
+		stopped = true;
+		cancelAnimationFrame(raf);
+		for (const type of kUserInput) scroller.removeEventListener(type, stop);
+	};
+	for (const type of kUserInput) scroller.addEventListener(type, stop, { passive: true });
+	const step = () => {
+		if (stopped) return;
+		frames += 1;
+		const landing = locate();
+		if (landing) {
+			const before = scroller.scrollTop;
+			const delta = landingDelta(measure(scroller, landing), landing.mode);
+			if (Math.abs(delta) > 1) scroller.scrollTop = before + delta;
+			still = Math.abs(scroller.scrollTop - before) <= 1 ? still + 1 : 0;
+		}
+		if (still >= 4 || frames >= maxFrames) {
+			stop();
+			return;
+		}
+		raf = requestAnimationFrame(step);
+	};
+	raf = requestAnimationFrame(step);
+	return stop;
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/barJump.ts
+/** The block after `el` inside `within`, climbing until one exists. */ var followingBlock = (within, el) => {
+	for (let at = el; at && at !== within;) {
+		const next = at.nextElementSibling;
+		if (next instanceof HTMLElement) return next;
+		at = at.parentElement;
+	}
+	return null;
+};
+/** The element a span stands for inside its event row: a prompt message, or
+*  the reply's reasoning or its answer after the reasoning. Null lands the
+*  row's header. */ var spanTargetIn = (row, target) => {
+	if (!target?.messageId) return null;
+	const message = row.querySelector(`[data-message-id="${CSS.escape(target.messageId)}"]`);
+	if (!message || !target.part) return message;
+	const reasoning = message.querySelectorAll("[data-content-kind=\"reasoning\"]");
+	if (target.part === "reasoning") return reasoning[0] ?? message;
+	const last = reasoning[reasoning.length - 1];
+	const answer = last ? followingBlock(message, last) : null;
+	return answer && !answer.matches("[class*=\"_metadataLabel_\"]") ? answer : message;
+};
+var activeList = null;
+/** Scroll the mounted transcript to an event, for jumps from outside it (a
+*  grep result citing the event already in the URL). */ var scrollTranscriptToEvent = (eventId) => {
+	activeList?.current?.scrollToEvent(eventId);
+};
+/** Time-bar clicks: land the clicked message (or the event's header) below
+*  the sticky chrome, and record the event in the URL without the list
+*  scrolling the row to its top again.
+*
+*  The landing starts once the URL change has rendered: collapsing the
+*  chrome before then re-renders the list with the old `?event=`, which
+*  clears its "already there" mark and the late URL render re-scrolls. */ var useBarJump = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(17);
+	const { turns, eventsListRef, scrollRef, urlEventId, onNavigatedToEvent, onHeadroomSetHidden, onHeadroomResetAnchor } = t0;
+	const stopRef = (0, import_react.useRef)(null);
+	const pendingRef = (0, import_react.useRef)(null);
+	const urlEventRef = useLatestRef(urlEventId);
+	let t1;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t1 = () => stopRef.current?.();
+		$[0] = t1;
+	} else t1 = $[0];
+	useUnmount(t1);
+	let t2;
+	let t3;
+	if ($[1] !== eventsListRef) {
+		t2 = () => {
+			if (!eventsListRef) return;
+			activeList = eventsListRef;
+			return () => {
+				if (activeList === eventsListRef) activeList = null;
+			};
+		};
+		t3 = [eventsListRef];
+		$[1] = eventsListRef;
+		$[2] = t2;
+		$[3] = t3;
+	} else {
+		t2 = $[2];
+		t3 = $[3];
+	}
+	(0, import_react.useEffect)(t2, t3);
+	let t4;
+	if ($[4] !== eventsListRef || $[5] !== onHeadroomResetAnchor || $[6] !== onHeadroomSetHidden || $[7] !== onNavigatedToEvent || $[8] !== scrollRef || $[9] !== urlEventRef) {
+		t4 = (eventId, target) => {
+			stopRef.current?.();
+			const list = eventsListRef?.current;
+			const land = () => {
+				const scroller = scrollRef.current;
+				list?.markNavigated?.(eventId);
+				onHeadroomResetAnchor?.(true);
+				onHeadroomSetHidden?.(true);
+				if (!scroller) return;
+				if (!eventRow$1(scroller, eventId)) list?.scrollToEvent(eventId);
+				stopRef.current = settleLanding(scroller, () => {
+					const row = eventRow$1(scroller, eventId);
+					if (!row) return null;
+					const inside = spanTargetIn(row, target);
+					return inside ? {
+						row,
+						target: inside,
+						mode: "top"
+					} : {
+						row,
+						target: null,
+						mode: "header"
+					};
+				});
+			};
+			if (!onNavigatedToEvent || urlEventRef.current === eventId) {
+				land();
+				return;
+			}
+			list?.markNavigated?.(eventId);
+			pendingRef.current = {
+				eventId,
+				land
+			};
+			onNavigatedToEvent(eventId);
+			const fallback = window.setTimeout(() => {
+				if (pendingRef.current?.eventId !== eventId) return;
+				pendingRef.current = null;
+				land();
+			}, 400);
+			stopRef.current = () => {
+				window.clearTimeout(fallback);
+				pendingRef.current = null;
+			};
+		};
+		$[4] = eventsListRef;
+		$[5] = onHeadroomResetAnchor;
+		$[6] = onHeadroomSetHidden;
+		$[7] = onNavigatedToEvent;
+		$[8] = scrollRef;
+		$[9] = urlEventRef;
+		$[10] = t4;
+	} else t4 = $[10];
+	const onSelect = t4;
+	let t5;
+	let t6;
+	if ($[11] !== urlEventId) {
+		t5 = () => {
+			const pending = pendingRef.current;
+			if (!pending || urlEventId !== pending.eventId) return;
+			pendingRef.current = null;
+			pending.land();
+		};
+		t6 = [urlEventId];
+		$[11] = urlEventId;
+		$[12] = t5;
+		$[13] = t6;
+	} else {
+		t5 = $[12];
+		t6 = $[13];
+	}
+	(0, import_react.useEffect)(t5, t6);
+	let t7;
+	if ($[14] !== onSelect || $[15] !== turns) {
+		t7 = {
+			turns,
+			onSelect
+		};
+		$[14] = onSelect;
+		$[15] = turns;
+		$[16] = t7;
+	} else t7 = $[16];
+	return t7;
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/grepJump.ts
+/** Splits a result line's pieces (after its citation link) at the bold
+*  match. */ var snippetFrom = (pieces) => {
+	const snippet = {
+		before: "",
+		match: "",
+		after: ""
+	};
+	for (const piece of pieces) if (piece.strong && !snippet.match) snippet.match = piece.text;
+	else if (snippet.match) snippet.after += piece.text;
+	else snippet.before += piece.text;
+	return snippet;
+};
+/** Letters and digits only: the server quotes raw text (JSON escapes,
+*  collapsed whitespace) while the page shows it rendered. */ var key$4 = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, "");
+var sharedPrefix = (a, b) => {
+	let n = 0;
+	while (n < a.length && n < b.length && a[n] === b[n]) n++;
+	return n;
+};
+var sharedSuffix = (a, b) => {
+	let n = 0;
+	while (n < a.length && n < b.length && a[a.length - 1 - n] === b[b.length - 1 - n]) n++;
+	return n;
+};
+/** Which rendered match a result line means: the one whose surrounding text
+*  agrees longest with the line's, ties going to the one nearest the
+*  line's place among that event's results. -1 when there is none. */ var pickMatch = (snippet, candidates, ordinal) => {
+	const before = key$4(snippet.before);
+	const after = key$4(snippet.after);
+	let best = -1;
+	let bestScore = -1;
+	candidates.forEach((candidate, i) => {
+		const score = sharedSuffix(key$4(candidate.before), before) + sharedPrefix(key$4(candidate.after), after);
+		const closer = best !== -1 && Math.abs(i - ordinal) < Math.abs(best - ordinal);
+		if (score > bestScore || score === bestScore && closer) {
+			best = i;
+			bestScore = score;
+		}
+	});
+	return best;
+};
+/** The pieces of the result line after `link`, up to its line break. */ var snippetOf = (link) => {
+	const pieces = [];
+	for (let node = link.nextSibling; node; node = node.nextSibling) {
+		if (node instanceof HTMLBRElement) break;
+		pieces.push({
+			text: node.textContent ?? "",
+			strong: node instanceof HTMLElement && node.tagName === "STRONG"
+		});
+	}
+	return snippetFrom(pieces);
+};
+/** How many earlier result lines cite the same event. */ var ordinalOf = (link, card) => {
+	const ref = link.getAttribute("href");
+	let n = 0;
+	for (const other of card.querySelectorAll("a[href]")) {
+		if (other === link) break;
+		if (other.getAttribute("href") === ref) n++;
+	}
+	return n;
+};
+var marker$5 = createMarker("pro-grep");
+/** Once the event's row is rendered and the scroll has settled (a changed
+*  URL scrolls the row to the top first), land the match midway down the
+*  clear space and paint it. */ var landOnMatch = (eventId, snippet, ordinal) => {
+	let frame = 0;
+	let waited = 0;
+	let still = 0;
+	let lastTop = NaN;
+	let stopLanding = null;
+	const wait = () => {
+		const found = document.querySelector(`[id="${CSS.escape(eventId)}"]`);
+		const top = found ? scrollerOf(found).scrollTop : NaN;
+		still = found && Math.abs(top - lastTop) < 1 ? still + 1 : 0;
+		lastTop = top;
+		if (still < 6 && waited++ < 180) {
+			frame = requestAnimationFrame(wait);
+			return;
+		}
+		if (!found) return;
+		const scroller = scrollerOf(found);
+		const matches = textMatchesIn(found, snippet.match, 80);
+		const target = matches[pickMatch(snippet, matches, ordinal)]?.range ?? null;
+		marker$5.paint(matches.map((m) => m.range), target);
+		stopLanding = settleLanding(scroller, () => {
+			const row = eventRow$1(scroller, eventId);
+			if (!row) return null;
+			return target?.startContainer.isConnected ? {
+				row,
+				target,
+				mode: "center"
+			} : {
+				row,
+				target: null,
+				mode: "header"
+			};
+		});
+	};
+	frame = requestAnimationFrame(wait);
+	return () => {
+		cancelAnimationFrame(frame);
+		stopLanding?.();
+	};
+};
+/** Pro-UX: clicking a grep result lands the clicked match, not the top of
+*  its event, and paints it; clicking another result in the same event
+*  moves to that match instead of doing nothing. */ var useGrepResultJump = () => {
+	const $ = (0, import_compiler_runtime.c)(4);
+	const enabled = useHtmlFlag("data-pro-ux");
+	const setFindTarget = useFindTargetSetter();
+	const stopRef = (0, import_react.useRef)(null);
+	let t0;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t0 = () => {
+			stopRef.current?.();
+			marker$5.clear();
+		};
+		$[0] = t0;
+	} else t0 = $[0];
+	useUnmount(t0);
+	let t1;
+	if ($[1] !== enabled || $[2] !== setFindTarget) {
+		t1 = (e) => {
+			if (!enabled || e.button !== 0) return;
+			if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+			const link = e.target instanceof Element ? e.target.closest("a[href]") : null;
+			const href = link?.getAttribute("href");
+			if (!link || !href) return;
+			const eventId = new URLSearchParams(href.split("?")[1] ?? "").get("event");
+			const snippet = snippetOf(link);
+			if (!eventId || !snippet.match) return;
+			const ordinal = ordinalOf(link, e.currentTarget);
+			stopRef.current?.();
+			if (window.location.hash === href) {
+				e.preventDefault();
+				if (!document.querySelector(`[id="${CSS.escape(eventId)}"]`)) scrollTranscriptToEvent(eventId);
+			}
+			setFindTarget({
+				term: snippet.match,
+				eventId
+			});
+			stopRef.current = landOnMatch(eventId, snippet, ordinal);
+		};
+		$[1] = enabled;
+		$[2] = setFindTarget;
+		$[3] = t1;
+	} else t1 = $[3];
+	return t1;
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/searchModes.ts
+var proUxOn = () => typeof document !== "undefined" && document.documentElement.hasAttribute("data-pro-ux");
+/** Grep is free and instant, so pro-UX opens on it; upstream opens on the
+*  paid LLM search. */ var defaultSearchType = (proUx = proUxOn()) => proUx ? "grep" : "llm";
+/** Search-mode segments, default first; pro-UX names grep after the tool. */ var searchModeSegments = (proUx) => proUx ? [{
+	id: "grep",
+	label: "grep"
+}, {
+	id: "llm",
+	label: "LLM"
+}] : [{
+	id: "llm",
+	label: "LLM"
+}, {
+	id: "grep",
+	label: "Grep"
+}];
 /** Identity of a grep search, or null when nothing should run on its own.
 *  LLM searches cost money, so they only ever run on Enter or Run. */ var autoRunKey = (searchType, query, options) => {
 	const text = query.trim();
@@ -73193,7 +75217,7 @@ var SearchPanel_module_default = {
 //#endregion
 //#region ../../packages/inspect-components/src/transcript-search/searchPanelState.ts
 var createInitialSearchPanelState = () => ({
-	searchType: "llm",
+	searchType: defaultSearchType(),
 	searches: {
 		grep: {
 			query: "",
@@ -73674,13 +75698,7 @@ var SearchPanel = ({ scope, api, stateController, navigation, defaultModel, mode
 									className: SearchPanel_module_default.typeToggle,
 									children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(SegmentedControl, {
 										selectedId: searchType,
-										segments: [{
-											id: "llm",
-											label: "LLM"
-										}, {
-											id: "grep",
-											label: "Grep"
-										}],
+										segments: searchModeSegments(autoRunOn),
 										onSegmentChange: (segmentId) => {
 											if (isSearchType(segmentId)) handleSearchTypeChange(segmentId);
 										}
@@ -74131,8 +76149,9 @@ var SearchResults = (t0) => {
 	return t5;
 };
 var SearchResult = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(22);
+	const $ = (0, import_compiler_runtime.c)(23);
 	const { result, scope, searchType, getMessageUrl, getEventUrl, getEventMessageUrl } = t0;
+	const jumpToMatch = useGrepResultJump();
 	let refs;
 	if ($[0] !== getEventMessageUrl || $[1] !== getEventUrl || $[2] !== getMessageUrl || $[3] !== result.references || $[4] !== scope) {
 		const seen = /* @__PURE__ */ new Set();
@@ -74173,29 +76192,31 @@ var SearchResult = (t0) => {
 			$[10] = t1;
 		} else t1 = $[10];
 		let t2;
-		if ($[11] !== t1) {
+		if ($[11] !== jumpToMatch || $[12] !== t1) {
 			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 				className: SearchPanel_module_default.resultCard,
+				onClickCapture: jumpToMatch,
 				children: t1
 			});
-			$[11] = t1;
-			$[12] = t2;
-		} else t2 = $[12];
+			$[11] = jumpToMatch;
+			$[12] = t1;
+			$[13] = t2;
+		} else t2 = $[13];
 		return t2;
 	}
 	let t1;
-	if ($[13] !== markdownRefs || $[14] !== result.value) {
+	if ($[14] !== markdownRefs || $[15] !== result.value) {
 		t1 = typeof result.value === "string" && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MarkdownDivWithReferences, {
 			markdown: result.value,
 			references: markdownRefs,
 			renderer: "textOnly"
 		});
-		$[13] = markdownRefs;
-		$[14] = result.value;
-		$[15] = t1;
-	} else t1 = $[15];
+		$[14] = markdownRefs;
+		$[15] = result.value;
+		$[16] = t1;
+	} else t1 = $[16];
 	let t2;
-	if ($[16] !== markdownRefs || $[17] !== result.explanation) {
+	if ($[17] !== markdownRefs || $[18] !== result.explanation) {
 		t2 = result.explanation && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: SearchPanel_module_default.sectionHeader,
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { children: "Explanation" })
@@ -74204,20 +76225,20 @@ var SearchResult = (t0) => {
 			references: markdownRefs,
 			renderer: "textOnly"
 		})] });
-		$[16] = markdownRefs;
-		$[17] = result.explanation;
-		$[18] = t2;
-	} else t2 = $[18];
+		$[17] = markdownRefs;
+		$[18] = result.explanation;
+		$[19] = t2;
+	} else t2 = $[19];
 	let t3;
-	if ($[19] !== t1 || $[20] !== t2) {
+	if ($[20] !== t1 || $[21] !== t2) {
 		t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			className: SearchPanel_module_default.resultCard,
 			children: [t1, t2]
 		});
-		$[19] = t1;
-		$[20] = t2;
-		$[21] = t3;
-	} else t3 = $[21];
+		$[20] = t1;
+		$[21] = t2;
+		$[22] = t3;
+	} else t3 = $[22];
 	return t3;
 };
 function _temp5$21() {
@@ -74771,7 +76792,7 @@ function useRouteSelection(pathname) {
 	const { children } = t0;
 	const { pathname } = useLocation();
 	const { logFile, sample } = useRouteSelection(pathname);
-	useMirrorToStore(sample, _temp$88);
+	useMirrorToStore(sample, _temp$93);
 	let t1;
 	if ($[0] !== logFile || $[1] !== sample) {
 		t1 = {
@@ -74794,7 +76815,7 @@ function useRouteSelection(pathname) {
 	} else t2 = $[5];
 	return t2;
 }
-function _temp$88(handle) {
+function _temp$93(handle) {
 	return highlightSample(handle.id, handle.epoch, handle.logFile);
 }
 function useCurrentSelection() {
@@ -76232,8 +78253,8 @@ var kDefaultScorePanelSort = {
 * own default (typically `chips` for ≤ 6 scores, `grid` for 7+).
 */ var useScorePanelView = () => {
 	const $ = (0, import_compiler_runtime.c)(5);
-	const stored = useStore(_temp$87);
-	const setPropertyValue = useStore(_temp2$57);
+	const stored = useStore(_temp$92);
+	const setPropertyValue = useStore(_temp2$59);
 	let t0;
 	if ($[0] !== setPropertyValue) {
 		t0 = (view) => {
@@ -76263,7 +78284,7 @@ var kDefaultScorePanelSort = {
 * value; callers resolve their own default via `resolveScorePanelSort`.
 */ var useScorePanelSort = () => {
 	const $ = (0, import_compiler_runtime.c)(5);
-	const stored = useStore(_temp3$40);
+	const stored = useStore(_temp3$41);
 	const setPropertyValue = useStore(_temp4$33);
 	let t0;
 	if ($[0] !== setPropertyValue) {
@@ -76647,7 +78668,7 @@ var useMessageVisibility = (id, scope) => {
 	} else t0 = $[1];
 	const visible = useStore(t0);
 	const setVisible = useStore(_temp11$3);
-	const clearVisible = useStore(_temp12$2);
+	const clearVisible = useStore(_temp12$3);
 	const isFirstRender = (0, import_react.useRef)(true);
 	const selectedLogFile = useCurrentLogFile();
 	let t1;
@@ -76754,14 +78775,14 @@ var useLogsListing = () => {
 	} else t0 = $[3];
 	return t0;
 };
-function _temp$87(state) {
+function _temp$92(state) {
 	const value = state.app.propertyBags[kScorePanelViewBag]?.[kScorePanelViewKey];
 	return isScoreView(value) ? value : void 0;
 }
-function _temp2$57(state_0) {
+function _temp2$59(state_0) {
 	return state_0.appActions.setPropertyValue;
 }
-function _temp3$40(state) {
+function _temp3$41(state) {
 	const value = state.app.propertyBags[kScorePanelSortBag]?.[kScorePanelSortKey];
 	return isScorePanelSortState(value) ? value : void 0;
 }
@@ -76783,7 +78804,7 @@ function _temp8$7(state_1) {
 function _temp11$3(state_0) {
 	return state_0.appActions.setMessageVisible;
 }
-function _temp12$2(state_1) {
+function _temp12$3(state_1) {
 	return state_1.appActions.clearMessageVisible;
 }
 function _temp16$2(state) {
@@ -77077,7 +79098,7 @@ var FlowButton = () => {
 		t2 = {
 			queryKey: t0,
 			queryFn: t1,
-			select: _temp$86,
+			select: _temp$91,
 			staleTime: Infinity
 		};
 		$[6] = t0;
@@ -77086,7 +79107,7 @@ var FlowButton = () => {
 	} else t2 = $[8];
 	return useAsyncDataFromQuery(t2);
 };
-function _temp$86(flow) {
+function _temp$91(flow) {
 	return flow ?? void 0;
 }
 var ThemeToggle_module_default = {
@@ -77376,9 +79397,9 @@ var subscribe = (onChange) => {
 		$[0] = preference;
 		$[1] = t0;
 	} else t0 = $[1];
-	return (0, import_react.useSyncExternalStore)(subscribe, t0, _temp$85);
+	return (0, import_react.useSyncExternalStore)(subscribe, t0, _temp$90);
 };
-function _temp$85() {
+function _temp$90() {
 	return false;
 }
 //#endregion
@@ -77837,11 +79858,17 @@ var parseNumber = (text) => {
 };
 //#endregion
 //#region src/pro-ux/cells.ts
+var isDurationLabel = (label) => label.includes("duration") || label === "time";
+var isQuantityLabel = (label) => label.includes("tokens") || label === "samples" || label.includes("cost") || label === "messages";
+/** Columns whose header carries the value-bar key. */ var isRankedLabel = (label) => {
+	const lower = label.toLowerCase();
+	return isDurationLabel(lower) || isQuantityLabel(lower);
+};
 var kindOf = (column) => {
 	const label = column.label.toLowerCase();
 	if (column.id.startsWith("score") || label === "score") return "score";
-	if (label.includes("duration") || label === "time") return "duration";
-	if (label.includes("tokens") || label === "samples" || label.includes("cost") || label === "messages") return "quantity";
+	if (isDurationLabel(label)) return "duration";
+	if (isQuantityLabel(label)) return "quantity";
 	return null;
 };
 var kLetterScores$1 = {
@@ -77989,33 +80016,33 @@ var read$1 = () => {
 	} catch {}
 	return kPrefDefaults;
 };
-var current = read$1();
-var listeners$1 = /* @__PURE__ */ new Set();
+var current$1 = read$1();
+var listeners$2 = /* @__PURE__ */ new Set();
 var applyToDocument = () => {
 	const root = document.documentElement;
-	for (const [key, on] of Object.entries(current)) root.toggleAttribute(`data-pro-${key}`, on === true);
+	for (const [key, on] of Object.entries(current$1)) root.toggleAttribute(`data-pro-${key}`, on === true);
 };
-var getPrefs = () => current;
+var getPrefs = () => current$1;
 var setPref = (key, value) => {
-	current = {
-		...current,
+	current$1 = {
+		...current$1,
 		[key]: value
 	};
 	try {
-		localStorage.setItem(kStorageKey$1, JSON.stringify(current));
+		localStorage.setItem(kStorageKey$1, JSON.stringify(current$1));
 	} catch {}
 	applyToDocument();
-	for (const listener of listeners$1) listener();
+	for (const listener of listeners$2) listener();
 };
 var subscribePrefs = (listener) => {
-	listeners$1.add(listener);
-	return () => listeners$1.delete(listener);
+	listeners$2.add(listener);
+	return () => listeners$2.delete(listener);
 };
 var useProPref = (key) => {
 	const $ = (0, import_compiler_runtime.c)(2);
 	let t0;
 	if ($[0] !== key) {
-		t0 = () => current[key];
+		t0 = () => current$1[key];
 		$[0] = key;
 		$[1] = t0;
 	} else t0 = $[1];
@@ -78060,7 +80087,7 @@ var read = () => {
 	}
 };
 var choice = read();
-var listeners = /* @__PURE__ */ new Set();
+var listeners$1 = /* @__PURE__ */ new Set();
 var getDockChoice = () => choice;
 var setDockChoice = (next) => {
 	choice = next;
@@ -78068,13 +80095,13 @@ var setDockChoice = (next) => {
 		if (next === null) localStorage.removeItem(kChoiceKey);
 		else localStorage.setItem(kChoiceKey, next);
 	} catch {}
-	for (const listener of listeners) listener();
+	for (const listener of listeners$1) listener();
 };
 var resolveDocked = (choice, autoDock) => choice === null ? autoDock : choice === "docked";
 /** Flip whatever is on screen now, automatic or not. */ var toggleSidebarDocked = () => setDockChoice(document.querySelector(".pro-sidebar[data-docked]") ? "floating" : "docked");
 var subscribeSidebar = (listener) => {
-	listeners.add(listener);
-	return () => listeners.delete(listener);
+	listeners$1.add(listener);
+	return () => listeners$1.delete(listener);
 };
 var subscribeWide = (listener) => {
 	const query = window.matchMedia(kWideQuery);
@@ -78105,7 +80132,7 @@ var kPrefsOpenKey = "pro-ux-prefs-open";
 var PrefsPane = () => {
 	const $ = (0, import_compiler_runtime.c)(22);
 	const prefs = (0, import_react.useSyncExternalStore)(subscribePrefs, getPrefs);
-	const [open, setOpen] = (0, import_react.useState)(_temp$84);
+	const [open, setOpen] = (0, import_react.useState)(_temp$89);
 	let t0;
 	if ($[0] !== open) {
 		t0 = () => {
@@ -78118,8 +80145,8 @@ var PrefsPane = () => {
 		$[1] = t0;
 	} else t0 = $[1];
 	const toggleOpen = t0;
-	const themePreference = useUserSettings(_temp2$56);
-	const setThemePreference = useUserSettings(_temp3$39);
+	const themePreference = useUserSettings(_temp2$58);
+	const setThemePreference = useUserSettings(_temp3$40);
 	let t1;
 	if ($[2] !== themePreference) {
 		let t2;
@@ -78517,17 +80544,17 @@ var SidebarIcon = (t0) => {
 	} else t16 = $[43];
 	return t16;
 };
-function _temp$84() {
+function _temp$89() {
 	try {
 		return localStorage.getItem(kPrefsOpenKey) === "1";
 	} catch {
 		return false;
 	}
 }
-function _temp2$56(s) {
+function _temp2$58(s) {
 	return s.themePreference;
 }
-function _temp3$39(s_0) {
+function _temp3$40(s_0) {
 	return s_0.setThemePreference;
 }
 function _temp4$32(v) {
@@ -79152,7 +81179,7 @@ var JsonValue = (t0) => {
 	const { value, depth } = t0;
 	const isArray = Array.isArray(value);
 	const isObject = value !== null && typeof value === "object";
-	const entries = isObject ? isArray ? value.map(_temp$83) : Object.entries(value) : [];
+	const entries = isObject ? isArray ? value.map(_temp$88) : Object.entries(value) : [];
 	const [open, setOpen] = (0, import_react.useState)(depth < (0, import_react.useContext)(OpenLevel));
 	if (!isObject) {
 		if (typeof value === "string") {
@@ -79299,7 +81326,7 @@ var XmlElement = (t0) => {
 	const [open, setOpen] = (0, import_react.useState)(depth < (0, import_react.useContext)(OpenLevel));
 	let t1;
 	if ($[0] !== node.attrs) {
-		t1 = node.attrs.map(_temp2$55);
+		t1 = node.attrs.map(_temp2$57);
 		$[0] = node.attrs;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -79782,10 +81809,10 @@ var XmlNodes = (t0) => {
 	} else t9 = $[32];
 	return t9;
 };
-function _temp$83(v, i) {
+function _temp$88(v, i) {
 	return [String(i), v];
 }
-function _temp2$55(t0) {
+function _temp2$57(t0) {
 	const [k, v] = t0;
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", { children: [
 		" ",
@@ -79956,7 +81983,7 @@ var CrumbList = (t0) => {
 	const { segments: allSegments, currentPath, logDir, fnNavigationUrl } = t0;
 	let t1;
 	if ($[0] !== allSegments) {
-		t1 = allSegments.filter(_temp$82);
+		t1 = allSegments.filter(_temp$87);
 		$[0] = allSegments;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -79983,7 +82010,7 @@ var CrumbList = (t0) => {
 			};
 			const observer = new ResizeObserver(check);
 			observer.observe(ol);
-			document.fonts.ready.then(check).catch(_temp2$54);
+			document.fonts.ready.then(check).catch(_temp2$56);
 			return () => observer.disconnect();
 		};
 		$[4] = t4;
@@ -80009,7 +82036,7 @@ var CrumbList = (t0) => {
 			$[18] = last;
 			$[19] = t9;
 		} else t9 = $[19];
-		const shown = segments.map(_temp3$38).filter(t9);
+		const shown = segments.map(_temp3$39).filter(t9);
 		let t10;
 		if ($[20] !== parts) {
 			t10 = (_, i_0) => i_0 >= 2 && isLogPath(crumbPath(parts, i_0) ?? "");
@@ -80601,11 +82628,11 @@ var CrumbMenu = (t0) => {
 	} else t17 = $[53];
 	return t17;
 };
-function _temp$82(s, i) {
+function _temp$87(s, i) {
 	return i < 2 || s.text !== "";
 }
-function _temp2$54() {}
-function _temp3$38(segment, index) {
+function _temp2$56() {}
+function _temp3$39(segment, index) {
 	return {
 		segment,
 		index
@@ -80891,11 +82918,11 @@ var ApplicationNavbar = (t0) => {
 	const { currentPath, fnNavigationUrl, backUrl, homeUrl, bordered, children, breadcrumbsEnabled, loading: t1, viewerOptionsError } = t0;
 	const loadingProp = t1 === void 0 ? false : t1;
 	const [optionsEl, setOptionsEl] = (0, import_react.useState)(null);
-	const themePreference = useUserSettings(_temp$81);
-	const setThemePreference = useUserSettings(_temp2$53);
+	const themePreference = useUserSettings(_temp$86);
+	const setThemePreference = useUserSettings(_temp2$55);
 	const isDark = useResolvedIsDark(themePreference);
 	const loading = useSelectedLogLoading() || loadingProp;
-	const isShowing = useStore(_temp3$37);
+	const isShowing = useStore(_temp3$38);
 	const setShowing = useStore(_temp4$30);
 	let t2;
 	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
@@ -80994,13 +83021,13 @@ var ApplicationNavbar = (t0) => {
 	} else t9 = $[30];
 	return t9;
 };
-function _temp$81(s) {
+function _temp$86(s) {
 	return s.themePreference;
 }
-function _temp2$53(s_0) {
+function _temp2$55(s_0) {
 	return s_0.setThemePreference;
 }
-function _temp3$37(state) {
+function _temp3$38(state) {
 	return state.app.dialogs.options;
 }
 function _temp4$30(state_0) {
@@ -81192,7 +83219,7 @@ var ViewSegmentedControl = (t0) => {
 		t2 = {
 			queryKey: t0,
 			queryFn: t1,
-			select: _temp$80,
+			select: _temp$85,
 			staleTime: Infinity
 		};
 		$[6] = t0;
@@ -81201,7 +83228,7 @@ var ViewSegmentedControl = (t0) => {
 	} else t2 = $[8];
 	return useAsyncDataFromQuery(t2);
 };
-function _temp$80(evalSet) {
+function _temp$85(evalSet) {
 	return evalSet ?? void 0;
 }
 //#endregion
@@ -81310,13 +83337,13 @@ var ColumnSelectorPopover = (t0) => {
 		}
 		let t10;
 		if ($[13] !== columns) {
-			t10 = columns.filter(_temp$79);
+			t10 = columns.filter(_temp$84);
 			$[13] = columns;
 			$[14] = t10;
 		} else t10 = $[14];
 		let t11;
 		if ($[15] !== columns) {
-			t11 = columns.filter(_temp2$52);
+			t11 = columns.filter(_temp2$54);
 			$[15] = columns;
 			$[16] = t11;
 		} else t11 = $[16];
@@ -81338,7 +83365,7 @@ var ColumnSelectorPopover = (t0) => {
 		t10 = () => {
 			onVisibilityChange({
 				...currentVisibility,
-				...Object.fromEntries(columnGroups.base.map(_temp3$36))
+				...Object.fromEntries(columnGroups.base.map(_temp3$37))
 			});
 		};
 		$[20] = columnGroups.base;
@@ -81634,13 +83661,13 @@ var ColumnSelectorPopover = (t0) => {
 	} else t32 = $[88];
 	return t32;
 };
-function _temp$79(col_0) {
+function _temp$84(col_0) {
 	return !isScoreField(getFieldKey(col_0));
 }
-function _temp2$52(col_1) {
+function _temp2$54(col_1) {
 	return isScoreField(getFieldKey(col_1));
 }
-function _temp3$36(col_2) {
+function _temp3$37(col_2) {
 	return [getFieldKey(col_2), true];
 }
 function _temp4$29(col_3) {
@@ -81697,1647 +83724,6 @@ function _temp6$11(col_5) {
 		...identity,
 		type: "file",
 		log: logFile
-	};
-};
-//#endregion
-//#region src/pro-ux/tasksState.ts
-/** A persisted set of row ids, for rows the user has opened. */ var openSet = (storageKey) => {
-	const read = () => {
-		try {
-			const raw = localStorage.getItem(storageKey);
-			const parsed = raw ? JSON.parse(raw) : [];
-			return new Set(Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : []);
-		} catch {
-			return /* @__PURE__ */ new Set();
-		}
-	};
-	let current = read();
-	const listeners = /* @__PURE__ */ new Set();
-	const set = (next) => {
-		current = next;
-		try {
-			localStorage.setItem(storageKey, JSON.stringify([...next]));
-		} catch {}
-		for (const listener of listeners) listener();
-	};
-	const subscribe = (listener) => {
-		listeners.add(listener);
-		return () => listeners.delete(listener);
-	};
-	return {
-		get: () => current,
-		toggle: (id) => {
-			const next = new Set(current);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			set(next);
-		},
-		setAll: (ids) => set(new Set(ids)),
-		subscribe
-	};
-};
-/** A named hook, not a `.use()` method: the React Compiler only treats
-*  `useXxx` calls as hooks, and caches anything else. */ var useOpenRows = (rows) => {
-	return (0, import_react.useSyncExternalStore)(rows.subscribe, rows.get);
-};
-/** Log rows whose samples are listed beneath them. */ var openSampleRows = openSet("pro-ux-task-samples-open");
-/** Rows whose task args are laid out in full. */ var openArgsRows = openSet("pro-ux-task-args-open");
-/** Whether grid rows must be measured: soft-wrap is on, or some row has
-*  its task args open. */ var useRowsGrow = () => {
-	const wrap = useProPref("wrapCells");
-	const pro = useHtmlFlag("data-pro-ux");
-	const argsOpen = useOpenRows(openArgsRows).size > 0;
-	return wrap || pro && argsOpen;
-};
-//#endregion
-//#region src/pro-ux/taskStats.ts
-var kLetterScores = {
-	C: 1,
-	P: .5,
-	I: 0,
-	N: 0
-};
-/** A sample's score as a number, or null when it isn't one. */ var numericScore = (value) => {
-	if (typeof value === "number") return Number.isFinite(value) ? value : null;
-	if (typeof value === "boolean") return value ? 1 : 0;
-	if (typeof value === "string") {
-		const letter = kLetterScores[value.trim()];
-		if (letter !== void 0) return letter;
-		const n = Number(value);
-		return value.trim() !== "" && Number.isFinite(n) ? n : null;
-	}
-	return null;
-};
-/** The first score in a sample's score map that reads as a number. */ var firstNumericScore = (scores) => {
-	for (const value of Object.values(scores ?? {})) {
-		const n = numericScore(value);
-		if (n !== null) return n;
-	}
-	return null;
-};
-var scoreStats = (values, binCount = 10) => {
-	if (values.length === 0) return null;
-	const top = scaleTop(values);
-	const bins = new Array(binCount).fill(0);
-	if (top !== null) for (const v of values) {
-		const i = Math.min(binCount - 1, Math.max(0, Math.floor(v / top * binCount)));
-		bins[i] = (bins[i] ?? 0) + 1;
-	}
-	const mean = values.reduce((a, b) => a + b, 0) / values.length;
-	return {
-		n: values.length,
-		mean,
-		top,
-		bins
-	};
-};
-/** Largest share of one row's samples in a single bin, over all rows: the
-*  common y range for every row's histogram. */ var maxBinShare = (stats) => {
-	let max = 0;
-	for (const s of stats) {
-		if (!s || s.n === 0) continue;
-		for (const count of s.bins) max = Math.max(max, count / s.n);
-	}
-	return max;
-};
-var binLabel = (stats, i) => {
-	if (stats.top === null) return "";
-	const width = stats.top / stats.bins.length;
-	const lo = i * width;
-	const hi = lo + width;
-	const fmt = (x) => Number.isInteger(x) ? String(x) : x.toFixed(2);
-	return `${fmt(lo)}–${fmt(hi)}`;
-};
-var statsHint = (stats, fromSamples) => {
-	const lines = [`${fromSamples ? "mean of sample scores" : "headline metric"}; histogram of ${stats.n} sample score${stats.n === 1 ? "" : "s"}`, `n = ${stats.n} · mean = ${stats.mean.toFixed(3)}${stats.top !== null ? ` · scale 0–${stats.top}` : ""}`];
-	if (stats.top !== null) lines.push(stats.bins.map((count, i) => `${binLabel(stats, i)}: ${count}`).join("\n"));
-	return lines.join("\n");
-};
-/** Task args as one line: `key value · key value`, values shortened. */ var argsSummary = (args) => Object.entries(args).map(([key, value]) => ({
-	key,
-	value: shortValue(value)
-}));
-var shortValue = (value) => {
-	if (typeof value === "string") {
-		const parsed = parseJsonish(value);
-		if (parsed !== void 0 && typeof parsed === "object" && parsed !== null) return braces(parsed);
-		return value;
-	}
-	if (value !== null && typeof value === "object") return braces(value);
-	return String(value);
-};
-var braces = (value) => Array.isArray(value) ? `[${value.length}]` : `{${Object.keys(value).join(", ")}}`;
-/** A string that holds a JSON object or array, parsed; otherwise undefined. */ var parseJsonish = (text) => {
-	const t = text.trim();
-	if (!(t.startsWith("{") || t.startsWith("["))) return void 0;
-	try {
-		return JSON.parse(t);
-	} catch {
-		return;
-	}
-};
-/** An arg's value laid out for reading: nested JSON pretty-printed. */ var argsDetail = (value) => {
-	if (typeof value === "string") {
-		const parsed = parseJsonish(value);
-		return parsed === void 0 ? value : JSON.stringify(parsed, null, 2);
-	}
-	if (value !== null && typeof value === "object") return JSON.stringify(value, null, 2);
-	return String(value);
-};
-/** A value with as many decimals as its scale warrants: 0–100 → one,
-*  0–10 → two, 0–1 → three. */ var formatOnScale = (value, top) => {
-	if (Number.isInteger(value)) return String(value);
-	const digits = top === 100 ? 1 : top === 10 ? 2 : 3;
-	return value.toFixed(digits);
-};
-//#endregion
-//#region src/pro-ux/TasksTable.tsx
-var kNoRows$1 = [];
-var buildIndex = (rows) => {
-	const byLog = /* @__PURE__ */ new Map();
-	for (const row of rows) {
-		const list = byLog.get(row.logFile) ?? [];
-		list.push(row);
-		byLog.set(row.logFile, list);
-	}
-	const stats = /* @__PURE__ */ new Map();
-	for (const [file, list] of byLog) {
-		const values = list.map((r) => firstNumericScore(r.derived.scores)).filter((v) => v !== null);
-		stats.set(file, scoreStats(values));
-	}
-	return {
-		byLog,
-		stats,
-		maxShare: maxBinShare(stats.values())
-	};
-};
-var indexCache = /* @__PURE__ */ new WeakMap();
-/** Every sample summary under the log dir, grouped by log. One query shared
-*  by every cell: the details fetch that fills the Tokens column already
-*  stored them, so this is a local read. */ var useSampleIndex = () => {
-	const $ = (0, import_compiler_runtime.c)(9);
-	const logDir = useLogDir();
-	let t0;
-	if ($[0] !== logDir) {
-		t0 = { prefix: logDir };
-		$[0] = logDir;
-		$[1] = t0;
-	} else t0 = $[1];
-	let t1;
-	if ($[2] !== logDir || $[3] !== t0) {
-		t1 = {
-			logDir,
-			scope: t0
-		};
-		$[2] = logDir;
-		$[3] = t0;
-		$[4] = t1;
-	} else t1 = $[4];
-	const list = useSamplesListing(t1).data ?? kNoRows$1;
-	let t2;
-	if ($[5] !== list) {
-		t2 = indexCache.get(list);
-		$[5] = list;
-		$[6] = t2;
-	} else t2 = $[6];
-	let index = t2;
-	if (!index) {
-		if ($[7] !== list) {
-			index = buildIndex(list);
-			indexCache.set(list, index);
-			$[7] = list;
-			$[8] = index;
-		} else index = $[8];
-	}
-	return index;
-};
-var logKey = (row) => row.log?.name ?? "";
-var sampleUrl = (parentUrl, id, epoch) => {
-	if (!parentUrl) return void 0;
-	const prefix = parentUrl.startsWith("/tasks/") ? "/tasks" : "/logs";
-	return logSamplesUrl(parentUrl.slice(prefix.length + 1), id, epoch, void 0, prefix);
-};
-/** Sub-rows are ordinary grid rows; this marks which ones are samples. */ var sampleRefs = /* @__PURE__ */ new WeakMap();
-var sampleSubRows = (parent, samples, top) => {
-	const prefix = commonIdPrefix(samples.map((s) => String(s.summary.id)));
-	return [...samples].sort((a, b) => String(a.summary.id).localeCompare(String(b.summary.id), void 0, { numeric: true }) || a.summary.epoch - b.summary.epoch).map((s) => {
-		const { id, epoch } = s.summary;
-		const score = firstNumericScore(s.derived.scores);
-		const row = {
-			id: `${parent.id}::${String(id)}::${epoch}`,
-			name: parent.name,
-			type: "file",
-			url: sampleUrl(parent.url, id, epoch),
-			task: String(id).slice(prefix.length),
-			score: score ?? void 0,
-			status: s.summary.error ? "error" : s.summary.completed === false ? "started" : "success",
-			totalTokens: s.derived.tokens,
-			duration: s.summary.total_time ?? void 0
-		};
-		sampleRefs.set(row, {
-			id: String(id),
-			epoch,
-			top
-		});
-		return row;
-	});
-};
-/** Sample rows inserted beneath each opened log row (tasks view only). */ var useProSampleRows = (rows, mode) => {
-	const $ = (0, import_compiler_runtime.c)(5);
-	const pro = useHtmlFlag("data-pro-ux");
-	const open = useOpenRows(openSampleRows);
-	const { byLog, stats } = useSampleIndex();
-	let t0;
-	bb0: {
-		if (!pro || mode !== "tasks" || open.size === 0) {
-			t0 = rows;
-			break bb0;
-		}
-		let out;
-		if ($[0] !== byLog || $[1] !== open || $[2] !== rows || $[3] !== stats) {
-			out = [];
-			for (const row of rows) {
-				out.push(row);
-				const samples = open.has(row.id) ? byLog.get(logKey(row)) : void 0;
-				if (samples && samples.length > 1) out.push(...sampleSubRows(row, samples, stats.get(logKey(row))?.top ?? null));
-			}
-			$[0] = byLog;
-			$[1] = open;
-			$[2] = rows;
-			$[3] = stats;
-			$[4] = out;
-		} else out = $[4];
-		t0 = out;
-	}
-	return t0;
-};
-/** Keep a click inside a row from opening the row (rows are links). */ var own = (e) => {
-	e.preventDefault();
-	e.stopPropagation();
-};
-var isSubRow = (row) => sampleRefs.has(row);
-var sampleCount = (row, index) => row.totalSamples ?? index.byLog.get(logKey(row))?.length ?? 0;
-var TaskCell = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(41);
-	const { row, name } = t0;
-	const index = useSampleIndex();
-	const t1 = useOpenRows(openSampleRows);
-	let t2;
-	if ($[0] !== row.id || $[1] !== t1) {
-		t2 = t1.has(row.id);
-		$[0] = row.id;
-		$[1] = t1;
-		$[2] = t2;
-	} else t2 = $[2];
-	const open = t2;
-	let t3;
-	if ($[3] !== row) {
-		t3 = sampleRefs.get(row);
-		$[3] = row;
-		$[4] = t3;
-	} else t3 = $[4];
-	const sample = t3;
-	if (sample) {
-		const t4 = row.task || sample.id;
-		let t5;
-		if ($[5] !== t4) {
-			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-				className: "pro-task-name",
-				children: t4
-			});
-			$[5] = t4;
-			$[6] = t5;
-		} else t5 = $[6];
-		let t6;
-		if ($[7] !== sample.epoch) {
-			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("small", { children: [" · epoch ", sample.epoch] });
-			$[7] = sample.epoch;
-			$[8] = t6;
-		} else t6 = $[8];
-		let t7;
-		if ($[9] !== sample.id || $[10] !== t5 || $[11] !== t6) {
-			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-				className: "pro-task-cell pro-task-sub",
-				title: sample.id,
-				children: [t5, t6]
-			});
-			$[9] = sample.id;
-			$[10] = t5;
-			$[11] = t6;
-			$[12] = t7;
-		} else t7 = $[12];
-		return t7;
-	}
-	let t4;
-	if ($[13] !== index || $[14] !== row) {
-		t4 = sampleCount(row, index);
-		$[13] = index;
-		$[14] = row;
-		$[15] = t4;
-	} else t4 = $[15];
-	const n = t4;
-	if (row.type !== "file" || n === 0) {
-		let t5;
-		if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
-			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: "pro-task-caret-gap" });
-			$[16] = t5;
-		} else t5 = $[16];
-		let t6;
-		if ($[17] !== name) {
-			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-				className: "pro-task-cell",
-				children: [t5, /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-					className: "pro-task-name",
-					children: name
-				})]
-			});
-			$[17] = name;
-			$[18] = t6;
-		} else t6 = $[18];
-		return t6;
-	}
-	if (n === 1) {
-		let t5;
-		if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
-			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: "pro-task-caret-gap" });
-			$[19] = t5;
-		} else t5 = $[19];
-		let t6;
-		if ($[20] !== name) {
-			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-				className: "pro-task-name",
-				children: name
-			});
-			$[20] = name;
-			$[21] = t6;
-		} else t6 = $[21];
-		let t7;
-		if ($[22] === Symbol.for("react.memo_cache_sentinel")) {
-			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("small", {
-				className: "pro-task-what",
-				children: "1 sample →"
-			});
-			$[22] = t7;
-		} else t7 = $[22];
-		let t8;
-		if ($[23] !== t6) {
-			t8 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-				className: "pro-task-cell",
-				title: "One sample: clicking the row opens it directly",
-				children: [
-					t5,
-					t6,
-					t7
-				]
-			});
-			$[23] = t6;
-			$[24] = t8;
-		} else t8 = $[24];
-		return t8;
-	}
-	const t5 = `Clicking the row opens the list of ${n} samples; the caret lists them here`;
-	const t6 = open ? "Hide this log's samples" : "List this log's samples";
-	let t7;
-	if ($[25] !== row.id) {
-		t7 = (e) => {
-			own(e);
-			openSampleRows.toggle(row.id);
-		};
-		$[25] = row.id;
-		$[26] = t7;
-	} else t7 = $[26];
-	const t8 = open ? "▾" : "▸";
-	let t9;
-	if ($[27] !== open || $[28] !== t6 || $[29] !== t7 || $[30] !== t8) {
-		t9 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
-			type: "button",
-			className: "pro-task-caret",
-			"aria-expanded": open,
-			"aria-label": t6,
-			onClick: t7,
-			children: t8
-		});
-		$[27] = open;
-		$[28] = t6;
-		$[29] = t7;
-		$[30] = t8;
-		$[31] = t9;
-	} else t9 = $[31];
-	let t10;
-	if ($[32] !== name) {
-		t10 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-task-name",
-			children: name
-		});
-		$[32] = name;
-		$[33] = t10;
-	} else t10 = $[33];
-	let t11;
-	if ($[34] !== n) {
-		t11 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("small", {
-			className: "pro-task-what",
-			children: [n, " samples"]
-		});
-		$[34] = n;
-		$[35] = t11;
-	} else t11 = $[35];
-	let t12;
-	if ($[36] !== t10 || $[37] !== t11 || $[38] !== t5 || $[39] !== t9) {
-		t12 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: "pro-task-cell",
-			title: t5,
-			children: [
-				t9,
-				t10,
-				t11
-			]
-		});
-		$[36] = t10;
-		$[37] = t11;
-		$[38] = t5;
-		$[39] = t9;
-		$[40] = t12;
-	} else t12 = $[40];
-	return t12;
-};
-var Histogram = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(13);
-	const { stats, maxShare } = t0;
-	const barWidth = 60 / stats.bins.length;
-	let t1;
-	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-		t1 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("line", {
-			x1: "0",
-			x2: 60,
-			y1: 15.5,
-			y2: 15.5,
-			className: "pro-hist-axis"
-		});
-		$[0] = t1;
-	} else t1 = $[0];
-	let t2;
-	if ($[1] !== barWidth || $[2] !== maxShare || $[3] !== stats.bins || $[4] !== stats.n) {
-		let t3;
-		if ($[6] !== barWidth || $[7] !== maxShare || $[8] !== stats.bins.length || $[9] !== stats.n) {
-			t3 = (count, i) => {
-				if (count === 0 || maxShare === 0) return null;
-				const h = Math.max(1.5, count / stats.n * 15 / maxShare);
-				return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("rect", {
-					x: i * barWidth + .5,
-					width: barWidth - 1,
-					y: 15 - h,
-					height: h,
-					fill: css(prgn((i + .5) / stats.bins.length))
-				}, i);
-			};
-			$[6] = barWidth;
-			$[7] = maxShare;
-			$[8] = stats.bins.length;
-			$[9] = stats.n;
-			$[10] = t3;
-		} else t3 = $[10];
-		t2 = stats.bins.map(t3);
-		$[1] = barWidth;
-		$[2] = maxShare;
-		$[3] = stats.bins;
-		$[4] = stats.n;
-		$[5] = t2;
-	} else t2 = $[5];
-	let t3;
-	if ($[11] !== t2) {
-		t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("svg", {
-			width: 60,
-			height: 16,
-			viewBox: "0 0 60 16",
-			"aria-hidden": "true",
-			children: [t1, t2]
-		});
-		$[11] = t2;
-		$[12] = t3;
-	} else t3 = $[12];
-	return t3;
-};
-/** A score badge on this row's own scale, so a 0–10 log never reads /100.
-*  `data-pro-own` keeps the column-wide badge pass off it. */ var Badge = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(18);
-	const { value, top } = t0;
-	if (top === null) {
-		let t1;
-		if ($[0] !== value) {
-			t1 = formatPrettyDecimal(value);
-			$[0] = value;
-			$[1] = t1;
-		} else t1 = $[1];
-		let t2;
-		if ($[2] !== t1) {
-			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-				"data-pro-own": "",
-				children: t1
-			});
-			$[2] = t1;
-			$[3] = t2;
-		} else t2 = $[3];
-		return t2;
-	}
-	let t1;
-	let t2;
-	if ($[4] !== top || $[5] !== value) {
-		const rgb = prgn(value / top);
-		t1 = css(rgb);
-		t2 = isDark(rgb) ? "#fff" : "#2a2a2e";
-		$[4] = top;
-		$[5] = value;
-		$[6] = t1;
-		$[7] = t2;
-	} else {
-		t1 = $[6];
-		t2 = $[7];
-	}
-	let t3;
-	if ($[8] !== t1 || $[9] !== t2) {
-		t3 = {
-			"--pro-badge-bg": t1,
-			"--pro-badge-fg": t2
-		};
-		$[8] = t1;
-		$[9] = t2;
-		$[10] = t3;
-	} else t3 = $[10];
-	const style = t3;
-	const t4 = top === 1 ? "" : `/${top}`;
-	let t5;
-	if ($[11] !== top || $[12] !== value) {
-		t5 = formatOnScale(value, top);
-		$[11] = top;
-		$[12] = value;
-		$[13] = t5;
-	} else t5 = $[13];
-	let t6;
-	if ($[14] !== style || $[15] !== t4 || $[16] !== t5) {
-		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			"data-pro-own": "",
-			"data-pro-badge": "",
-			"data-pro-of": t4,
-			style,
-			children: t5
-		});
-		$[14] = style;
-		$[15] = t4;
-		$[16] = t5;
-		$[17] = t6;
-	} else t6 = $[17];
-	return t6;
-};
-var ScoreCell = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(11);
-	const { row } = t0;
-	const index = useSampleIndex();
-	let t1;
-	if ($[0] !== row) {
-		t1 = sampleRefs.get(row);
-		$[0] = row;
-		$[1] = t1;
-	} else t1 = $[1];
-	const sample = t1;
-	if (sample) {
-		let t2;
-		if ($[2] !== row.score || $[3] !== sample) {
-			t2 = row.score === void 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Badge, {
-				value: row.score,
-				top: sample.top ?? scaleTop([row.score])
-			});
-			$[2] = row.score;
-			$[3] = sample;
-			$[4] = t2;
-		} else t2 = $[4];
-		return t2;
-	}
-	let t2;
-	let t3;
-	if ($[5] !== index.maxShare || $[6] !== index.stats || $[7] !== row) {
-		t3 = Symbol.for("react.early_return_sentinel");
-		bb0: {
-			const stats = index.stats.get(logKey(row)) ?? null;
-			const value = row.score ?? stats?.mean;
-			if (value === void 0) {
-				let t4;
-				if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
-					t4 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
-					$[10] = t4;
-				} else t4 = $[10];
-				t3 = t4;
-				break bb0;
-			}
-			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(Badge, {
-				value,
-				top: stats?.top ?? scaleTop([value])
-			}), stats && stats.top !== null && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-				className: "pro-hist",
-				title: `${statsHint(stats, row.score === void 0)}\nbar height: share of samples; the tallest bar in the table is ${Math.round(index.maxShare * 100)}%`,
-				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Histogram, {
-					stats,
-					maxShare: index.maxShare
-				})
-			})] });
-		}
-		$[5] = index.maxShare;
-		$[6] = index.stats;
-		$[7] = row;
-		$[8] = t2;
-		$[9] = t3;
-	} else {
-		t2 = $[8];
-		t3 = $[9];
-	}
-	if (t3 !== Symbol.for("react.early_return_sentinel")) return t3;
-	return t2;
-};
-var ArgsCell = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(16);
-	const { row } = t0;
-	const t1 = useOpenRows(openArgsRows);
-	let t2;
-	if ($[0] !== row.id || $[1] !== t1) {
-		t2 = t1.has(row.id);
-		$[0] = row.id;
-		$[1] = t1;
-		$[2] = t2;
-	} else t2 = $[2];
-	const open = t2;
-	const args = row.taskArgsRaw;
-	if (!args || Object.keys(args).length === 0 || isSubRow(row)) {
-		let t3;
-		if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-			t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
-			$[3] = t3;
-		} else t3 = $[3];
-		return t3;
-	}
-	const t3 = open ? "pro-args open" : "pro-args";
-	let t4;
-	if ($[4] !== row.id) {
-		t4 = (e) => {
-			own(e);
-			if (window.getSelection()?.isCollapsed === false) return;
-			openArgsRows.toggle(row.id);
-		};
-		$[4] = row.id;
-		$[5] = t4;
-	} else t4 = $[5];
-	const t5 = open ? "▾" : "▸";
-	let t6;
-	if ($[6] !== t5) {
-		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-caret",
-			"aria-hidden": "true",
-			children: t5
-		});
-		$[6] = t5;
-		$[7] = t6;
-	} else t6 = $[7];
-	let t7;
-	if ($[8] !== args || $[9] !== open) {
-		t7 = open ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-			className: "pro-args-full",
-			children: Object.entries(args).map(_temp$78)
-		}) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-line",
-			children: argsSummary(args).map(_temp2$51)
-		});
-		$[8] = args;
-		$[9] = open;
-		$[10] = t7;
-	} else t7 = $[10];
-	let t8;
-	if ($[11] !== t3 || $[12] !== t4 || $[13] !== t6 || $[14] !== t7) {
-		t8 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: t3,
-			onClick: t4,
-			children: [t6, t7]
-		});
-		$[11] = t3;
-		$[12] = t4;
-		$[13] = t6;
-		$[14] = t7;
-		$[15] = t8;
-	} else t8 = $[15];
-	return t8;
-};
-var ArgsHeader = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(13);
-	const { table } = t0;
-	const open = useOpenRows(openArgsRows);
-	let ids;
-	let t1;
-	if ($[0] !== open || $[1] !== table) {
-		ids = table.getRowModel().rows.map(_temp3$35).filter(_temp4$28).map(_temp5$16);
-		let t2;
-		if ($[4] !== open) {
-			t2 = (id) => open.has(id);
-			$[4] = open;
-			$[5] = t2;
-		} else t2 = $[5];
-		t1 = ids.some(t2);
-		$[0] = open;
-		$[1] = table;
-		$[2] = ids;
-		$[3] = t1;
-	} else {
-		ids = $[2];
-		t1 = $[3];
-	}
-	const anyOpen = t1;
-	const t2 = anyOpen ? "Fold every row's task args" : "Show every row's task args in full";
-	let t3;
-	if ($[6] !== anyOpen || $[7] !== ids) {
-		t3 = (e) => {
-			own(e);
-			openArgsRows.setAll(anyOpen ? [] : ids);
-		};
-		$[6] = anyOpen;
-		$[7] = ids;
-		$[8] = t3;
-	} else t3 = $[8];
-	const t4 = anyOpen ? "▾ all" : "▸ all";
-	let t5;
-	if ($[9] !== t2 || $[10] !== t3 || $[11] !== t4) {
-		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
-			className: "pro-args-head",
-			children: ["Task Args", /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
-				type: "button",
-				className: "pro-args-all",
-				title: t2,
-				onClick: t3,
-				onMouseDown: _temp6$10,
-				children: t4
-			})]
-		});
-		$[9] = t2;
-		$[10] = t3;
-		$[11] = t4;
-		$[12] = t5;
-	} else t5 = $[12];
-	return t5;
-};
-var taskName = (ctx) => {
-	const value = ctx.getValue();
-	return typeof value === "string" ? value : ctx.row.original.name;
-};
-/** Pro-ux cells for the Tasks table: a sample caret in Task, readable Task
-*  args, and a score with its histogram. Upstream's columns otherwise. */ var useProLogListColumns = (columns, mode) => {
-	const $ = (0, import_compiler_runtime.c)(5);
-	const pro = useHtmlFlag("data-pro-ux");
-	const index = useSampleIndex();
-	let t0;
-	bb0: {
-		if (!pro || mode !== "tasks") {
-			t0 = columns;
-			break bb0;
-		}
-		let t1;
-		if ($[0] !== columns || $[1] !== index) {
-			let t2;
-			if ($[3] !== index) {
-				t2 = (c) => {
-					switch (c.id) {
-						case "task": return Object.assign({}, c, { cell: _temp7$7 });
-						case "taskArgs": return Object.assign({}, c, {
-							size: 320,
-							maxSize: 900,
-							header: _temp8$5,
-							headerTitle: "Task Args",
-							titleValue: _temp9$4,
-							cell: _temp10$2
-						});
-						case "score": return Object.assign({}, c, {
-							size: 150,
-							maxSize: 220,
-							headerTitle: "Headline metric, or the mean of sample scores when the log has none; histogram of sample scores",
-							accessorFn: (row) => row.score ?? index.stats.get(logKey(row))?.mean,
-							cell: _temp11$2
-						});
-						default: return c;
-					}
-				};
-				$[3] = index;
-				$[4] = t2;
-			} else t2 = $[4];
-			t1 = columns.map(t2);
-			$[0] = columns;
-			$[1] = index;
-			$[2] = t1;
-		} else t1 = $[2];
-		t0 = t1;
-	}
-	return t0;
-};
-function _temp$78(t0) {
-	const [key, value] = t0;
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-		className: "pro-args-row",
-		children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-key",
-			children: key
-		}), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
-			className: "pro-args-value",
-			children: argsDetail(value)
-		})]
-	}, key);
-}
-function _temp2$51(t0, i) {
-	const { key: key_0, value: value_0 } = t0;
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", { children: [
-		i > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-sep",
-			children: " · "
-		}),
-		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-key",
-			children: key_0
-		}),
-		" ",
-		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-			className: "pro-args-value",
-			children: value_0
-		})
-	] }, key_0);
-}
-function _temp3$35(r) {
-	return r.original;
-}
-function _temp4$28(r_0) {
-	return !isSubRow(r_0) && r_0.taskArgsRaw && Object.keys(r_0.taskArgsRaw).length > 0;
-}
-function _temp5$16(r_1) {
-	return r_1.id;
-}
-function _temp6$10(e_0) {
-	return e_0.stopPropagation();
-}
-function _temp7$7(ctx_2) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TaskCell, {
-		row: ctx_2.row.original,
-		name: taskName(ctx_2)
-	});
-}
-function _temp8$5(ctx_0) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ArgsHeader, { ...ctx_0 });
-}
-function _temp9$4() {}
-function _temp10$2(ctx_1) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ArgsCell, { row: ctx_1.row.original });
-}
-function _temp11$2(ctx) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ScoreCell, { row: ctx.row.original });
-}
-//#endregion
-//#region src/utils/evallog.ts
-var kLogFilePattern = /^(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}[-+]\d{2}-\d{2})_(.+)_([0-9A-Za-z]+)\.(eval|json)$/;
-/** Log file names carry a filesystem-safe ISO timestamp (colons replaced
-*  with dashes: `2026-07-04T19-37-16-00-00`); restore the colons so the
-*  Date parser accepts it. */ var parseFileNameTimestamp = (raw) => {
-	const iso = raw.replace(/T(\d{2})-(\d{2})-(\d{2})([-+])(\d{2})-(\d{2})$/, "T$1:$2:$3$4$5:$6");
-	const date = new Date(iso);
-	return Number.isNaN(date.getTime()) ? void 0 : date;
-};
-var parseLogFileName = (logFileName) => {
-	const match = logFileName.match(kLogFilePattern);
-	if (!match) return {
-		timestamp: void 0,
-		name: filename(logFileName),
-		taskId: void 0,
-		extension: logFileName.endsWith(".eval") ? "eval" : "json"
-	};
-	return {
-		timestamp: parseFileNameTimestamp(match[1]),
-		name: match[2],
-		taskId: match[3],
-		extension: match[4] === "json" ? "json" : "eval"
-	};
-};
-//#endregion
-//#region src/utils/format.ts
-/**
-* Formats a duration given in seconds into a human-readable string.
-*/ var formatTime = (seconds) => {
-	if (seconds < 60) return `${formatPrettyDecimal(seconds, 1)} sec`;
-	else if (seconds < 3600) return `${Math.floor(seconds / 60)} min ${Math.floor(seconds % 60)} sec`;
-	else if (seconds < 86400) {
-		const hours = Math.floor(seconds / 3600);
-		const minutes = Math.floor(seconds % 3600 / 60);
-		const remainingSeconds = seconds % 60;
-		return `${hours} hr ${minutes} min ${Math.floor(remainingSeconds)} sec`;
-	} else {
-		const days = Math.floor(seconds / 86400);
-		const hours = Math.floor(seconds % 86400 / 3600);
-		const minutes = Math.floor(seconds % 3600 / 60);
-		const remainingSeconds = seconds % 60;
-		return `${days} days ${hours} hr ${minutes} min ${Math.floor(remainingSeconds)} sec`;
-	}
-};
-/**
-* Formats a Date as yyyy-mm-dd hh:mm:ss (sv-SE locale, all surveyed users were OK with that format)
-*/ function formatDateTime(date) {
-	return date.toLocaleString("sv-SE");
-}
-/**
-* Returns the formatted duration between two dates
-*/ function formatDuration(start, end) {
-	return formatTime((end.getTime() - start.getTime()) / 1e3);
-}
-var gridCells_module_default$1 = {
-	gridWrapper: "_gridWrapper_nawgx_1",
-	gridContainer: "_gridContainer_nawgx_7",
-	iconCell: "_iconCell_nawgx_15",
-	numberCell: "_numberCell_nawgx_29",
-	taskText: "_taskText_nawgx_39",
-	folder: "_folder_nawgx_46",
-	fullWidthHeight: "_fullWidthHeight_nawgx_52"
-};
-var columns_module_default = {
-	nameCell: "_nameCell_8fyml_1",
-	modelCell: "_modelCell_8fyml_8",
-	modelCellPrimary: "_modelCellPrimary_8fyml_15",
-	scoreCell: "_scoreCell_8fyml_22",
-	multiScorerBadge: "_multiScorerBadge_8fyml_29",
-	error: "_error_8fyml_41",
-	started: "_started_8fyml_45",
-	success: "_success_8fyml_49",
-	cancelled: "_cancelled_8fyml_53",
-	statusCell: "_statusCell_8fyml_57",
-	dateCell: "_dateCell_8fyml_68"
-};
-//#endregion
-//#region src/app/shared/gridComparators.ts
-var isMissingNumber$1 = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
-/**
-* Common value-comparison functions for client-side grid sorting.
-*/ var toTime = (value) => {
-	if (value instanceof Date) return value.getTime();
-	if (typeof value === "string" || typeof value === "number") {
-		const time = new Date(value).getTime();
-		return Number.isNaN(time) ? 0 : time;
-	}
-	return 0;
-};
-var comparators = {
-	/**
-	* Compare values as numbers. NaN / null / undefined / "" are pinned to the
-	* bottom regardless of sort direction — the sentinel is flipped on
-	* `isDescending` so the caller's reversal still leaves missing rows last.
-	* A non-NaN-aware comparator returns 0 for any pair involving NaN, which
-	* violates transitivity and scrambles the non-NaN rows too.
-	*/ number: (a, b, isDescending) => {
-		const aMissing = isMissingNumber$1(a);
-		const bMissing = isMissingNumber$1(b);
-		if (aMissing && bMissing) return 0;
-		if (aMissing) return isDescending ? -1 : 1;
-		if (bMissing) return isDescending ? 1 : -1;
-		return Number(a) - Number(b);
-	},
-	/** Compare values as dates */ date: (a, b) => toTime(a) - toTime(b)
-};
-//#endregion
-//#region src/app/log-list/grid/columns/comparators.ts
-var isMissingNumber = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
-var numberCompare$1 = (a, b) => {
-	const aMissing = isMissingNumber(a);
-	const bMissing = isMissingNumber(b);
-	if (aMissing && bMissing) return 0;
-	if (aMissing) return -1;
-	if (bMissing) return 1;
-	return Number(a) - Number(b);
-};
-var dateCompare$1 = (a, b) => comparators.date(a, b);
-//#endregion
-//#region src/app/log-list/grid/columns/completedAt.ts
-/**
-* Sort/filter value for the Completed column. Never-completed logs (status
-* `started`, including currently-running evals) have no completion date —
-* `completedAt` arrives as `""` or undefined; fall back to the timestamp
-* embedded in the log file name so a Completed-descending sort slots them
-* by recency — a just-started eval surfaces at the top — instead of
-* coercing the missing date to epoch 0 and sinking them to the bottom.
-*/ var completedAtValue = (row) => row.completedAt || parseLogFileName(basename(row.name)).timestamp?.toISOString();
-//#endregion
-//#region src/app/log-list/grid/columns/hooks.tsx
-var styles = {
-	...gridCells_module_default$1,
-	...columns_module_default
-};
-var EmptyCell$1 = () => {
-	const $ = (0, import_compiler_runtime.c)(1);
-	let t0;
-	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-		t0 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
-		$[0] = t0;
-	} else t0 = $[0];
-	return t0;
-};
-var kNoScorerMap = {};
-var kNoListingRows = [];
-var displayModelRoles = (row) => {
-	if (!row) return [];
-	if (row.model && row.model !== "none/none") return [];
-	return row.modelRoles ? Object.entries(row.modelRoles) : [];
-};
-var primaryModelValue = (row) => {
-	if (!row) return void 0;
-	if (row.model && row.model !== "none/none") return row.model;
-	return displayModelRoles(row)[0]?.[1];
-};
-/** Human-readable header: "scorer / metric". */ var scorerMetricHeader = (scorerName, metricName) => `${scorerName} / ${metricName}`;
-/**
-* Field key for the synthetic "by metric" column that aggregates across
-* scorers. Uses a `metric_` prefix (no slash) so it can never collide with
-* the per-scorer `score_<scorer>/<metric>` field keys.
-*/ var byMetricField = (metricName) => `metric_${metricName}`;
-var useLogListColumns = (mode = "logs", scopeDir, viewMode = "by-metric") => {
-	const columnVisibility = useStore((state) => state.logs.listing.columnVisibility);
-	const setColumnVisibility = useStore((state_0) => state_0.logsActions.setLogsColumnVisibility);
-	const logDir = useLogDir();
-	const scorerMap = useScoreSchema(logDir, scopeDir).data ?? kNoScorerMap;
-	const allColumns = (0, import_react.useMemo)(() => {
-		const baseColumns = [
-			{
-				id: "type",
-				header: "",
-				size: 32,
-				minSize: 32,
-				maxSize: 32,
-				enableResizing: false,
-				meta: { align: "center" },
-				accessorFn: (row) => row.type,
-				cell: ({ row: row_0 }) => {
-					const type = row_0.original.type;
-					const icon = type === "file" || type === "pending-task" ? "inspectFile" : "folder";
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.iconCell,
-						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: icon })
-					});
-				}
-			},
-			{
-				id: "task",
-				header: "Task",
-				size: 250,
-				minSize: 150,
-				accessorFn: (row_1) => {
-					if (row_1.type === "file") return row_1.task || parseLogFileName(row_1.name).name;
-					return row_1.name;
-				},
-				titleValue: (row_2) => {
-					if (row_2.type === "file") return row_2.task || parseLogFileName(row_2.name).name;
-					return row_2.name;
-				},
-				cell: ({ row: row_3 }) => {
-					const item = row_3.original;
-					let value = item.name;
-					if (item.type === "file") value = item.task || parseLogFileName(item.name).name;
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: item.type === "folder" ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-							className: styles.folder,
-							children: value
-						}) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-							className: styles.taskText,
-							children: value
-						})
-					});
-				}
-			},
-			{
-				id: "model",
-				header: "Model",
-				size: 300,
-				minSize: 100,
-				maxSize: 400,
-				accessorFn: (row_4) => primaryModelValue(row_4),
-				titleValue: (row_5) => {
-					const roles = displayModelRoles(row_5);
-					if (roles.length > 0) return roles.map(([role, model]) => `${role}: ${model}`).join("\n");
-					const model_0 = row_5.model;
-					return model_0 && model_0 !== "none/none" ? model_0 : void 0;
-				},
-				cell: ({ row: row_6 }) => {
-					const item_0 = row_6.original;
-					if (item_0.model && item_0.model !== "none/none") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.modelCell,
-						children: item_0.model
-					});
-					const roles_0 = displayModelRoles(item_0);
-					const firstRole = roles_0[0];
-					if (firstRole) {
-						const primary = firstRole[1];
-						const extras = roles_0.length - 1;
-						return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-							className: styles.modelCell,
-							children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-								className: styles.modelCellPrimary,
-								children: primary
-							}), extras > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
-								className: styles.multiScorerBadge,
-								children: ["+", extras]
-							})]
-						});
-					}
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-				}
-			},
-			{
-				id: "score",
-				header: "Score",
-				size: 80,
-				minSize: 60,
-				maxSize: 120,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_7) => row_7.score,
-				textValue: (row_8) => row_8.score === void 0 ? null : formatPrettyDecimal(row_8.score),
-				cell: ({ row: row_9 }) => {
-					const item_1 = row_9.original;
-					if (item_1.score === void 0) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.scoreCell,
-						children: formatPrettyDecimal(item_1.score)
-					});
-				}
-			},
-			{
-				id: "status",
-				header: "Status",
-				size: 80,
-				minSize: 60,
-				maxSize: 100,
-				accessorFn: (row_10) => row_10.status,
-				titleValue: (row_11) => {
-					if (row_11.status === "error" && row_11.errorMessage) return row_11.errorMessage;
-					return row_11.status || void 0;
-				},
-				cell: ({ row: row_12 }) => {
-					const item_2 = row_12.original;
-					const status = item_2.status;
-					if (!status && item_2.type !== "pending-task") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					const icon_0 = item_2.type === "pending-task" ? "pendingTaskSubtle" : status === "error" ? "error" : status === "started" ? "running" : status === "cancelled" ? "cancel" : "success";
-					const clz = item_2.type === "pending-task" ? styles.started : status === "error" ? styles.error : status === "started" ? styles.started : status === "cancelled" ? styles.cancelled : styles.success;
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.statusCell,
-						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
-							name: icon_0,
-							className: clz
-						})
-					});
-				}
-			},
-			{
-				id: "completedAt",
-				header: "Completed",
-				size: 130,
-				minSize: 80,
-				maxSize: 140,
-				meta: { sortComparator: dateCompare$1 },
-				accessorFn: (row_13) => completedAtValue(row_13),
-				cell: ({ row: row_14 }) => {
-					const completed = row_14.original.completedAt;
-					if (!completed) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.dateCell,
-						children: formatDateTime(new Date(completed))
-					});
-				}
-			},
-			{
-				id: "name",
-				header: "File Name",
-				size: 600,
-				minSize: 150,
-				accessorFn: (row_15) => {
-					if (row_15.type === "folder") return row_15.name;
-					if (row_15.type === "file") return basename(row_15.name);
-					return "";
-				},
-				titleValue: (row_16) => {
-					if (row_16.type === "folder") return row_16.name;
-					if (row_16.type === "file") return basename(row_16.name);
-				},
-				cell: ({ row: row_17 }) => {
-					const item_3 = row_17.original;
-					if (item_3.type === "pending-task") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					if (item_3.type === "folder") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
-							className: styles.folder,
-							children: item_3.name
-						})
-					});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: basename(item_3.name)
-					});
-				}
-			},
-			{
-				id: "path",
-				header: "Path",
-				size: 300,
-				minSize: 100,
-				accessorFn: (row_18) => row_18.path,
-				titleValue: (row_19) => row_19.path,
-				cell: ({ row: row_20 }) => {
-					const item_4 = row_20.original;
-					if (!item_4.path) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: item_4.path
-					});
-				}
-			},
-			{
-				id: "totalSamples",
-				header: "Samples",
-				size: 90,
-				minSize: 60,
-				maxSize: 120,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_21) => row_21.totalSamples,
-				cell: ({ getValue }) => {
-					const value_0 = getValue();
-					if (value_0 === void 0 || value_0 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_0) });
-				}
-			},
-			{
-				id: "completedSamples",
-				header: "Completed Samples",
-				size: 130,
-				minSize: 80,
-				maxSize: 160,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_22) => row_22.completedSamples,
-				cell: ({ getValue: getValue_0 }) => {
-					const value_1 = getValue_0();
-					if (value_1 === void 0 || value_1 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_1) });
-				}
-			},
-			{
-				id: "sandbox",
-				header: "Sandbox",
-				size: 100,
-				minSize: 60,
-				maxSize: 150,
-				accessorFn: (row_23) => row_23.sandbox,
-				cell: ({ getValue: getValue_1 }) => {
-					const value_2 = getValue_1();
-					if (!value_2) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: value_2 });
-				}
-			},
-			{
-				id: "totalTokens",
-				header: "Tokens",
-				size: 100,
-				minSize: 60,
-				maxSize: 140,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_24) => row_24.totalTokens,
-				cell: ({ getValue: getValue_2 }) => {
-					const value_3 = getValue_2();
-					if (value_3 === void 0 || value_3 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_3) });
-				}
-			},
-			{
-				id: "duration",
-				header: "Duration",
-				size: 120,
-				minSize: 70,
-				maxSize: 160,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_25) => row_25.duration,
-				titleValue: (row_26) => row_26.duration === void 0 ? void 0 : formatTime(row_26.duration),
-				textValue: (row_27) => row_27.duration === void 0 ? null : formatTime(row_27.duration),
-				cell: ({ getValue: getValue_3 }) => {
-					const value_4 = getValue_3();
-					if (value_4 === void 0 || value_4 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatTime(value_4) });
-				}
-			},
-			{
-				id: "taskFile",
-				header: "Task File",
-				size: 200,
-				minSize: 100,
-				accessorFn: (row_28) => row_28.taskFile,
-				titleValue: (row_29) => row_29.taskFile,
-				cell: ({ getValue: getValue_4 }) => {
-					const value_5 = getValue_4();
-					if (!value_5) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: value_5
-					});
-				}
-			},
-			{
-				id: "taskArgs",
-				header: "Task Args",
-				size: 200,
-				minSize: 100,
-				accessorFn: (row_30) => row_30.taskArgs,
-				titleValue: (row_31) => row_31.taskArgsRaw ? JSON.stringify(row_31.taskArgsRaw, null, 2) : void 0,
-				cell: ({ getValue: getValue_5 }) => {
-					const value_6 = getValue_5();
-					if (!value_6) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: value_6
-					});
-				}
-			},
-			{
-				id: "tags",
-				header: "Tags",
-				size: 80,
-				minSize: 80,
-				accessorFn: (row_32) => row_32.tags && row_32.tags.length > 0 ? row_32.tags.join(", ") : "",
-				titleValue: (row_33) => row_33.tags && row_33.tags.length > 0 ? row_33.tags.join(", ") : void 0,
-				cell: ({ getValue: getValue_6 }) => {
-					const value_7 = getValue_6();
-					if (!value_7) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: value_7
-					});
-				}
-			},
-			{
-				id: "percentCompleted",
-				header: "% Completed",
-				size: 110,
-				minSize: 80,
-				maxSize: 140,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_34) => row_34.percentCompleted,
-				textValue: (row_35) => row_35.percentCompleted === void 0 ? null : `${formatPrettyDecimal(row_35.percentCompleted)}%`,
-				cell: ({ getValue: getValue_7 }) => {
-					const value_8 = getValue_7();
-					if (value_8 === void 0 || value_8 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", { children: [formatPrettyDecimal(value_8), "%"] });
-				}
-			},
-			{
-				id: "sampleErrors",
-				header: "Sample Errors",
-				size: 110,
-				minSize: 60,
-				maxSize: 140,
-				meta: { sortComparator: numberCompare$1 },
-				accessorFn: (row_36) => row_36.sampleErrors,
-				cell: ({ getValue: getValue_8 }) => {
-					const value_9 = getValue_8();
-					if (value_9 === void 0 || value_9 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_9) });
-				}
-			},
-			{
-				id: "sampleLimits",
-				header: "Sample Limits",
-				size: 140,
-				minSize: 80,
-				accessorFn: (row_37) => row_37.sampleLimits,
-				cell: ({ getValue: getValue_9 }) => {
-					const value_10 = getValue_9();
-					if (!value_10) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: value_10 });
-				}
-			},
-			{
-				id: "errorMessage",
-				header: "Error",
-				size: 300,
-				minSize: 100,
-				accessorFn: (row_38) => row_38.errorMessage ? row_38.errorMessage.split("\n")[0] : "",
-				titleValue: (row_39) => row_39.errorMessage || void 0,
-				cell: ({ getValue: getValue_10 }) => {
-					const value_11 = getValue_10();
-					if (!value_11) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.nameCell,
-						children: value_11
-					});
-				}
-			}
-		];
-		const perScorerColumns = Object.entries(scorerMap).sort(([a], [b]) => a.localeCompare(b)).map(([key, { scorerName, metricName, valueType }]) => {
-			return {
-				id: `score_${key}`,
-				header: scorerMetricHeader(scorerName, metricName),
-				size: 100,
-				minSize: 100,
-				meta: valueType === "number" ? { sortComparator: numberCompare$1 } : void 0,
-				accessorFn: (row_40) => row_40[`score_${key}`],
-				textValue: (row_41) => {
-					const value_12 = row_41[`score_${key}`];
-					if (typeof value_12 === "number") return formatPrettyDecimal(value_12);
-					if (typeof value_12 === "boolean") return String(value_12);
-					return typeof value_12 === "string" && value_12 !== "" ? value_12 : null;
-				},
-				cell: ({ getValue: getValue_11 }) => {
-					const value_13 = getValue_11();
-					if (value_13 === void 0 || value_13 === null || value_13 === "") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-						className: styles.scoreCell,
-						children: typeof value_13 === "number" ? formatPrettyDecimal(value_13) : String(value_13)
-					});
-				}
-			};
-		});
-		const metricGroups = /* @__PURE__ */ new Map();
-		for (const { scorerName: scorerName_0, metricName: metricName_0, valueType: valueType_0 } of Object.values(scorerMap)) {
-			const list = metricGroups.get(metricName_0) ?? [];
-			list.push({
-				scorerName: scorerName_0,
-				valueType: valueType_0
-			});
-			metricGroups.set(metricName_0, list);
-		}
-		const byMetricColumns = [...metricGroups.entries()].sort(([a_0], [b_0]) => a_0.localeCompare(b_0)).map(([metricName_1, entries]) => {
-			const scorerOrder = entries.map((e) => e.scorerName).sort((a_1, b_1) => a_1.localeCompare(b_1));
-			const allNumeric = entries.every((e_0) => e_0.valueType === "number");
-			const readContributors = (row_42) => {
-				if (!row_42) return [];
-				const contributors = [];
-				for (const scorer of scorerOrder) {
-					const v = row_42[`score_${scorer}/${metricName_1}`];
-					if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
-						if (v !== "") contributors.push({
-							scorer,
-							value: v
-						});
-					}
-				}
-				return contributors;
-			};
-			return {
-				id: byMetricField(metricName_1),
-				header: metricName_1,
-				size: 100,
-				minSize: 100,
-				meta: allNumeric ? { sortComparator: numberCompare$1 } : void 0,
-				accessorFn: (row_43) => readContributors(row_43)[0]?.value,
-				textValue: (row_44) => {
-					const first = readContributors(row_44)[0];
-					if (!first) return null;
-					return typeof first.value === "number" ? formatPrettyDecimal(first.value) : String(first.value);
-				},
-				cell: ({ row: row_45 }) => {
-					const [first_0, ...extras_0] = readContributors(row_45.original);
-					if (!first_0) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
-					const primary_0 = first_0.value;
-					const primaryText = typeof primary_0 === "number" ? formatPrettyDecimal(primary_0) : String(primary_0);
-					return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-						className: styles.scoreCell,
-						children: [primaryText, extras_0.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
-							className: styles.multiScorerBadge,
-							title: extras_0.map((c) => {
-								const v_0 = typeof c.value === "number" ? formatPrettyDecimal(c.value) : String(c.value);
-								return `${c.scorer}: ${v_0}`;
-							}).join("\n"),
-							children: ["+", extras_0.length]
-						})]
-					});
-				}
-			};
-		});
-		const allCols = [
-			...baseColumns,
-			...perScorerColumns,
-			...byMetricColumns
-		];
-		if (mode === "tasks") {
-			const typeIdx = allCols.findIndex((col) => col.id === "type");
-			if (typeIdx >= 0) allCols.splice(typeIdx, 1);
-			const tasksFieldOrder = [
-				"status",
-				"task",
-				"model",
-				"taskArgs",
-				"tags",
-				"score",
-				"completedAt",
-				"totalSamples",
-				"completedSamples",
-				"percentCompleted",
-				"sampleErrors",
-				"sampleLimits",
-				"totalTokens",
-				"duration",
-				"errorMessage",
-				"name",
-				"sandbox",
-				"taskFile"
-			];
-			allCols.sort((a_2, b_2) => {
-				const aIdx = tasksFieldOrder.indexOf(a_2.id || "");
-				const bIdx = tasksFieldOrder.indexOf(b_2.id || "");
-				return (aIdx >= 0 ? aIdx : tasksFieldOrder.length) - (bIdx >= 0 ? bIdx : tasksFieldOrder.length);
-			});
-		} else {
-			const nameIdx = allCols.findIndex((col_0) => col_0.id === "name");
-			if (nameIdx > 1) {
-				const [nameCol] = allCols.splice(nameIdx, 1);
-				if (nameCol) allCols.splice(1, 0, nameCol);
-			}
-			const statusIdx = allCols.findIndex((col_1) => col_1.id === "status");
-			if (statusIdx > 2) {
-				const [statusCol] = allCols.splice(statusIdx, 1);
-				if (statusCol) allCols.splice(2, 0, statusCol);
-			}
-		}
-		for (const col_2 of allCols) {
-			if (col_2.id === "type") continue;
-			const cmp = col_2.meta?.sortComparator;
-			const filterType = cmp === numberCompare$1 ? "number" : cmp === dateCompare$1 ? "date" : "string";
-			col_2.meta = {
-				...col_2.meta,
-				filterable: true,
-				filterType
-			};
-		}
-		return allCols;
-	}, [scorerMap, mode]);
-	const listingRows = useLogListing(logDir).data ?? kNoListingRows;
-	const hasSampleLimits = (0, import_react.useMemo)(() => {
-		const prefix = scopeDir ? scopePrefix(scopeDir) : void 0;
-		return listingRows.some((row_46) => (!prefix || row_46.name.startsWith(prefix)) && (row_46.header?.sampleLimits.length ?? 0) > 0);
-	}, [listingRows, scopeDir]);
-	const defaultHiddenFields = (0, import_react.useMemo)(() => {
-		const hidden = /* @__PURE__ */ new Set();
-		if (mode === "tasks") {
-			hidden.add("sandbox");
-			hidden.add("taskFile");
-			hidden.add("name");
-			hidden.add("path");
-			hidden.add("completedSamples");
-		} else {
-			hidden.add("path");
-			hidden.add("completedSamples");
-			hidden.add("sandbox");
-			hidden.add("taskFile");
-		}
-		hidden.add("percentCompleted");
-		hidden.add("sampleErrors");
-		if (!hasSampleLimits) hidden.add("sampleLimits");
-		hidden.add("errorMessage");
-		return hidden;
-	}, [mode, hasSampleLimits]);
-	const matchesActiveMode = (field) => {
-		if (field.startsWith("score_")) return viewMode === "per-scorer";
-		if (field.startsWith("metric_")) return viewMode === "by-metric";
-		return true;
-	};
-	const visibility = (0, import_react.useMemo)(() => {
-		const v_1 = {};
-		for (const col_3 of allColumns) {
-			const field_0 = col_3.id;
-			if (field_0 === void 0) continue;
-			const defaultVisible = field_0.startsWith("score_") || field_0.startsWith("metric_") ? false : !defaultHiddenFields.has(field_0);
-			v_1[field_0] = columnVisibility[field_0] ?? defaultVisible;
-		}
-		return v_1;
-	}, [
-		allColumns,
-		columnVisibility,
-		defaultHiddenFields
-	]);
-	const pickerColumns = (0, import_react.useMemo)(() => {
-		return allColumns.flatMap((col_4) => col_4.id === void 0 || !matchesActiveMode(col_4.id) ? [] : [{
-			colId: col_4.id,
-			headerName: typeof col_4.header === "string" ? col_4.header : ""
-		}]);
-	}, [allColumns, viewMode]);
-	const columnsById = (0, import_react.useMemo)(() => {
-		const byId = /* @__PURE__ */ new Map();
-		for (const col_5 of allColumns) if (col_5.id) byId.set(col_5.id, col_5);
-		return byId;
-	}, [allColumns]);
-	const getValue_12 = (0, import_react.useCallback)((row_47, columnId) => {
-		const col_6 = columnsById.get(columnId);
-		if (col_6 && "accessorFn" in col_6 && typeof col_6.accessorFn === "function") return col_6.accessorFn(row_47, 0);
-		return row_47[columnId];
-	}, [columnsById]);
-	const getComparator = (0, import_react.useCallback)((columnId_0) => columnsById.get(columnId_0)?.meta?.sortComparator, [columnsById]);
-	const getFilterType = (0, import_react.useCallback)((columnId_1) => columnsById.get(columnId_1)?.meta?.filterType, [columnsById]);
-	const accessorsKey = (0, import_react.useMemo)(() => Object.entries(scorerMap).map(([key_0, { valueType: valueType_1 }]) => `${key_0}:${valueType_1}`).sort().join(","), [scorerMap]);
-	return {
-		columns: useProLogListColumns(allColumns, mode),
-		visibility,
-		pickerColumns,
-		getValue: getValue_12,
-		getComparator,
-		getFilterType,
-		accessorsKey,
-		setColumnVisibility
 	};
 };
 //#endregion
@@ -88814,6 +89200,1805 @@ function useTable(tableOptions, selector) {
 		state
 	]);
 }
+//#endregion
+//#region src/pro-ux/taskStats.ts
+var kLetterScores = {
+	C: 1,
+	P: .5,
+	I: 0,
+	N: 0
+};
+/** A sample's score as a number, or null when it isn't one. */ var numericScore = (value) => {
+	if (typeof value === "number") return Number.isFinite(value) ? value : null;
+	if (typeof value === "boolean") return value ? 1 : 0;
+	if (typeof value === "string") {
+		const letter = kLetterScores[value.trim()];
+		if (letter !== void 0) return letter;
+		const n = Number(value);
+		return value.trim() !== "" && Number.isFinite(n) ? n : null;
+	}
+	return null;
+};
+/** The first score in a sample's score map that reads as a number. */ var firstNumericScore = (scores) => {
+	for (const value of Object.values(scores ?? {})) {
+		const n = numericScore(value);
+		if (n !== null) return n;
+	}
+	return null;
+};
+var scoreStats = (values, binCount = 10) => {
+	if (values.length === 0) return null;
+	const top = scaleTop(values);
+	const bins = new Array(binCount).fill(0);
+	if (top !== null) for (const v of values) {
+		const i = Math.min(binCount - 1, Math.max(0, Math.floor(v / top * binCount)));
+		bins[i] = (bins[i] ?? 0) + 1;
+	}
+	const mean = values.reduce((a, b) => a + b, 0) / values.length;
+	return {
+		n: values.length,
+		mean,
+		top,
+		bins
+	};
+};
+/** Largest share of one row's samples in a single bin, over all rows: the
+*  common y range for every row's histogram. */ var maxBinShare = (stats) => {
+	let max = 0;
+	for (const s of stats) {
+		if (!s || s.n === 0) continue;
+		for (const count of s.bins) max = Math.max(max, count / s.n);
+	}
+	return max;
+};
+var binLabel = (stats, i) => {
+	if (stats.top === null) return "";
+	const width = stats.top / stats.bins.length;
+	const lo = i * width;
+	const hi = lo + width;
+	const fmt = (x) => Number.isInteger(x) ? String(x) : x.toFixed(2);
+	return `${fmt(lo)}–${fmt(hi)}`;
+};
+var statsHint = (stats, fromSamples) => {
+	const lines = [`${fromSamples ? "mean of sample scores" : "headline metric"}; histogram of ${stats.n} sample score${stats.n === 1 ? "" : "s"}`, `n = ${stats.n} · mean = ${stats.mean.toFixed(3)}${stats.top !== null ? ` · scale 0–${stats.top}` : ""}`];
+	if (stats.top !== null) lines.push(stats.bins.map((count, i) => `${binLabel(stats, i)}: ${count}`).join("\n"));
+	return lines.join("\n");
+};
+/** Task args as one line: `key value · key value`, values shortened. */ var argsSummary = (args) => Object.entries(args).map(([key, value]) => ({
+	key,
+	value: shortValue(value)
+}));
+var shortValue = (value) => {
+	if (typeof value === "string") {
+		const parsed = parseJsonish(value);
+		if (parsed !== void 0 && typeof parsed === "object" && parsed !== null) return braces(parsed);
+		return value;
+	}
+	if (value !== null && typeof value === "object") return braces(value);
+	return String(value);
+};
+var braces = (value) => Array.isArray(value) ? `[${value.length}]` : `{${Object.keys(value).join(", ")}}`;
+/** A string that holds a JSON object or array, parsed; otherwise undefined. */ var parseJsonish = (text) => {
+	const t = text.trim();
+	if (!(t.startsWith("{") || t.startsWith("["))) return void 0;
+	try {
+		return JSON.parse(t);
+	} catch {
+		return;
+	}
+};
+/** An arg's value laid out for reading: nested JSON pretty-printed. */ var argsDetail = (value) => {
+	if (typeof value === "string") {
+		const parsed = parseJsonish(value);
+		return parsed === void 0 ? value : JSON.stringify(parsed, null, 2);
+	}
+	if (value !== null && typeof value === "object") return JSON.stringify(value, null, 2);
+	return String(value);
+};
+/** A value with as many decimals as its scale warrants: 0–100 → one,
+*  0–10 → two, 0–1 → three. */ var formatOnScale = (value, top) => {
+	if (Number.isInteger(value)) return String(value);
+	const digits = top === 100 ? 1 : top === 10 ? 2 : 3;
+	return value.toFixed(digits);
+};
+/** A score as its badge reads: the value, then the scale ("/100"). */ var scoreLabel = (value, top) => top === null ? {
+	value: formatPrettyDecimal(value),
+	of: ""
+} : {
+	value: formatOnScale(value, top),
+	of: top === 1 ? "" : `/${top}`
+};
+/** Width in `ch` of the widest label, the scale being set at 0.85em: one
+*  badge width for the whole column, so every histogram starts at one x. */ var badgeSlotCh = (labels) => {
+	let max = 0;
+	for (const label of labels) max = Math.max(max, label.value.length + .85 * label.of.length);
+	return Math.max(0, Math.ceil(max * 10 - 1e-9) / 10);
+};
+//#endregion
+//#region src/pro-ux/tasksIndex.ts
+var logKey = (row) => row.log?.name ?? "";
+var fnv1a = (text) => {
+	let hash = 2166136261;
+	for (let i = 0; i < text.length; i++) {
+		hash ^= text.charCodeAt(i);
+		hash = Math.imul(hash, 16777619);
+	}
+	return (hash >>> 0).toString(36);
+};
+var buildIndex = (rows) => {
+	const byLog = /* @__PURE__ */ new Map();
+	for (const row of rows) {
+		const list = byLog.get(row.logFile) ?? [];
+		list.push(row);
+		byLog.set(row.logFile, list);
+	}
+	const stats = /* @__PURE__ */ new Map();
+	for (const [file, list] of byLog) {
+		const values = list.map((r) => firstNumericScore(r.derived.scores)).filter((v) => v !== null);
+		stats.set(file, scoreStats(values));
+	}
+	const signature = fnv1a([...byLog.keys()].sort().map((file) => `${file}\t${byLog.get(file)?.length}\t${stats.get(file)?.mean}`).join("\n"));
+	return {
+		byLog,
+		stats,
+		maxShare: maxBinShare(stats.values()),
+		signature
+	};
+};
+/** A log row's score as its badge shows it: the headline metric, else the
+*  mean of its sample scores. */ var shownScore = (row, index) => row.score ?? index.stats.get(logKey(row))?.mean;
+/** A log row's sample count, from the samples themselves when the log's
+*  results don't carry it. */ var shownSampleCount = (row, index) => row.totalSamples ?? index.byLog.get(logKey(row))?.length;
+var isMissing = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
+/** Numbers ascending; missing values last in both directions (the listing
+*  negates the result for descending, so they are pinned against that). */ var missingLastCompare = (a, b, isDescending) => {
+	const aMissing = isMissing(a);
+	const bMissing = isMissing(b);
+	if (aMissing && bMissing) return 0;
+	if (aMissing) return isDescending ? -1 : 1;
+	if (bMissing) return isDescending ? 1 : -1;
+	return Number(a) - Number(b);
+};
+/** The listing query's accessors with Score and Samples reading the values
+*  the Tasks table shows, so sorting and filtering match the cells. */ var tasksListingAccessors = (base, index) => ({
+	getValue: (row, columnId) => {
+		if (columnId === "score") return shownScore(row, index);
+		if (columnId === "totalSamples") return shownSampleCount(row, index);
+		return base.getValue(row, columnId);
+	},
+	getComparator: (columnId) => columnId === "score" ? missingLastCompare : base.getComparator(columnId)
+});
+/** `items` with the one whose id is `id` moved right after `after`;
+*  unchanged when either is absent. */ var moveAfter = (items, id, after) => {
+	const item = items.find((c) => c.id === id);
+	if (!item || !items.some((c) => c.id === after)) return items;
+	const rest = items.filter((c) => c !== item);
+	const at = rest.findIndex((c) => c.id === after);
+	return [
+		...rest.slice(0, at + 1),
+		item,
+		...rest.slice(at + 1)
+	];
+};
+//#endregion
+//#region src/pro-ux/tasksState.ts
+/** A persisted set of row ids, for rows the user has opened. */ var openSet = (storageKey) => {
+	const read = () => {
+		try {
+			const raw = localStorage.getItem(storageKey);
+			const parsed = raw ? JSON.parse(raw) : [];
+			return new Set(Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : []);
+		} catch {
+			return /* @__PURE__ */ new Set();
+		}
+	};
+	let current = read();
+	const listeners = /* @__PURE__ */ new Set();
+	const set = (next) => {
+		current = next;
+		try {
+			localStorage.setItem(storageKey, JSON.stringify([...next]));
+		} catch {}
+		for (const listener of listeners) listener();
+	};
+	const subscribe = (listener) => {
+		listeners.add(listener);
+		return () => listeners.delete(listener);
+	};
+	return {
+		get: () => current,
+		toggle: (id) => {
+			const next = new Set(current);
+			if (next.has(id)) next.delete(id);
+			else next.add(id);
+			set(next);
+		},
+		setAll: (ids) => set(new Set(ids)),
+		subscribe
+	};
+};
+/** A named hook, not a `.use()` method: the React Compiler only treats
+*  `useXxx` calls as hooks, and caches anything else. */ var useOpenRows = (rows) => {
+	return (0, import_react.useSyncExternalStore)(rows.subscribe, rows.get);
+};
+/** Log rows whose samples are listed beneath them. */ var openSampleRows = openSet("pro-ux-task-samples-open");
+/** Rows whose task args are laid out in full. */ var openArgsRows = openSet("pro-ux-task-args-open");
+/** Whether grid rows must be measured: soft-wrap is on, or some row has
+*  its task args open. */ var useRowsGrow = () => {
+	const wrap = useProPref("wrapCells");
+	const pro = useHtmlFlag("data-pro-ux");
+	const argsOpen = useOpenRows(openArgsRows).size > 0;
+	return wrap || pro && argsOpen;
+};
+//#endregion
+//#region src/pro-ux/TasksTable.tsx
+var kNoRows$1 = [];
+var indexCache = /* @__PURE__ */ new WeakMap();
+/** Every sample summary under the log dir, grouped by log. One query shared
+*  by every cell: the details fetch that fills the Tokens column already
+*  stored them, so this is a local read. */ var useSampleIndex = () => {
+	const $ = (0, import_compiler_runtime.c)(9);
+	const logDir = useLogDir();
+	let t0;
+	if ($[0] !== logDir) {
+		t0 = { prefix: logDir };
+		$[0] = logDir;
+		$[1] = t0;
+	} else t0 = $[1];
+	let t1;
+	if ($[2] !== logDir || $[3] !== t0) {
+		t1 = {
+			logDir,
+			scope: t0
+		};
+		$[2] = logDir;
+		$[3] = t0;
+		$[4] = t1;
+	} else t1 = $[4];
+	const list = useSamplesListing(t1).data ?? kNoRows$1;
+	let t2;
+	if ($[5] !== list) {
+		t2 = indexCache.get(list);
+		$[5] = list;
+		$[6] = t2;
+	} else t2 = $[6];
+	let index = t2;
+	if (!index) {
+		if ($[7] !== list) {
+			index = buildIndex(list);
+			indexCache.set(list, index);
+			$[7] = list;
+			$[8] = index;
+		} else index = $[8];
+	}
+	return index;
+};
+var sampleUrl = (parentUrl, id, epoch) => {
+	if (!parentUrl) return void 0;
+	const prefix = parentUrl.startsWith("/tasks/") ? "/tasks" : "/logs";
+	return logSamplesUrl(parentUrl.slice(prefix.length + 1), id, epoch, void 0, prefix);
+};
+/** Sub-rows are ordinary grid rows; this marks which ones are samples. */ var sampleRefs = /* @__PURE__ */ new WeakMap();
+var sampleSubRows = (parent, samples, top) => {
+	const prefix = commonIdPrefix(samples.map((s) => String(s.summary.id)));
+	return [...samples].sort((a, b) => String(a.summary.id).localeCompare(String(b.summary.id), void 0, { numeric: true }) || a.summary.epoch - b.summary.epoch).map((s) => {
+		const { id, epoch } = s.summary;
+		const score = firstNumericScore(s.derived.scores);
+		const row = {
+			id: `${parent.id}::${String(id)}::${epoch}`,
+			name: parent.name,
+			type: "file",
+			url: sampleUrl(parent.url, id, epoch),
+			task: String(id).slice(prefix.length),
+			score: score ?? void 0,
+			status: s.summary.error ? "error" : s.summary.completed === false ? "started" : "success",
+			totalTokens: s.derived.tokens,
+			duration: s.summary.total_time ?? void 0
+		};
+		sampleRefs.set(row, {
+			id: String(id),
+			epoch,
+			top
+		});
+		return row;
+	});
+};
+/** Sample rows inserted beneath each opened log row (tasks view only). */ var useProSampleRows = (rows, mode) => {
+	const $ = (0, import_compiler_runtime.c)(5);
+	const pro = useHtmlFlag("data-pro-ux");
+	const open = useOpenRows(openSampleRows);
+	const { byLog, stats } = useSampleIndex();
+	let t0;
+	bb0: {
+		if (!pro || mode !== "tasks" || open.size === 0) {
+			t0 = rows;
+			break bb0;
+		}
+		let out;
+		if ($[0] !== byLog || $[1] !== open || $[2] !== rows || $[3] !== stats) {
+			out = [];
+			for (const row of rows) {
+				out.push(row);
+				const samples = open.has(row.id) ? byLog.get(logKey(row)) : void 0;
+				if (samples && samples.length > 1) out.push(...sampleSubRows(row, samples, stats.get(logKey(row))?.top ?? null));
+			}
+			$[0] = byLog;
+			$[1] = open;
+			$[2] = rows;
+			$[3] = stats;
+			$[4] = out;
+		} else out = $[4];
+		t0 = out;
+	}
+	return t0;
+};
+/** Keep a click inside a row from opening the row (rows are links). */ var own = (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+};
+var isSubRow = (row) => sampleRefs.has(row);
+var sampleCount = (row, index) => shownSampleCount(row, index) ?? 0;
+var TaskCell = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(38);
+	const { row, name } = t0;
+	const index = useSampleIndex();
+	const t1 = useOpenRows(openSampleRows);
+	let t2;
+	if ($[0] !== row.id || $[1] !== t1) {
+		t2 = t1.has(row.id);
+		$[0] = row.id;
+		$[1] = t1;
+		$[2] = t2;
+	} else t2 = $[2];
+	const open = t2;
+	let t3;
+	if ($[3] !== row) {
+		t3 = sampleRefs.get(row);
+		$[3] = row;
+		$[4] = t3;
+	} else t3 = $[4];
+	const sample = t3;
+	if (sample) {
+		const t4 = row.task || sample.id;
+		let t5;
+		if ($[5] !== t4) {
+			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-task-name",
+				children: t4
+			});
+			$[5] = t4;
+			$[6] = t5;
+		} else t5 = $[6];
+		let t6;
+		if ($[7] !== sample.epoch) {
+			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("small", { children: [" · epoch ", sample.epoch] });
+			$[7] = sample.epoch;
+			$[8] = t6;
+		} else t6 = $[8];
+		let t7;
+		if ($[9] !== sample.id || $[10] !== t5 || $[11] !== t6) {
+			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+				className: "pro-task-cell pro-task-sub",
+				title: sample.id,
+				children: [t5, t6]
+			});
+			$[9] = sample.id;
+			$[10] = t5;
+			$[11] = t6;
+			$[12] = t7;
+		} else t7 = $[12];
+		return t7;
+	}
+	let t4;
+	if ($[13] !== index || $[14] !== row) {
+		t4 = sampleCount(row, index);
+		$[13] = index;
+		$[14] = row;
+		$[15] = t4;
+	} else t4 = $[15];
+	const n = t4;
+	if (row.type !== "file" || n === 0) {
+		let t5;
+		if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
+			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: "pro-task-caret-gap" });
+			$[16] = t5;
+		} else t5 = $[16];
+		let t6;
+		if ($[17] !== name) {
+			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+				className: "pro-task-cell",
+				children: [t5, /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+					className: "pro-task-name",
+					children: name
+				})]
+			});
+			$[17] = name;
+			$[18] = t6;
+		} else t6 = $[18];
+		return t6;
+	}
+	if (n === 1) {
+		let t5;
+		if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
+			t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: "pro-task-caret-gap" });
+			$[19] = t5;
+		} else t5 = $[19];
+		let t6;
+		if ($[20] !== name) {
+			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-task-name",
+				children: name
+			});
+			$[20] = name;
+			$[21] = t6;
+		} else t6 = $[21];
+		let t7;
+		if ($[22] === Symbol.for("react.memo_cache_sentinel")) {
+			t7 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("small", {
+				className: "pro-task-what",
+				"aria-hidden": "true",
+				children: "→"
+			});
+			$[22] = t7;
+		} else t7 = $[22];
+		let t8;
+		if ($[23] !== t6) {
+			t8 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+				className: "pro-task-cell",
+				title: "One sample: clicking the row opens it directly",
+				children: [
+					t5,
+					t6,
+					t7
+				]
+			});
+			$[23] = t6;
+			$[24] = t8;
+		} else t8 = $[24];
+		return t8;
+	}
+	const t5 = `Clicking the row opens the list of ${n} samples; the caret lists them here`;
+	const t6 = open ? "Hide this log's samples" : "List this log's samples";
+	let t7;
+	if ($[25] !== row.id) {
+		t7 = (e) => {
+			own(e);
+			openSampleRows.toggle(row.id);
+		};
+		$[25] = row.id;
+		$[26] = t7;
+	} else t7 = $[26];
+	const t8 = open ? "▾" : "▸";
+	let t9;
+	if ($[27] !== open || $[28] !== t6 || $[29] !== t7 || $[30] !== t8) {
+		t9 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
+			type: "button",
+			className: "pro-task-caret",
+			"aria-expanded": open,
+			"aria-label": t6,
+			onClick: t7,
+			children: t8
+		});
+		$[27] = open;
+		$[28] = t6;
+		$[29] = t7;
+		$[30] = t8;
+		$[31] = t9;
+	} else t9 = $[31];
+	let t10;
+	if ($[32] !== name) {
+		t10 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-task-name",
+			children: name
+		});
+		$[32] = name;
+		$[33] = t10;
+	} else t10 = $[33];
+	let t11;
+	if ($[34] !== t10 || $[35] !== t5 || $[36] !== t9) {
+		t11 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: "pro-task-cell",
+			title: t5,
+			children: [t9, t10]
+		});
+		$[34] = t10;
+		$[35] = t5;
+		$[36] = t9;
+		$[37] = t11;
+	} else t11 = $[37];
+	return t11;
+};
+var Histogram = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(13);
+	const { stats, maxShare } = t0;
+	const barWidth = 60 / stats.bins.length;
+	let t1;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t1 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("line", {
+			x1: "0",
+			x2: 60,
+			y1: 15.5,
+			y2: 15.5,
+			className: "pro-hist-axis"
+		});
+		$[0] = t1;
+	} else t1 = $[0];
+	let t2;
+	if ($[1] !== barWidth || $[2] !== maxShare || $[3] !== stats.bins || $[4] !== stats.n) {
+		let t3;
+		if ($[6] !== barWidth || $[7] !== maxShare || $[8] !== stats.bins.length || $[9] !== stats.n) {
+			t3 = (count, i) => {
+				if (count === 0 || maxShare === 0) return null;
+				const h = Math.max(1.5, count / stats.n * 15 / maxShare);
+				return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("rect", {
+					x: i * barWidth + .5,
+					width: barWidth - 1,
+					y: 15 - h,
+					height: h,
+					fill: css(prgn((i + .5) / stats.bins.length))
+				}, i);
+			};
+			$[6] = barWidth;
+			$[7] = maxShare;
+			$[8] = stats.bins.length;
+			$[9] = stats.n;
+			$[10] = t3;
+		} else t3 = $[10];
+		t2 = stats.bins.map(t3);
+		$[1] = barWidth;
+		$[2] = maxShare;
+		$[3] = stats.bins;
+		$[4] = stats.n;
+		$[5] = t2;
+	} else t2 = $[5];
+	let t3;
+	if ($[11] !== t2) {
+		t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("svg", {
+			width: 60,
+			height: 16,
+			viewBox: "0 0 60 16",
+			"aria-hidden": "true",
+			children: [t1, t2]
+		});
+		$[11] = t2;
+		$[12] = t3;
+	} else t3 = $[12];
+	return t3;
+};
+/** A score badge on this row's own scale, so a 0–10 log never reads /100. */ var Badge = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(16);
+	const { value, top } = t0;
+	let t1;
+	if ($[0] !== top || $[1] !== value) {
+		t1 = scoreLabel(value, top);
+		$[0] = top;
+		$[1] = value;
+		$[2] = t1;
+	} else t1 = $[2];
+	const label = t1;
+	if (top === null) {
+		let t2;
+		if ($[3] !== label.value) {
+			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { children: label.value });
+			$[3] = label.value;
+			$[4] = t2;
+		} else t2 = $[4];
+		return t2;
+	}
+	let t2;
+	let t3;
+	if ($[5] !== top || $[6] !== value) {
+		const rgb = prgn(value / top);
+		t2 = css(rgb);
+		t3 = isDark(rgb) ? "#fff" : "#2a2a2e";
+		$[5] = top;
+		$[6] = value;
+		$[7] = t2;
+		$[8] = t3;
+	} else {
+		t2 = $[7];
+		t3 = $[8];
+	}
+	let t4;
+	if ($[9] !== t2 || $[10] !== t3) {
+		t4 = {
+			"--pro-badge-bg": t2,
+			"--pro-badge-fg": t3
+		};
+		$[9] = t2;
+		$[10] = t3;
+		$[11] = t4;
+	} else t4 = $[11];
+	const style = t4;
+	let t5;
+	if ($[12] !== label.of || $[13] !== label.value || $[14] !== style) {
+		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			"data-pro-badge": "",
+			"data-pro-of": label.of,
+			style,
+			children: label.value
+		});
+		$[12] = label.of;
+		$[13] = label.value;
+		$[14] = style;
+		$[15] = t5;
+	} else t5 = $[15];
+	return t5;
+};
+/** The score a row shows, on the scale its badge uses. */ var rowScore = (row, index) => {
+	const sample = sampleRefs.get(row);
+	if (sample) return row.score === void 0 ? null : {
+		value: row.score,
+		top: sample.top ?? scaleTop([row.score])
+	};
+	const value = shownScore(row, index);
+	if (value === void 0) return null;
+	return {
+		value,
+		top: index.stats.get(logKey(row))?.top ?? scaleTop([value])
+	};
+};
+var slotCache = /* @__PURE__ */ new WeakMap();
+/** The badge width every row of the table shares. */ var scoreSlotCh = (rows, index) => {
+	const hit = slotCache.get(rows);
+	if (hit && hit.index === index) return hit.ch;
+	const ch = badgeSlotCh(rows.flatMap((r) => {
+		const score = rowScore(r.original, index);
+		return score ? [scoreLabel(score.value, score.top)] : [];
+	}));
+	slotCache.set(rows, {
+		index,
+		ch
+	});
+	return ch;
+};
+/** Badge in a slot as wide as the table's widest, then the histogram, so
+*  histograms line up down the column. `data-pro-own` keeps the
+*  column-wide badge pass off it. */ var ScoreCell = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(18);
+	const { row, rows } = t0;
+	const index = useSampleIndex();
+	let t1;
+	if ($[0] !== index || $[1] !== row) {
+		t1 = rowScore(row, index);
+		$[0] = index;
+		$[1] = row;
+		$[2] = t1;
+	} else t1 = $[2];
+	const score = t1;
+	if (score === null) {
+		let t2;
+		if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+			t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
+			$[3] = t2;
+		} else t2 = $[3];
+		return t2;
+	}
+	let t2;
+	if ($[4] !== index || $[5] !== row || $[6] !== rows || $[7] !== score.top || $[8] !== score.value) {
+		const stats = isSubRow(row) ? null : index.stats.get(logKey(row)) ?? null;
+		let t3;
+		if ($[10] !== index || $[11] !== rows) {
+			t3 = scoreSlotCh(rows, index);
+			$[10] = index;
+			$[11] = rows;
+			$[12] = t3;
+		} else t3 = $[12];
+		const t4 = String(t3);
+		let t5;
+		if ($[13] !== t4) {
+			t5 = { "--pro-score-ch": t4 };
+			$[13] = t4;
+			$[14] = t5;
+		} else t5 = $[14];
+		const style = t5;
+		let t6;
+		if ($[15] !== score.top || $[16] !== score.value) {
+			t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-score-value",
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Badge, {
+					value: score.value,
+					top: score.top
+				})
+			});
+			$[15] = score.top;
+			$[16] = score.value;
+			$[17] = t6;
+		} else t6 = $[17];
+		t2 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: "pro-score",
+			"data-pro-own": "",
+			style,
+			children: [t6, stats && stats.top !== null && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-hist",
+				title: `${statsHint(stats, row.score === void 0)}\nbar height: share of samples; the tallest bar in the table is ${Math.round(index.maxShare * 100)}%`,
+				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Histogram, {
+					stats,
+					maxShare: index.maxShare
+				})
+			})]
+		});
+		$[4] = index;
+		$[5] = row;
+		$[6] = rows;
+		$[7] = score.top;
+		$[8] = score.value;
+		$[9] = t2;
+	} else t2 = $[9];
+	return t2;
+};
+/** A status icon needs no label: the header is an icon, with a hint. */ var StatusHeader = () => {
+	const $ = (0, import_compiler_runtime.c)(1);
+	let t0;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t0 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-status-head",
+			"aria-label": "Status",
+			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: "success" })
+		});
+		$[0] = t0;
+	} else t0 = $[0];
+	return t0;
+};
+var ArgsCell = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(16);
+	const { row } = t0;
+	const t1 = useOpenRows(openArgsRows);
+	let t2;
+	if ($[0] !== row.id || $[1] !== t1) {
+		t2 = t1.has(row.id);
+		$[0] = row.id;
+		$[1] = t1;
+		$[2] = t2;
+	} else t2 = $[2];
+	const open = t2;
+	const args = row.taskArgsRaw;
+	if (!args || Object.keys(args).length === 0 || isSubRow(row)) {
+		let t3;
+		if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+			t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
+			$[3] = t3;
+		} else t3 = $[3];
+		return t3;
+	}
+	const t3 = open ? "pro-args open" : "pro-args";
+	let t4;
+	if ($[4] !== row.id) {
+		t4 = (e) => {
+			own(e);
+			if (window.getSelection()?.isCollapsed === false) return;
+			openArgsRows.toggle(row.id);
+		};
+		$[4] = row.id;
+		$[5] = t4;
+	} else t4 = $[5];
+	const t5 = open ? "▾" : "▸";
+	let t6;
+	if ($[6] !== t5) {
+		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-caret",
+			"aria-hidden": "true",
+			children: t5
+		});
+		$[6] = t5;
+		$[7] = t6;
+	} else t6 = $[7];
+	let t7;
+	if ($[8] !== args || $[9] !== open) {
+		t7 = open ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			className: "pro-args-full",
+			children: Object.entries(args).map(_temp$83)
+		}) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-line",
+			children: argsSummary(args).map(_temp2$53)
+		});
+		$[8] = args;
+		$[9] = open;
+		$[10] = t7;
+	} else t7 = $[10];
+	let t8;
+	if ($[11] !== t3 || $[12] !== t4 || $[13] !== t6 || $[14] !== t7) {
+		t8 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: t3,
+			onClick: t4,
+			children: [t6, t7]
+		});
+		$[11] = t3;
+		$[12] = t4;
+		$[13] = t6;
+		$[14] = t7;
+		$[15] = t8;
+	} else t8 = $[15];
+	return t8;
+};
+var ArgsHeader = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(13);
+	const { table } = t0;
+	const open = useOpenRows(openArgsRows);
+	let ids;
+	let t1;
+	if ($[0] !== open || $[1] !== table) {
+		ids = table.getRowModel().rows.map(_temp3$36).filter(_temp4$28).map(_temp5$16);
+		let t2;
+		if ($[4] !== open) {
+			t2 = (id) => open.has(id);
+			$[4] = open;
+			$[5] = t2;
+		} else t2 = $[5];
+		t1 = ids.some(t2);
+		$[0] = open;
+		$[1] = table;
+		$[2] = ids;
+		$[3] = t1;
+	} else {
+		ids = $[2];
+		t1 = $[3];
+	}
+	const anyOpen = t1;
+	const t2 = anyOpen ? "Fold every row's task args" : "Show every row's task args in full";
+	let t3;
+	if ($[6] !== anyOpen || $[7] !== ids) {
+		t3 = (e) => {
+			own(e);
+			openArgsRows.setAll(anyOpen ? [] : ids);
+		};
+		$[6] = anyOpen;
+		$[7] = ids;
+		$[8] = t3;
+	} else t3 = $[8];
+	const t4 = anyOpen ? "▾ all" : "▸ all";
+	let t5;
+	if ($[9] !== t2 || $[10] !== t3 || $[11] !== t4) {
+		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+			className: "pro-args-head",
+			children: ["Task Args", /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
+				type: "button",
+				className: "pro-args-all",
+				title: t2,
+				onClick: t3,
+				onMouseDown: _temp6$10,
+				children: t4
+			})]
+		});
+		$[9] = t2;
+		$[10] = t3;
+		$[11] = t4;
+		$[12] = t5;
+	} else t5 = $[12];
+	return t5;
+};
+var taskName = (ctx) => {
+	const value = ctx.getValue();
+	return typeof value === "string" ? value : ctx.row.original.name;
+};
+/** Pro-ux cells for the Tasks table: an icon-wide Status, a sample caret in
+*  Task, readable Task args, a score with its histogram, then Samples.
+*  Upstream's columns otherwise. */ var useProLogListColumns = (columns, mode) => {
+	const $ = (0, import_compiler_runtime.c)(5);
+	const pro = useHtmlFlag("data-pro-ux");
+	const index = useSampleIndex();
+	let t0;
+	bb0: {
+		if (!pro || mode !== "tasks") {
+			t0 = columns;
+			break bb0;
+		}
+		let t1;
+		if ($[0] !== columns || $[1] !== index) {
+			let t2;
+			if ($[3] !== index) {
+				t2 = (c) => {
+					switch (c.id) {
+						case "status": return Object.assign({}, c, {
+							size: 30,
+							minSize: 30,
+							maxSize: 80,
+							header: _temp7$7,
+							headerTitle: "Status",
+							cell: (ctx_3) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+								className: "pro-status-cell",
+								children: flexRender(c.cell, ctx_3)
+							})
+						});
+						case "totalSamples": return Object.assign({}, c, { accessorFn: (row_0) => shownSampleCount(row_0, index) });
+						case "task": return Object.assign({}, c, { cell: _temp8$5 });
+						case "taskArgs": return Object.assign({}, c, {
+							size: 320,
+							maxSize: 900,
+							header: _temp9$4,
+							headerTitle: "Task Args",
+							titleValue: _temp10$2,
+							cell: _temp11$2
+						});
+						case "score": return Object.assign({}, c, {
+							size: 170,
+							maxSize: 220,
+							headerTitle: "Headline metric, or the mean of sample scores when the log has none; histogram of sample scores",
+							accessorFn: (row) => shownScore(row, index),
+							cell: _temp12$2
+						});
+						default: return c;
+					}
+				};
+				$[3] = index;
+				$[4] = t2;
+			} else t2 = $[4];
+			t1 = moveAfter(columns.map(t2), "totalSamples", "score");
+			$[0] = columns;
+			$[1] = index;
+			$[2] = t1;
+		} else t1 = $[2];
+		t0 = t1;
+	}
+	return t0;
+};
+/** The listing query's accessors, reading Score and Samples as the Tasks
+*  table shows them. The key changes with the sample index, so the query
+*  re-sorts as sample scores load. */ var useProListingAccessors = (mode, getValue, getComparator, accessorsKey) => {
+	const $ = (0, import_compiler_runtime.c)(11);
+	const pro = useHtmlFlag("data-pro-ux");
+	const index = useSampleIndex();
+	let t0;
+	bb0: {
+		if (!pro || mode !== "tasks") {
+			let t1;
+			if ($[0] !== accessorsKey || $[1] !== getComparator || $[2] !== getValue) {
+				t1 = {
+					getValue,
+					getComparator,
+					accessorsKey
+				};
+				$[0] = accessorsKey;
+				$[1] = getComparator;
+				$[2] = getValue;
+				$[3] = t1;
+			} else t1 = $[3];
+			t0 = t1;
+			break bb0;
+		}
+		let t1;
+		if ($[4] !== getComparator || $[5] !== getValue || $[6] !== index) {
+			t1 = tasksListingAccessors({
+				getValue,
+				getComparator
+			}, index);
+			$[4] = getComparator;
+			$[5] = getValue;
+			$[6] = index;
+			$[7] = t1;
+		} else t1 = $[7];
+		const t2 = `${accessorsKey}|pro-tasks:${index.signature}`;
+		let t3;
+		if ($[8] !== t1 || $[9] !== t2) {
+			t3 = {
+				...t1,
+				accessorsKey: t2
+			};
+			$[8] = t1;
+			$[9] = t2;
+			$[10] = t3;
+		} else t3 = $[10];
+		t0 = t3;
+	}
+	return t0;
+};
+function _temp$83(t0) {
+	const [key, value] = t0;
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+		className: "pro-args-row",
+		children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-key",
+			children: key
+		}), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
+			className: "pro-args-value",
+			children: argsDetail(value)
+		})]
+	}, key);
+}
+function _temp2$53(t0, i) {
+	const { key: key_0, value: value_0 } = t0;
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", { children: [
+		i > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-sep",
+			children: " · "
+		}),
+		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-key",
+			children: key_0
+		}),
+		" ",
+		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-args-value",
+			children: value_0
+		})
+	] }, key_0);
+}
+function _temp3$36(r) {
+	return r.original;
+}
+function _temp4$28(r_0) {
+	return !isSubRow(r_0) && r_0.taskArgsRaw && Object.keys(r_0.taskArgsRaw).length > 0;
+}
+function _temp5$16(r_1) {
+	return r_1.id;
+}
+function _temp6$10(e_0) {
+	return e_0.stopPropagation();
+}
+function _temp7$7() {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StatusHeader, {});
+}
+function _temp8$5(ctx_2) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TaskCell, {
+		row: ctx_2.row.original,
+		name: taskName(ctx_2)
+	});
+}
+function _temp9$4(ctx_0) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ArgsHeader, { ...ctx_0 });
+}
+function _temp10$2() {}
+function _temp11$2(ctx_1) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ArgsCell, { row: ctx_1.row.original });
+}
+function _temp12$2(ctx) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ScoreCell, {
+		row: ctx.row.original,
+		rows: ctx.table.getCoreRowModel().rows
+	});
+}
+//#endregion
+//#region src/utils/evallog.ts
+var kLogFilePattern = /^(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}[-+]\d{2}-\d{2})_(.+)_([0-9A-Za-z]+)\.(eval|json)$/;
+/** Log file names carry a filesystem-safe ISO timestamp (colons replaced
+*  with dashes: `2026-07-04T19-37-16-00-00`); restore the colons so the
+*  Date parser accepts it. */ var parseFileNameTimestamp = (raw) => {
+	const iso = raw.replace(/T(\d{2})-(\d{2})-(\d{2})([-+])(\d{2})-(\d{2})$/, "T$1:$2:$3$4$5:$6");
+	const date = new Date(iso);
+	return Number.isNaN(date.getTime()) ? void 0 : date;
+};
+var parseLogFileName = (logFileName) => {
+	const match = logFileName.match(kLogFilePattern);
+	if (!match) return {
+		timestamp: void 0,
+		name: filename(logFileName),
+		taskId: void 0,
+		extension: logFileName.endsWith(".eval") ? "eval" : "json"
+	};
+	return {
+		timestamp: parseFileNameTimestamp(match[1]),
+		name: match[2],
+		taskId: match[3],
+		extension: match[4] === "json" ? "json" : "eval"
+	};
+};
+//#endregion
+//#region src/utils/format.ts
+/**
+* Formats a duration given in seconds into a human-readable string.
+*/ var formatTime = (seconds) => {
+	if (seconds < 60) return `${formatPrettyDecimal(seconds, 1)} sec`;
+	else if (seconds < 3600) return `${Math.floor(seconds / 60)} min ${Math.floor(seconds % 60)} sec`;
+	else if (seconds < 86400) {
+		const hours = Math.floor(seconds / 3600);
+		const minutes = Math.floor(seconds % 3600 / 60);
+		const remainingSeconds = seconds % 60;
+		return `${hours} hr ${minutes} min ${Math.floor(remainingSeconds)} sec`;
+	} else {
+		const days = Math.floor(seconds / 86400);
+		const hours = Math.floor(seconds % 86400 / 3600);
+		const minutes = Math.floor(seconds % 3600 / 60);
+		const remainingSeconds = seconds % 60;
+		return `${days} days ${hours} hr ${minutes} min ${Math.floor(remainingSeconds)} sec`;
+	}
+};
+/**
+* Formats a Date as yyyy-mm-dd hh:mm:ss (sv-SE locale, all surveyed users were OK with that format)
+*/ function formatDateTime(date) {
+	return date.toLocaleString("sv-SE");
+}
+/**
+* Returns the formatted duration between two dates
+*/ function formatDuration(start, end) {
+	return formatTime((end.getTime() - start.getTime()) / 1e3);
+}
+var gridCells_module_default$1 = {
+	gridWrapper: "_gridWrapper_nawgx_1",
+	gridContainer: "_gridContainer_nawgx_7",
+	iconCell: "_iconCell_nawgx_15",
+	numberCell: "_numberCell_nawgx_29",
+	taskText: "_taskText_nawgx_39",
+	folder: "_folder_nawgx_46",
+	fullWidthHeight: "_fullWidthHeight_nawgx_52"
+};
+var columns_module_default = {
+	nameCell: "_nameCell_8fyml_1",
+	modelCell: "_modelCell_8fyml_8",
+	modelCellPrimary: "_modelCellPrimary_8fyml_15",
+	scoreCell: "_scoreCell_8fyml_22",
+	multiScorerBadge: "_multiScorerBadge_8fyml_29",
+	error: "_error_8fyml_41",
+	started: "_started_8fyml_45",
+	success: "_success_8fyml_49",
+	cancelled: "_cancelled_8fyml_53",
+	statusCell: "_statusCell_8fyml_57",
+	dateCell: "_dateCell_8fyml_68"
+};
+//#endregion
+//#region src/app/shared/gridComparators.ts
+var isMissingNumber$1 = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
+/**
+* Common value-comparison functions for client-side grid sorting.
+*/ var toTime = (value) => {
+	if (value instanceof Date) return value.getTime();
+	if (typeof value === "string" || typeof value === "number") {
+		const time = new Date(value).getTime();
+		return Number.isNaN(time) ? 0 : time;
+	}
+	return 0;
+};
+var comparators = {
+	/**
+	* Compare values as numbers. NaN / null / undefined / "" are pinned to the
+	* bottom regardless of sort direction — the sentinel is flipped on
+	* `isDescending` so the caller's reversal still leaves missing rows last.
+	* A non-NaN-aware comparator returns 0 for any pair involving NaN, which
+	* violates transitivity and scrambles the non-NaN rows too.
+	*/ number: (a, b, isDescending) => {
+		const aMissing = isMissingNumber$1(a);
+		const bMissing = isMissingNumber$1(b);
+		if (aMissing && bMissing) return 0;
+		if (aMissing) return isDescending ? -1 : 1;
+		if (bMissing) return isDescending ? 1 : -1;
+		return Number(a) - Number(b);
+	},
+	/** Compare values as dates */ date: (a, b) => toTime(a) - toTime(b)
+};
+//#endregion
+//#region src/app/log-list/grid/columns/comparators.ts
+var isMissingNumber = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
+var numberCompare$1 = (a, b) => {
+	const aMissing = isMissingNumber(a);
+	const bMissing = isMissingNumber(b);
+	if (aMissing && bMissing) return 0;
+	if (aMissing) return -1;
+	if (bMissing) return 1;
+	return Number(a) - Number(b);
+};
+var dateCompare$1 = (a, b) => comparators.date(a, b);
+//#endregion
+//#region src/app/log-list/grid/columns/completedAt.ts
+/**
+* Sort/filter value for the Completed column. Never-completed logs (status
+* `started`, including currently-running evals) have no completion date —
+* `completedAt` arrives as `""` or undefined; fall back to the timestamp
+* embedded in the log file name so a Completed-descending sort slots them
+* by recency — a just-started eval surfaces at the top — instead of
+* coercing the missing date to epoch 0 and sinking them to the bottom.
+*/ var completedAtValue = (row) => row.completedAt || parseLogFileName(basename(row.name)).timestamp?.toISOString();
+//#endregion
+//#region src/app/log-list/grid/columns/hooks.tsx
+var styles = {
+	...gridCells_module_default$1,
+	...columns_module_default
+};
+var EmptyCell$1 = () => {
+	const $ = (0, import_compiler_runtime.c)(1);
+	let t0;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t0 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: "-" });
+		$[0] = t0;
+	} else t0 = $[0];
+	return t0;
+};
+var kNoScorerMap = {};
+var kNoListingRows = [];
+var displayModelRoles = (row) => {
+	if (!row) return [];
+	if (row.model && row.model !== "none/none") return [];
+	return row.modelRoles ? Object.entries(row.modelRoles) : [];
+};
+var primaryModelValue = (row) => {
+	if (!row) return void 0;
+	if (row.model && row.model !== "none/none") return row.model;
+	return displayModelRoles(row)[0]?.[1];
+};
+/** Human-readable header: "scorer / metric". */ var scorerMetricHeader = (scorerName, metricName) => `${scorerName} / ${metricName}`;
+/**
+* Field key for the synthetic "by metric" column that aggregates across
+* scorers. Uses a `metric_` prefix (no slash) so it can never collide with
+* the per-scorer `score_<scorer>/<metric>` field keys.
+*/ var byMetricField = (metricName) => `metric_${metricName}`;
+var useLogListColumns = (mode = "logs", scopeDir, viewMode = "by-metric") => {
+	const columnVisibility = useStore((state) => state.logs.listing.columnVisibility);
+	const setColumnVisibility = useStore((state_0) => state_0.logsActions.setLogsColumnVisibility);
+	const logDir = useLogDir();
+	const scorerMap = useScoreSchema(logDir, scopeDir).data ?? kNoScorerMap;
+	const allColumns = (0, import_react.useMemo)(() => {
+		const baseColumns = [
+			{
+				id: "type",
+				header: "",
+				size: 32,
+				minSize: 32,
+				maxSize: 32,
+				enableResizing: false,
+				meta: { align: "center" },
+				accessorFn: (row) => row.type,
+				cell: ({ row: row_0 }) => {
+					const type = row_0.original.type;
+					const icon = type === "file" || type === "pending-task" ? "inspectFile" : "folder";
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.iconCell,
+						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: icon })
+					});
+				}
+			},
+			{
+				id: "task",
+				header: "Task",
+				size: 250,
+				minSize: 150,
+				accessorFn: (row_1) => {
+					if (row_1.type === "file") return row_1.task || parseLogFileName(row_1.name).name;
+					return row_1.name;
+				},
+				titleValue: (row_2) => {
+					if (row_2.type === "file") return row_2.task || parseLogFileName(row_2.name).name;
+					return row_2.name;
+				},
+				cell: ({ row: row_3 }) => {
+					const item = row_3.original;
+					let value = item.name;
+					if (item.type === "file") value = item.task || parseLogFileName(item.name).name;
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: item.type === "folder" ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+							className: styles.folder,
+							children: value
+						}) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+							className: styles.taskText,
+							children: value
+						})
+					});
+				}
+			},
+			{
+				id: "model",
+				header: "Model",
+				size: 300,
+				minSize: 100,
+				maxSize: 400,
+				accessorFn: (row_4) => primaryModelValue(row_4),
+				titleValue: (row_5) => {
+					const roles = displayModelRoles(row_5);
+					if (roles.length > 0) return roles.map(([role, model]) => `${role}: ${model}`).join("\n");
+					const model_0 = row_5.model;
+					return model_0 && model_0 !== "none/none" ? model_0 : void 0;
+				},
+				cell: ({ row: row_6 }) => {
+					const item_0 = row_6.original;
+					if (item_0.model && item_0.model !== "none/none") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.modelCell,
+						children: item_0.model
+					});
+					const roles_0 = displayModelRoles(item_0);
+					const firstRole = roles_0[0];
+					if (firstRole) {
+						const primary = firstRole[1];
+						const extras = roles_0.length - 1;
+						return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+							className: styles.modelCell,
+							children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+								className: styles.modelCellPrimary,
+								children: primary
+							}), extras > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+								className: styles.multiScorerBadge,
+								children: ["+", extras]
+							})]
+						});
+					}
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+				}
+			},
+			{
+				id: "score",
+				header: "Score",
+				size: 80,
+				minSize: 60,
+				maxSize: 120,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_7) => row_7.score,
+				textValue: (row_8) => row_8.score === void 0 ? null : formatPrettyDecimal(row_8.score),
+				cell: ({ row: row_9 }) => {
+					const item_1 = row_9.original;
+					if (item_1.score === void 0) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.scoreCell,
+						children: formatPrettyDecimal(item_1.score)
+					});
+				}
+			},
+			{
+				id: "status",
+				header: "Status",
+				size: 80,
+				minSize: 60,
+				maxSize: 100,
+				accessorFn: (row_10) => row_10.status,
+				titleValue: (row_11) => {
+					if (row_11.status === "error" && row_11.errorMessage) return row_11.errorMessage;
+					return row_11.status || void 0;
+				},
+				cell: ({ row: row_12 }) => {
+					const item_2 = row_12.original;
+					const status = item_2.status;
+					if (!status && item_2.type !== "pending-task") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					const icon_0 = item_2.type === "pending-task" ? "pendingTaskSubtle" : status === "error" ? "error" : status === "started" ? "running" : status === "cancelled" ? "cancel" : "success";
+					const clz = item_2.type === "pending-task" ? styles.started : status === "error" ? styles.error : status === "started" ? styles.started : status === "cancelled" ? styles.cancelled : styles.success;
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.statusCell,
+						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
+							name: icon_0,
+							className: clz
+						})
+					});
+				}
+			},
+			{
+				id: "completedAt",
+				header: "Completed",
+				size: 130,
+				minSize: 80,
+				maxSize: 140,
+				meta: { sortComparator: dateCompare$1 },
+				accessorFn: (row_13) => completedAtValue(row_13),
+				cell: ({ row: row_14 }) => {
+					const completed = row_14.original.completedAt;
+					if (!completed) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.dateCell,
+						children: formatDateTime(new Date(completed))
+					});
+				}
+			},
+			{
+				id: "name",
+				header: "File Name",
+				size: 600,
+				minSize: 150,
+				accessorFn: (row_15) => {
+					if (row_15.type === "folder") return row_15.name;
+					if (row_15.type === "file") return basename(row_15.name);
+					return "";
+				},
+				titleValue: (row_16) => {
+					if (row_16.type === "folder") return row_16.name;
+					if (row_16.type === "file") return basename(row_16.name);
+				},
+				cell: ({ row: row_17 }) => {
+					const item_3 = row_17.original;
+					if (item_3.type === "pending-task") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					if (item_3.type === "folder") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+							className: styles.folder,
+							children: item_3.name
+						})
+					});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: basename(item_3.name)
+					});
+				}
+			},
+			{
+				id: "path",
+				header: "Path",
+				size: 300,
+				minSize: 100,
+				accessorFn: (row_18) => row_18.path,
+				titleValue: (row_19) => row_19.path,
+				cell: ({ row: row_20 }) => {
+					const item_4 = row_20.original;
+					if (!item_4.path) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: item_4.path
+					});
+				}
+			},
+			{
+				id: "totalSamples",
+				header: "Samples",
+				size: 90,
+				minSize: 60,
+				maxSize: 120,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_21) => row_21.totalSamples,
+				cell: ({ getValue }) => {
+					const value_0 = getValue();
+					if (value_0 === void 0 || value_0 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_0) });
+				}
+			},
+			{
+				id: "completedSamples",
+				header: "Completed Samples",
+				size: 130,
+				minSize: 80,
+				maxSize: 160,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_22) => row_22.completedSamples,
+				cell: ({ getValue: getValue_0 }) => {
+					const value_1 = getValue_0();
+					if (value_1 === void 0 || value_1 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_1) });
+				}
+			},
+			{
+				id: "sandbox",
+				header: "Sandbox",
+				size: 100,
+				minSize: 60,
+				maxSize: 150,
+				accessorFn: (row_23) => row_23.sandbox,
+				cell: ({ getValue: getValue_1 }) => {
+					const value_2 = getValue_1();
+					if (!value_2) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: value_2 });
+				}
+			},
+			{
+				id: "totalTokens",
+				header: "Tokens",
+				size: 100,
+				minSize: 60,
+				maxSize: 140,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_24) => row_24.totalTokens,
+				cell: ({ getValue: getValue_2 }) => {
+					const value_3 = getValue_2();
+					if (value_3 === void 0 || value_3 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_3) });
+				}
+			},
+			{
+				id: "duration",
+				header: "Duration",
+				size: 120,
+				minSize: 70,
+				maxSize: 160,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_25) => row_25.duration,
+				titleValue: (row_26) => row_26.duration === void 0 ? void 0 : formatTime(row_26.duration),
+				textValue: (row_27) => row_27.duration === void 0 ? null : formatTime(row_27.duration),
+				cell: ({ getValue: getValue_3 }) => {
+					const value_4 = getValue_3();
+					if (value_4 === void 0 || value_4 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatTime(value_4) });
+				}
+			},
+			{
+				id: "taskFile",
+				header: "Task File",
+				size: 200,
+				minSize: 100,
+				accessorFn: (row_28) => row_28.taskFile,
+				titleValue: (row_29) => row_29.taskFile,
+				cell: ({ getValue: getValue_4 }) => {
+					const value_5 = getValue_4();
+					if (!value_5) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: value_5
+					});
+				}
+			},
+			{
+				id: "taskArgs",
+				header: "Task Args",
+				size: 200,
+				minSize: 100,
+				accessorFn: (row_30) => row_30.taskArgs,
+				titleValue: (row_31) => row_31.taskArgsRaw ? JSON.stringify(row_31.taskArgsRaw, null, 2) : void 0,
+				cell: ({ getValue: getValue_5 }) => {
+					const value_6 = getValue_5();
+					if (!value_6) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: value_6
+					});
+				}
+			},
+			{
+				id: "tags",
+				header: "Tags",
+				size: 80,
+				minSize: 80,
+				accessorFn: (row_32) => row_32.tags && row_32.tags.length > 0 ? row_32.tags.join(", ") : "",
+				titleValue: (row_33) => row_33.tags && row_33.tags.length > 0 ? row_33.tags.join(", ") : void 0,
+				cell: ({ getValue: getValue_6 }) => {
+					const value_7 = getValue_6();
+					if (!value_7) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: value_7
+					});
+				}
+			},
+			{
+				id: "percentCompleted",
+				header: "% Completed",
+				size: 110,
+				minSize: 80,
+				maxSize: 140,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_34) => row_34.percentCompleted,
+				textValue: (row_35) => row_35.percentCompleted === void 0 ? null : `${formatPrettyDecimal(row_35.percentCompleted)}%`,
+				cell: ({ getValue: getValue_7 }) => {
+					const value_8 = getValue_7();
+					if (value_8 === void 0 || value_8 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", { children: [formatPrettyDecimal(value_8), "%"] });
+				}
+			},
+			{
+				id: "sampleErrors",
+				header: "Sample Errors",
+				size: 110,
+				minSize: 60,
+				maxSize: 140,
+				meta: { sortComparator: numberCompare$1 },
+				accessorFn: (row_36) => row_36.sampleErrors,
+				cell: ({ getValue: getValue_8 }) => {
+					const value_9 = getValue_8();
+					if (value_9 === void 0 || value_9 === null) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: formatNumber(value_9) });
+				}
+			},
+			{
+				id: "sampleLimits",
+				header: "Sample Limits",
+				size: 140,
+				minSize: 80,
+				accessorFn: (row_37) => row_37.sampleLimits,
+				cell: ({ getValue: getValue_9 }) => {
+					const value_10 = getValue_9();
+					if (!value_10) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", { children: value_10 });
+				}
+			},
+			{
+				id: "errorMessage",
+				header: "Error",
+				size: 300,
+				minSize: 100,
+				accessorFn: (row_38) => row_38.errorMessage ? row_38.errorMessage.split("\n")[0] : "",
+				titleValue: (row_39) => row_39.errorMessage || void 0,
+				cell: ({ getValue: getValue_10 }) => {
+					const value_11 = getValue_10();
+					if (!value_11) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.nameCell,
+						children: value_11
+					});
+				}
+			}
+		];
+		const perScorerColumns = Object.entries(scorerMap).sort(([a], [b]) => a.localeCompare(b)).map(([key, { scorerName, metricName, valueType }]) => {
+			return {
+				id: `score_${key}`,
+				header: scorerMetricHeader(scorerName, metricName),
+				size: 100,
+				minSize: 100,
+				meta: valueType === "number" ? { sortComparator: numberCompare$1 } : void 0,
+				accessorFn: (row_40) => row_40[`score_${key}`],
+				textValue: (row_41) => {
+					const value_12 = row_41[`score_${key}`];
+					if (typeof value_12 === "number") return formatPrettyDecimal(value_12);
+					if (typeof value_12 === "boolean") return String(value_12);
+					return typeof value_12 === "string" && value_12 !== "" ? value_12 : null;
+				},
+				cell: ({ getValue: getValue_11 }) => {
+					const value_13 = getValue_11();
+					if (value_13 === void 0 || value_13 === null || value_13 === "") return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+						className: styles.scoreCell,
+						children: typeof value_13 === "number" ? formatPrettyDecimal(value_13) : String(value_13)
+					});
+				}
+			};
+		});
+		const metricGroups = /* @__PURE__ */ new Map();
+		for (const { scorerName: scorerName_0, metricName: metricName_0, valueType: valueType_0 } of Object.values(scorerMap)) {
+			const list = metricGroups.get(metricName_0) ?? [];
+			list.push({
+				scorerName: scorerName_0,
+				valueType: valueType_0
+			});
+			metricGroups.set(metricName_0, list);
+		}
+		const byMetricColumns = [...metricGroups.entries()].sort(([a_0], [b_0]) => a_0.localeCompare(b_0)).map(([metricName_1, entries]) => {
+			const scorerOrder = entries.map((e) => e.scorerName).sort((a_1, b_1) => a_1.localeCompare(b_1));
+			const allNumeric = entries.every((e_0) => e_0.valueType === "number");
+			const readContributors = (row_42) => {
+				if (!row_42) return [];
+				const contributors = [];
+				for (const scorer of scorerOrder) {
+					const v = row_42[`score_${scorer}/${metricName_1}`];
+					if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
+						if (v !== "") contributors.push({
+							scorer,
+							value: v
+						});
+					}
+				}
+				return contributors;
+			};
+			return {
+				id: byMetricField(metricName_1),
+				header: metricName_1,
+				size: 100,
+				minSize: 100,
+				meta: allNumeric ? { sortComparator: numberCompare$1 } : void 0,
+				accessorFn: (row_43) => readContributors(row_43)[0]?.value,
+				textValue: (row_44) => {
+					const first = readContributors(row_44)[0];
+					if (!first) return null;
+					return typeof first.value === "number" ? formatPrettyDecimal(first.value) : String(first.value);
+				},
+				cell: ({ row: row_45 }) => {
+					const [first_0, ...extras_0] = readContributors(row_45.original);
+					if (!first_0) return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EmptyCell$1, {});
+					const primary_0 = first_0.value;
+					const primaryText = typeof primary_0 === "number" ? formatPrettyDecimal(primary_0) : String(primary_0);
+					return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+						className: styles.scoreCell,
+						children: [primaryText, extras_0.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+							className: styles.multiScorerBadge,
+							title: extras_0.map((c) => {
+								const v_0 = typeof c.value === "number" ? formatPrettyDecimal(c.value) : String(c.value);
+								return `${c.scorer}: ${v_0}`;
+							}).join("\n"),
+							children: ["+", extras_0.length]
+						})]
+					});
+				}
+			};
+		});
+		const allCols = [
+			...baseColumns,
+			...perScorerColumns,
+			...byMetricColumns
+		];
+		if (mode === "tasks") {
+			const typeIdx = allCols.findIndex((col) => col.id === "type");
+			if (typeIdx >= 0) allCols.splice(typeIdx, 1);
+			const tasksFieldOrder = [
+				"status",
+				"task",
+				"model",
+				"taskArgs",
+				"tags",
+				"score",
+				"completedAt",
+				"totalSamples",
+				"completedSamples",
+				"percentCompleted",
+				"sampleErrors",
+				"sampleLimits",
+				"totalTokens",
+				"duration",
+				"errorMessage",
+				"name",
+				"sandbox",
+				"taskFile"
+			];
+			allCols.sort((a_2, b_2) => {
+				const aIdx = tasksFieldOrder.indexOf(a_2.id || "");
+				const bIdx = tasksFieldOrder.indexOf(b_2.id || "");
+				return (aIdx >= 0 ? aIdx : tasksFieldOrder.length) - (bIdx >= 0 ? bIdx : tasksFieldOrder.length);
+			});
+		} else {
+			const nameIdx = allCols.findIndex((col_0) => col_0.id === "name");
+			if (nameIdx > 1) {
+				const [nameCol] = allCols.splice(nameIdx, 1);
+				if (nameCol) allCols.splice(1, 0, nameCol);
+			}
+			const statusIdx = allCols.findIndex((col_1) => col_1.id === "status");
+			if (statusIdx > 2) {
+				const [statusCol] = allCols.splice(statusIdx, 1);
+				if (statusCol) allCols.splice(2, 0, statusCol);
+			}
+		}
+		for (const col_2 of allCols) {
+			if (col_2.id === "type") continue;
+			const cmp = col_2.meta?.sortComparator;
+			const filterType = cmp === numberCompare$1 ? "number" : cmp === dateCompare$1 ? "date" : "string";
+			col_2.meta = {
+				...col_2.meta,
+				filterable: true,
+				filterType
+			};
+		}
+		return allCols;
+	}, [scorerMap, mode]);
+	const listingRows = useLogListing(logDir).data ?? kNoListingRows;
+	const hasSampleLimits = (0, import_react.useMemo)(() => {
+		const prefix = scopeDir ? scopePrefix(scopeDir) : void 0;
+		return listingRows.some((row_46) => (!prefix || row_46.name.startsWith(prefix)) && (row_46.header?.sampleLimits.length ?? 0) > 0);
+	}, [listingRows, scopeDir]);
+	const defaultHiddenFields = (0, import_react.useMemo)(() => {
+		const hidden = /* @__PURE__ */ new Set();
+		if (mode === "tasks") {
+			hidden.add("sandbox");
+			hidden.add("taskFile");
+			hidden.add("name");
+			hidden.add("path");
+			hidden.add("completedSamples");
+		} else {
+			hidden.add("path");
+			hidden.add("completedSamples");
+			hidden.add("sandbox");
+			hidden.add("taskFile");
+		}
+		hidden.add("percentCompleted");
+		hidden.add("sampleErrors");
+		if (!hasSampleLimits) hidden.add("sampleLimits");
+		hidden.add("errorMessage");
+		return hidden;
+	}, [mode, hasSampleLimits]);
+	const matchesActiveMode = (field) => {
+		if (field.startsWith("score_")) return viewMode === "per-scorer";
+		if (field.startsWith("metric_")) return viewMode === "by-metric";
+		return true;
+	};
+	const visibility = (0, import_react.useMemo)(() => {
+		const v_1 = {};
+		for (const col_3 of allColumns) {
+			const field_0 = col_3.id;
+			if (field_0 === void 0) continue;
+			const defaultVisible = field_0.startsWith("score_") || field_0.startsWith("metric_") ? false : !defaultHiddenFields.has(field_0);
+			v_1[field_0] = columnVisibility[field_0] ?? defaultVisible;
+		}
+		return v_1;
+	}, [
+		allColumns,
+		columnVisibility,
+		defaultHiddenFields
+	]);
+	const pickerColumns = (0, import_react.useMemo)(() => {
+		return allColumns.flatMap((col_4) => col_4.id === void 0 || !matchesActiveMode(col_4.id) ? [] : [{
+			colId: col_4.id,
+			headerName: typeof col_4.header === "string" ? col_4.header : ""
+		}]);
+	}, [allColumns, viewMode]);
+	const columnsById = (0, import_react.useMemo)(() => {
+		const byId = /* @__PURE__ */ new Map();
+		for (const col_5 of allColumns) if (col_5.id) byId.set(col_5.id, col_5);
+		return byId;
+	}, [allColumns]);
+	const getValue_12 = (0, import_react.useCallback)((row_47, columnId) => {
+		const col_6 = columnsById.get(columnId);
+		if (col_6 && "accessorFn" in col_6 && typeof col_6.accessorFn === "function") return col_6.accessorFn(row_47, 0);
+		return row_47[columnId];
+	}, [columnsById]);
+	const getComparator = (0, import_react.useCallback)((columnId_0) => columnsById.get(columnId_0)?.meta?.sortComparator, [columnsById]);
+	const getFilterType = (0, import_react.useCallback)((columnId_1) => columnsById.get(columnId_1)?.meta?.filterType, [columnsById]);
+	const accessorsKey = (0, import_react.useMemo)(() => Object.entries(scorerMap).map(([key_0, { valueType: valueType_1 }]) => `${key_0}:${valueType_1}`).sort().join(","), [scorerMap]);
+	const proColumns = useProLogListColumns(allColumns, mode);
+	const pro = useProListingAccessors(mode, getValue_12, getComparator, accessorsKey);
+	return {
+		columns: proColumns,
+		visibility,
+		pickerColumns,
+		getValue: pro.getValue,
+		getComparator: pro.getComparator,
+		getFilterType,
+		accessorsKey: pro.accessorsKey,
+		setColumnVisibility
+	};
+};
 var ColumnFilterButton_module_default = {
 	filterButton: "_filterButton_b38ko_1",
 	filterButtonActive: "_filterButtonActive_b38ko_13"
@@ -89232,7 +91417,7 @@ var isConditionShaped = (value) => {
 	const t3 = `${columnId}-op${idSuffix}`;
 	let t4;
 	if ($[2] !== operatorOptions) {
-		t4 = operatorOptions.map(_temp$77);
+		t4 = operatorOptions.map(_temp$82);
 		$[2] = operatorOptions;
 		$[3] = t4;
 	} else t4 = $[3];
@@ -89490,7 +91675,7 @@ var ColumnFilterEditor = (t0) => {
 	} else t10 = $[32];
 	return t10;
 };
-function _temp$77(option) {
+function _temp$82(option) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("option", {
 		value: option,
 		children: OPERATOR_LABELS[option]
@@ -90044,6 +92229,61 @@ var ColumnFilterControl = ({ columnId, filterType, spec, onChange, operators, su
 	if (!columnFilters) return void 0;
 	return Object.values(columnFilters).map((f) => isColumnFilter(f) && f.columnId !== excludeColumnId ? specToCondition(f.columnId, f.filterType, f.spec) : null).filter((c) => c !== null && c !== void 0).reduce((acc, c) => acc ? acc.and(c) : c, void 0);
 }
+var cache = /* @__PURE__ */ new Map();
+var probe$1 = null;
+var fontSet = () => typeof document !== "undefined" && "fonts" in document ? document.fonts : void 0;
+var fontsLoaded = () => fontSet()?.status === "loaded";
+var subscribeFonts = (listener) => {
+	const fonts = fontSet();
+	if (!fonts) return () => {};
+	fonts.addEventListener("loadingdone", listener);
+	fonts.ready.then(listener, () => void 0);
+	return () => fonts.removeEventListener("loadingdone", listener);
+};
+/** Rendered width of a header label in the pro-ux header style; 0 where
+*  there is no layout (tests). */ var labelWidth = (label) => {
+	const hit = cache.get(label);
+	if (hit !== void 0) return hit;
+	if (typeof document === "undefined") return 0;
+	if (!probe$1) {
+		probe$1 = document.createElement("span");
+		probe$1.setAttribute("aria-hidden", "true");
+		Object.assign(probe$1.style, {
+			position: "absolute",
+			left: "-9999px",
+			top: "0",
+			visibility: "hidden",
+			whiteSpace: "nowrap",
+			font: "14px \"EB Garamond\", Garamond, Georgia, serif",
+			fontVariantCaps: "all-small-caps",
+			letterSpacing: "0.04em"
+		});
+		document.body.appendChild(probe$1);
+	}
+	probe$1.textContent = label;
+	const width = Math.ceil(probe$1.getBoundingClientRect().width);
+	if (fontsLoaded()) cache.set(label, width);
+	return width;
+};
+/** The narrowest a column can be while still showing its whole header. */ var headerMinWidth = (label, width) => width > 0 ? width + 38 + (isRankedLabel(label) ? 24 : 0) : 0;
+/** Widen columns whose fixed size would cut their header label short. */ var fitHeaders = (columns, skip, idOf, measure = labelWidth) => columns.map((c) => {
+	const id = idOf(c);
+	if (typeof c.header !== "string" || id !== void 0 && skip.has(id)) return c;
+	const min = headerMinWidth(c.header, measure(c.header));
+	if (min === 0 || (c.minSize ?? 0) >= min) return c;
+	return {
+		...c,
+		minSize: min,
+		size: Math.max(c.size ?? 0, min),
+		maxSize: c.maxSize !== void 0 ? Math.max(c.maxSize, min) : c.maxSize
+	};
+});
+/** Re-render once web fonts finish loading, so widths use the real font. */ var useFontsLoaded = () => {
+	return (0, import_react.useSyncExternalStore)(subscribeFonts, fontsLoaded, _temp$81);
+};
+function _temp$81() {
+	return false;
+}
 var isEmptyValue = (value) => {
 	if (value === void 0 || value === null) return true;
 	if (typeof value === "string") return value.trim() === "" || value === "-";
@@ -90062,38 +92302,47 @@ var isEmptyValue = (value) => {
 	return empty;
 };
 /** Move `ids` to the end of `order`, keeping relative order otherwise. */ var moveToEnd = (order, ids) => [...order.filter((id) => !ids.has(id)), ...order.filter((id) => ids.has(id))];
-/** Narrow empty columns and report their ids; a no-op when the pref is off. */ var useCollapsedEmptyColumns = (columns, rows) => {
-	const $ = (0, import_compiler_runtime.c)(4);
+/** Narrow empty columns and report their ids, and under the pro-ux skin widen
+*  the rest so no header label is cut short. */ var useCollapsedEmptyColumns = (columns, rows) => {
+	const $ = (0, import_compiler_runtime.c)(6);
 	const enabled = useProPref("collapseEmptyColumns");
+	const skin = useHtmlFlag("data-pro-ux");
+	const fontsLoaded = useFontsLoaded();
 	let t0;
-	if ($[0] !== columns || $[1] !== enabled || $[2] !== rows) {
+	if ($[0] !== columns || $[1] !== enabled || $[2] !== fontsLoaded || $[3] !== rows || $[4] !== skin) {
 		bb0: {
 			const emptyIds = enabled ? emptyColumnIds(columns, rows) : /* @__PURE__ */ new Set();
+			const fitted = skin && fontsLoaded ? fitHeaders(columns, emptyIds, _temp$80) : columns;
 			if (emptyIds.size === 0) {
 				t0 = {
-					columns: [...columns],
+					columns: [...fitted],
 					emptyIds
 				};
 				break bb0;
 			}
 			t0 = {
-				columns: columns.map((c) => c.id !== void 0 && emptyIds.has(c.id) ? {
-					...c,
+				columns: fitted.map((c_0) => c_0.id !== void 0 && emptyIds.has(c_0.id) ? {
+					...c_0,
 					size: 28,
 					minSize: 28,
 					maxSize: 28,
 					flex: void 0
-				} : c),
+				} : c_0),
 				emptyIds
 			};
 		}
 		$[0] = columns;
 		$[1] = enabled;
-		$[2] = rows;
-		$[3] = t0;
-	} else t0 = $[3];
+		$[2] = fontsLoaded;
+		$[3] = rows;
+		$[4] = skin;
+		$[5] = t0;
+	} else t0 = $[5];
 	return t0;
 };
+function _temp$80(c) {
+	return c.id;
+}
 /**
 * Width that fits the widest rendered cell (or the header label) without
 * truncation, clamped to the column's min/max. Mirrors the AG grid's
@@ -91178,7 +93427,7 @@ function GridRowInner(t0) {
 		t18 = columnDef.meta?.filterable && filterType && !hideColumnFilters && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 			className: DataGrid_module_default.rotatedFilter,
 			role: "presentation",
-			onClick: _temp$76,
+			onClick: _temp$79,
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ColumnFilterControl, {
 				columnId: header.column.id,
 				filterType,
@@ -91279,7 +93528,7 @@ function GridRowInner(t0) {
 	} else t22 = $[62];
 	return t22;
 }
-function _temp$76(e_2) {
+function _temp$79(e_2) {
 	return e_2.stopPropagation();
 }
 //#endregion
@@ -91863,7 +94112,7 @@ var LogListGrid = (t0) => {
 	const searchColumns = t10;
 	let t11;
 	if ($[26] !== searchColumns) {
-		t11 = searchColumns.map(_temp$75);
+		t11 = searchColumns.map(_temp$78);
 		$[26] = searchColumns;
 		$[27] = t11;
 	} else t11 = $[27];
@@ -91875,7 +94124,7 @@ var LogListGrid = (t0) => {
 		$[29] = t12;
 	} else t12 = $[29];
 	const rowText = t12;
-	const getRowId = _temp2$50;
+	const getRowId = _temp2$52;
 	let t13;
 	if ($[30] !== accessorsKey || $[31] !== filter || $[32] !== findTerm || $[33] !== getComparator || $[34] !== getFilterType || $[35] !== getValue || $[36] !== listing || $[37] !== orderBy || $[38] !== rowText || $[39] !== searchKey || $[40] !== showFind) {
 		t13 = {
@@ -91909,7 +94158,7 @@ var LogListGrid = (t0) => {
 	const { reset: resetMatches } = fileMatches;
 	let t14;
 	if ($[42] !== rows || $[43] !== searchColumns || $[44] !== showFind) {
-		t14 = showFind ? buildSearchIndex(rows.filter(_temp3$34), searchColumns, _temp4$27) : void 0;
+		t14 = showFind ? buildSearchIndex(rows.filter(_temp3$35), searchColumns, _temp4$27) : void 0;
 		$[42] = rows;
 		$[43] = searchColumns;
 		$[44] = showFind;
@@ -92154,13 +94403,13 @@ var LogListGrid = (t0) => {
 	} else t32 = $[108];
 	return t32;
 };
-function _temp$75(col_0) {
+function _temp$78(col_0) {
 	return col_0.id ?? "";
 }
-function _temp2$50(row_2) {
+function _temp2$52(row_2) {
 	return row_2.id;
 }
-function _temp3$34(row_3) {
+function _temp3$35(row_3) {
 	return row_3.type !== "file";
 }
 function _temp4$27(row_4) {
@@ -92283,7 +94532,7 @@ var kNoRows = [];
 	const $ = (0, import_compiler_runtime.c)(45);
 	const { overlayItems, scopeKey, getValue, getComparator, getFilterType, accessorsKey, listing } = t0;
 	const { gridStateByScope } = useLogsListing();
-	const overlayData = useKeyedMemo(overlayItems, _temp$74, _temp2$49, _temp3$33);
+	const overlayData = useKeyedMemo(overlayItems, _temp$77, _temp2$51, _temp3$34);
 	let t1;
 	if ($[0] !== overlayData) {
 		const folders = [];
@@ -92422,10 +94671,10 @@ var kNoRows = [];
 	} else t12 = $[44];
 	return t12;
 };
-function _temp$74(item) {
+function _temp$77(item) {
 	return item.id;
 }
-function _temp2$49(item_0) {
+function _temp2$51(item_0) {
 	return [
 		item_0.id,
 		item_0.type,
@@ -92436,7 +94685,7 @@ function _temp2$49(item_0) {
 		item_0.type === "pending-task" ? item_0.model : void 0
 	];
 }
-function _temp3$33(item_1) {
+function _temp3$34(item_1) {
 	return buildLogListRow(item_1);
 }
 var LogListFooter_module_default = {
@@ -92599,8 +94848,8 @@ var LogsPanel = (t0) => {
 	const mode = t1 === void 0 ? "logs" : t1;
 	const [showColumnSelector, setShowColumnSelector] = (0, import_react.useState)(false);
 	const [columnButtonEl, setColumnButtonEl] = (0, import_react.useState)(null);
-	const showRetriedLogs = useUserSettings(_temp$73);
-	const setShowRetriedLogs = useUserSettings(_temp2$48);
+	const showRetriedLogs = useUserSettings(_temp$76);
+	const setShowRetriedLogs = useUserSettings(_temp2$50);
 	const logDir = useLogDir();
 	const { gridStateByScope, patchGridState } = useLogsListing();
 	const { logPath } = useLogRouteParams();
@@ -92782,7 +95031,7 @@ var LogsPanel = (t0) => {
 	const totalRowCount = (overview?.fileCount ?? 0) + logItems.length;
 	const listBusy = busy || listData.pending || overviewQuery.loading;
 	const error = sync.error ?? overviewQuery.error ?? listData.error;
-	const currentColumnVisibility = useStore(_temp3$32);
+	const currentColumnVisibility = useStore(_temp3$33);
 	let t19;
 	if ($[51] !== listData.columnFilters) {
 		t19 = Object.keys(listData.columnFilters ?? {});
@@ -93069,13 +95318,13 @@ var appendPendingItems = (evalSet, tasksWithLogFiles, items) => {
 	items.push(...pendingTasks);
 	return items;
 };
-function _temp$73(state) {
+function _temp$76(state) {
 	return state.showRetriedLogs;
 }
-function _temp2$48(state_0) {
+function _temp2$50(state_0) {
 	return state_0.setShowRetriedLogs;
 }
-function _temp3$32(state_1) {
+function _temp3$33(state_1) {
 	return state_1.logs.listing.columnVisibility;
 }
 function _temp4$26(item_0) {
@@ -94900,7 +97149,7 @@ var Grid = (t0) => {
 	const { rows } = t0;
 	let t1;
 	if ($[0] !== rows) {
-		t1 = rows.slice(0, 4).map(_temp$72);
+		t1 = rows.slice(0, 4).map(_temp$75);
 		$[0] = rows;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -95295,7 +97544,7 @@ var BurstBody = (t0) => {
 			$[20] = t10;
 		} else t10 = $[20];
 		members = row.spans.filter(t10);
-		const firstUuid = members.find(_temp2$47)?.uuid;
+		const firstUuid = members.find(_temp2$49)?.uuid;
 		T0 = Card;
 		let t11;
 		if ($[21] !== burst.label) {
@@ -95461,7 +97710,7 @@ var ContextPointBody = (t0) => {
 		const rows = [];
 		const collapsed = parallel !== void 0 && !turnsMode;
 		const first = parallel?.[0];
-		const values = parallel?.map(_temp3$31) ?? [];
+		const values = parallel?.map(_temp3$32) ?? [];
 		if (point.delta !== void 0) {
 			let t2;
 			if ($[7] !== point.delta) {
@@ -96181,7 +98430,7 @@ var CurveBody = (t0) => {
 	} else t3 = $[43];
 	return t3;
 };
-function _temp$72(row) {
+function _temp$75(row) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: ActivityTooltip_module_default.key,
 		children: row.key
@@ -96190,10 +98439,10 @@ function _temp$72(row) {
 		children: row.value
 	})] }, row.key);
 }
-function _temp2$47(m) {
+function _temp2$49(m) {
 	return m.uuid !== void 0;
 }
-function _temp3$31(p) {
+function _temp3$32(p) {
 	return p.value;
 }
 function _temp4$25(m) {
@@ -98050,8 +100299,8 @@ var ModelTokenTable = (t0) => {
 								(() => {
 									const cfg = model_configs?.[modelId];
 									const args = model_args?.[modelId];
-									const cfgEntries = cfg ? Object.entries(cfg).filter(_temp$71) : [];
-									const argEntries = args ? Object.entries(args).filter(_temp2$46) : [];
+									const cfgEntries = cfg ? Object.entries(cfg).filter(_temp$74) : [];
+									const argEntries = args ? Object.entries(args).filter(_temp2$48) : [];
 									if (cfgEntries.length === 0 && argEntries.length === 0) return null;
 									const renderSection = _temp4$24;
 									return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
@@ -98165,15 +100414,15 @@ var ModelTokenTable = (t0) => {
 	} else t11 = $[37];
 	return t11;
 };
-function _temp$71(t0) {
+function _temp$74(t0) {
 	const [, v] = t0;
 	return v != null;
 }
-function _temp2$46(t0) {
+function _temp2$48(t0) {
 	const [, v_0] = t0;
 	return v_0 != null;
 }
-function _temp3$30(t0) {
+function _temp3$31(t0) {
 	const [k_0, v_1] = t0;
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("dt", {
 		className: ModelTokenTable_module_default.configKey,
@@ -98189,7 +100438,7 @@ function _temp4$24(label, entries) {
 		children: label
 	}), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("dl", {
 		className: ModelTokenTable_module_default.configTable,
-		children: entries.map(_temp3$30)
+		children: entries.map(_temp3$31)
 	})] });
 }
 var ModelUsagePanel_module_default = {
@@ -98343,7 +100592,7 @@ var ModelUsagePanel = (t0) => {
 	let t7;
 	if ($[0] !== className || $[1] !== timing || $[2] !== usage) {
 		const categories = buildCategories(usage);
-		const composeTotal = categories.reduce(_temp$70, 0);
+		const composeTotal = categories.reduce(_temp$73, 0);
 		const total = usage.total_tokens || composeTotal;
 		const inputAll = (usage.input_tokens ?? 0) + (usage.input_tokens_cache_read ?? 0) + (usage.input_tokens_cache_write ?? 0);
 		const denom = inputAll + ((usage.output_tokens ?? 0) + (usage.reasoning_tokens ?? 0)) || total || 1;
@@ -98420,7 +100669,7 @@ var ModelUsagePanel = (t0) => {
 			}, c_0.key))
 		});
 		t1 = ModelUsagePanel_module_default.breakdown;
-		t2 = categories.map(_temp2$45);
+		t2 = categories.map(_temp2$47);
 		$[0] = className;
 		$[1] = timing;
 		$[2] = usage;
@@ -98531,10 +100780,10 @@ var ModelUsagePanel = (t0) => {
 	} else t11 = $[40];
 	return t11;
 };
-function _temp$70(a, c) {
+function _temp$73(a, c) {
 	return a + c.value;
 }
-function _temp2$45(c_1) {
+function _temp2$47(c_1) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", { children: [
 		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: clsx(ModelUsagePanel_module_default.swatch, c_1.swatchClass) }),
 		/*#__PURE__*/ (0, import_jsx_runtime.jsx)("b", { children: formatNumber(c_1.value) }),
@@ -99194,7 +101443,7 @@ var ProvenanceGrid = (t0) => {
 	} else t4 = $[3];
 	let t5;
 	if ($[4] !== changes) {
-		t5 = changes.map(_temp$69);
+		t5 = changes.map(_temp$72);
 		$[4] = changes;
 		$[5] = t5;
 	} else t5 = $[5];
@@ -99241,7 +101490,7 @@ var ProvenanceGrid = (t0) => {
 	} else t9 = $[17];
 	return t9;
 };
-function _temp$69(change) {
+function _temp$72(change) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", { children: [
 		change.name,
 		" ",
@@ -99404,7 +101653,7 @@ var ConnectionLogModal = (t0) => {
 			$[3] = retunes;
 			$[4] = t2;
 		} else t2 = $[4];
-		t1 = [...events.map(_temp$68), ...t2.map(_temp2$44)].sort(_temp3$29);
+		t1 = [...events.map(_temp$71), ...t2.map(_temp2$46)].sort(_temp3$30);
 		$[0] = events;
 		$[1] = retunes;
 		$[2] = t1;
@@ -99543,21 +101792,21 @@ var ConnectionLogModal = (t0) => {
 	} else t12 = $[35];
 	return t12;
 };
-function _temp$68(event) {
+function _temp$71(event) {
 	return {
 		kind: "controller",
 		time: event.timestamp,
 		event
 	};
 }
-function _temp2$44(retune) {
+function _temp2$46(retune) {
 	return {
 		kind: "config",
 		time: retune.timestamp,
 		retune
 	};
 }
-function _temp3$29(a, b) {
+function _temp3$30(a, b) {
 	return a.time - b.time || (a.kind === b.kind ? 0 : a.kind === "config" ? -1 : 1);
 }
 function _temp4$23(role, i) {
@@ -99758,7 +102007,7 @@ var ConnectionsView_module_default = {
 									children: model_0
 								}), roles.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
 									className: ConnectionsView_module_default.roles,
-									children: [roles.length > 1 ? "shared by" : "used by", roles.map(_temp$67)]
+									children: [roles.length > 1 ? "shared by" : "used by", roles.map(_temp$70)]
 								})]
 							}),
 							/*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
@@ -99915,7 +102164,7 @@ var kBaselineY = 60;
 					y1: y(seg.value),
 					y2: y(seg.value)
 				}, `cap-${i}`)),
-				data.events.filter(_temp2$43).map((e_1, i_0) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)("line", {
+				data.events.filter(_temp2$45).map((e_1, i_0) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)("line", {
 					className: ConnectionsView_module_default.rateLimitLine,
 					x1: x(e_1.timestamp),
 					x2: x(e_1.timestamp),
@@ -100036,13 +102285,13 @@ var kBaselineY = 60;
 	} else t2 = $[3];
 	return t2;
 };
-function _temp$67(role) {
+function _temp$70(role) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: ConnectionsView_module_default.roleChip,
 		children: role
 	}, role);
 }
-function _temp2$43(e_0) {
+function _temp2$45(e_0) {
 	return e_0.reason === "rate_limit";
 }
 var UsagePanel_module_default = {
@@ -101498,7 +103747,7 @@ var StoreSpecificRenderableTypes = [human_baseline_session];
 	const { toolDefinitions } = t0;
 	let t1;
 	if ($[0] !== toolDefinitions) {
-		t1 = toolDefinitions.map(_temp$66);
+		t1 = toolDefinitions.map(_temp$69);
 		$[0] = toolDefinitions;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -101542,7 +103791,7 @@ var StoreSpecificRenderableTypes = [human_baseline_session];
 	} else t3 = $[5];
 	return t3;
 };
-function _temp$66(toolDefinition, idx) {
+function _temp$69(toolDefinition, idx) {
 	const name = toolDefinition.name;
 	const toolArgs = toolDefinition.parameters?.properties ? Object.keys(toolDefinition.parameters.properties) : [];
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Tool, {
@@ -101827,7 +104076,7 @@ var GoToTurnBar_module_default = {
 			} else if (prefillTurn !== void 0) setValue(String(prefillTurn));
 			openRef.current = true;
 			setOpen(true);
-			setFocusEpoch(_temp$65);
+			setFocusEpoch(_temp$68);
 		};
 		$[0] = t2;
 	} else t2 = $[0];
@@ -102013,7 +104262,7 @@ var GoToTurnBar_module_default = {
 	} else t14 = $[29];
 	return t14;
 });
-function _temp$65(epoch) {
+function _temp$68(epoch) {
 	return epoch + 1;
 }
 var TimelineSelector_module_default = {
@@ -102276,7 +104525,7 @@ var ToolCheckInset_module_default = {
 	} else t6 = $[14];
 	let t7;
 	if ($[15] !== scores) {
-		t7 = scores?.map(_temp$64);
+		t7 = scores?.map(_temp$67);
 		$[15] = scores;
 		$[16] = t7;
 	} else t7 = $[16];
@@ -102475,7 +104724,7 @@ var ToolCheckInset_module_default = {
 	label: ToolCheckInset_module_default.label,
 	mono: ToolCheckInset_module_default.mono
 };
-function _temp$64(score, i) {
+function _temp$67(score, i) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: ToolCheckInset_module_default.scores,
 		children: score
@@ -102629,7 +104878,7 @@ var decisionIcon$1 = (decision) => {
 	const [collapsed, setCollapsed] = useCollapsedState(`${chain[0].id}-approval-chain`, true);
 	const event = final.event;
 	const look = decisionLook(event.decision);
-	const escalated = chain.slice(0, -1).some(_temp$63);
+	const escalated = chain.slice(0, -1).some(_temp$66);
 	let t1;
 	if ($[0] !== chain.length || $[1] !== collapsed || $[2] !== setCollapsed) {
 		t1 = chain.length > 1 ? {
@@ -102646,7 +104895,7 @@ var decisionIcon$1 = (decision) => {
 	if ($[4] !== chain || $[5] !== collapsed) {
 		t2 = chain.length > 1 && !collapsed ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: ApprovalEventView_module_default.chain,
-			children: chain.map(_temp2$42)
+			children: chain.map(_temp2$44)
 		}) : null;
 		$[4] = chain;
 		$[5] = collapsed;
@@ -102695,10 +104944,10 @@ var decisionLook = (decision) => {
 		};
 	}
 };
-function _temp$63(n) {
+function _temp$66(n) {
 	return n.event.decision === "escalate";
 }
-function _temp2$42(node, index) {
+function _temp2$44(node, index) {
 	const step = decisionLook(node.event.decision);
 	const explanation = node.event.explanation?.trim();
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [
@@ -102722,6 +104971,132 @@ function _temp2$42(node, index) {
 }
 var BranchEventView_module_default = { panel: "_panel_8zdtn_1" };
 //#endregion
+//#region ../../packages/inspect-components/src/pro-ux/cardExpand.tsx
+/** A plain click on a card's caret steps › → ⌄ → ⌄⌄ → ›: open with long
+*  panels cut short, then every line, then folded. A shift- or alt-click, like
+*  a click on the rest of the header, only folds or unfolds, keeping what was
+*  shown. A card with nothing cut short just folds and unfolds. */ var caretAction = (collapsed, level, foldOnly) => {
+	if (foldOnly) return collapsed ? "unfold" : "fold";
+	if (collapsed) return "open";
+	return level === "truncated" ? "showAll" : "fold";
+};
+var DoubleChevron = () => {
+	const $ = (0, import_compiler_runtime.c)(1);
+	let t0;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t0 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("svg", {
+			"aria-hidden": "true",
+			className: "pro-caret-full",
+			width: "1em",
+			height: "1em",
+			viewBox: "0 0 16 16",
+			fill: "currentColor",
+			children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("path", {
+				fillRule: "evenodd",
+				d: "M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+			}), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("path", {
+				fillRule: "evenodd",
+				d: "M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+			})]
+		});
+		$[0] = t0;
+	} else t0 = $[0];
+	return t0;
+};
+var kNoSubscribe = () => () => {};
+var useCardExpand = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(20);
+	const { enabled, collapsed, toggle, beforeFold, title } = t0;
+	const pro = useHtmlFlag("data-pro-ux");
+	const [group] = (0, import_react.useState)(_temp$65);
+	const active = pro && enabled;
+	const level = (0, import_react.useSyncExternalStore)(active ? group.subscribe : kNoSubscribe, group.getLevel, group.getLevel);
+	const provided = active ? group : null;
+	let t1;
+	if ($[0] !== provided) {
+		t1 = (card) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ExpandGroupContext.Provider, {
+			value: provided,
+			children: card
+		});
+		$[0] = provided;
+		$[1] = t1;
+	} else t1 = $[1];
+	const wrap = t1;
+	if (!active) {
+		let t2;
+		if ($[2] !== wrap) {
+			t2 = { wrap };
+			$[2] = wrap;
+			$[3] = t2;
+		} else t2 = $[3];
+		return t2;
+	}
+	let t2;
+	if ($[4] !== beforeFold || $[5] !== collapsed || $[6] !== group || $[7] !== level || $[8] !== toggle) {
+		t2 = (e) => {
+			bb21: switch (caretAction(collapsed, level, e.shiftKey || e.altKey)) {
+				case "open":
+					group.resetAll();
+					toggle();
+					break bb21;
+				case "showAll":
+					group.showAll();
+					break bb21;
+				case "fold":
+					beforeFold();
+					toggle();
+					break bb21;
+				case "unfold": toggle();
+			}
+		};
+		$[4] = beforeFold;
+		$[5] = collapsed;
+		$[6] = group;
+		$[7] = level;
+		$[8] = toggle;
+		$[9] = t2;
+	} else t2 = $[9];
+	const onClick = t2;
+	const full = !collapsed && level === "full";
+	const cut = !collapsed && level === "truncated";
+	let t3;
+	if ($[10] !== full) {
+		t3 = full ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DoubleChevron, {}) : void 0;
+		$[10] = full;
+		$[11] = t3;
+	} else t3 = $[11];
+	const t4 = collapsed ? "Open" : cut ? "Show every line · ⇧-click folds" : "Fold";
+	const t5 = cut && title ? `Show every line of ${title}` : void 0;
+	let t6;
+	if ($[12] !== onClick || $[13] !== t3 || $[14] !== t4 || $[15] !== t5) {
+		t6 = {
+			onClick,
+			icon: t3,
+			hint: t4,
+			label: t5
+		};
+		$[12] = onClick;
+		$[13] = t3;
+		$[14] = t4;
+		$[15] = t5;
+		$[16] = t6;
+	} else t6 = $[16];
+	let t7;
+	if ($[17] !== t6 || $[18] !== wrap) {
+		t7 = {
+			wrap,
+			caret: t6
+		};
+		$[17] = t6;
+		$[18] = wrap;
+		$[19] = t7;
+	} else t7 = $[19];
+	return t7;
+};
+function _temp$65() {
+	return new ExpandGroup();
+}
+//#endregion
 //#region ../../packages/inspect-components/src/pro-ux/keepInPlace.ts
 /** Before collapsing a card whose header is stuck to the top of the scroller,
 *  scroll the card up so the header's resting place is where it is drawn now.
@@ -102737,6 +105112,10 @@ var BranchEventView_module_default = { panel: "_panel_8zdtn_1" };
 		behavior: "instant"
 	});
 };
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/shownTab.ts
+/** False for an absent child, or a tab the pro-UX skin folds away with
+*  `data-hidden`. */ var isShownTab = (child) => !!child && !((0, import_react.isValidElement)(child) && child.props["data-hidden"]);
 //#endregion
 //#region ../../packages/inspect-components/src/transcript/EventLabelContext.ts
 var EventLabelContext = (0, import_react.createContext)(void 0);
@@ -102959,7 +105338,7 @@ var EventNavsPicker_module_default = {
 	let t8;
 	if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
 		t7 = clsx("nav-link", "active", "text-style-label", "text-size-small", EventNavsPicker_module_default.trigger);
-		t8 = () => setOpen(_temp$62);
+		t8 = () => setOpen(_temp$64);
 		$[9] = t7;
 		$[10] = t8;
 	} else {
@@ -103055,7 +105434,7 @@ var EventNavsPicker_module_default = {
 	} else t15 = $[28];
 	return t15;
 };
-function _temp$62(v) {
+function _temp$64(v) {
 	return !v;
 }
 //#endregion
@@ -103150,7 +105529,7 @@ var SWITCH_TOLERANCE = 4;
 	} else t5 = $[10];
 	let t6;
 	if ($[11] !== navs) {
-		t6 = navs.map(_temp$61);
+		t6 = navs.map(_temp$63);
 		$[11] = navs;
 		$[12] = t6;
 	} else t6 = $[12];
@@ -103179,7 +105558,7 @@ var SWITCH_TOLERANCE = 4;
 	} else t8 = $[18];
 	return t8;
 };
-function _temp$61(nav_1) {
+function _temp$63(nav_1) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("li", {
 		className: "nav-item",
 		children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
@@ -103235,7 +105614,7 @@ var EventPanel_module_default = {
 	const headerCollapsed = contentCollapseId ? contentCollapsed : collapsed;
 	const url = linkingEnabled && getEventUrl ? getEventUrl(eventNodeId) : void 0;
 	const pillId = (index) => `${eventNodeId}-nav-pill-${index}`;
-	const filteredArrChildren = (Array.isArray(children) ? children : [children]).filter(Boolean);
+	const filteredArrChildren = (Array.isArray(children) ? children : [children]).filter(isShownTab);
 	const defaultPill = filteredArrChildren.findIndex((node) => hasDataDefault(node) && node.props["data-default"]);
 	const defaultPillId = defaultPill !== -1 ? pillId(defaultPill) : pillId(0);
 	const showNavs = !(isCollapsible && collapsibleContent && collapsed) && filteredArrChildren.length > 1;
@@ -103244,7 +105623,7 @@ var EventPanel_module_default = {
 		const child = filteredArrChildren[index];
 		return child && /*#__PURE__*/ (0, import_react.isValidElement)(child) ? child.props["data-name"] : void 0;
 	};
-	const tabNames = (0, import_react.useMemo)(() => (Array.isArray(children) ? children : [children]).filter(Boolean).map((child, index) => /*#__PURE__*/ (0, import_react.isValidElement)(child) ? child.props["data-name"] ?? `Tab ${index}` : `Tab ${index}`), [children]);
+	const tabNames = (0, import_react.useMemo)(() => (Array.isArray(children) ? children : [children]).filter(isShownTab).map((child, index) => /*#__PURE__*/ (0, import_react.isValidElement)(child) ? child.props["data-name"] ?? `Tab ${index}` : `Tab ${index}`), [children]);
 	const sharedTabActive = !!getSelectedTab && filteredArrChildren.length > 1;
 	const sharedTab = sharedTabActive ? getSelectedTab(eventNodeId, tabNames) : void 0;
 	const sharedSelectedNav = pillId(Math.max(0, sharedTab === void 0 ? -1 : tabNames.indexOf(sharedTab)));
@@ -103291,6 +105670,13 @@ var EventPanel_module_default = {
 		onCollapse,
 		scrollRef
 	]);
+	const cardExpand = useCardExpand({
+		enabled: headerChevron,
+		collapsed: headerCollapsed,
+		toggle: toggleCollapse,
+		beforeFold: () => unstickBeforeCollapse(stickyRef.current, scrollRef?.current),
+		title
+	});
 	const [mouseOver, setMouseOver] = (0, import_react.useState)(false);
 	const titleEl = eventLabel || title || icon || rowSelection || filteredArrChildren.length > 1 ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 		title: subTitle,
@@ -103314,10 +105700,11 @@ var EventPanel_module_default = {
 			headerChevron ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("button", {
 				type: "button",
 				className: EventPanel_module_default.collapseToggle,
-				onClick: toggleCollapse,
+				onClick: cardExpand.caret?.onClick ?? toggleCollapse,
+				title: cardExpand.caret?.hint,
 				"aria-expanded": !headerCollapsed,
-				"aria-label": title ? `${headerCollapsed ? "Expand" : "Collapse"} ${title}` : void 0,
-				children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: headerCollapsed ? "chevronRight" : "chevronDown" })
+				"aria-label": cardExpand.caret?.label ?? (title ? `${headerCollapsed ? "Expand" : "Collapse"} ${title}` : void 0),
+				children: cardExpand.caret?.icon ?? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: headerCollapsed ? "chevronRight" : "chevronDown" })
 			}) : "",
 			icon ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
 				name: icon,
@@ -103354,7 +105741,7 @@ var EventPanel_module_default = {
 				children: showNavs ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EventNavs, {
 					navs: filteredArrChildren.map((child, index) => {
 						const defaultTitle = `Tab ${index}`;
-						const title = child && /*#__PURE__*/ (0, import_react.isValidElement)(child) ? child.props["data-name"] || defaultTitle : defaultTitle;
+						const title = child && /*#__PURE__*/ (0, import_react.isValidElement)(child) ? child.props["data-label"] || child.props["data-name"] || defaultTitle : defaultTitle;
 						return {
 							id: `eventpanel-${eventNodeId}-${index}`,
 							title,
@@ -103428,7 +105815,7 @@ var EventPanel_module_default = {
 	}) : "";
 	const isRoot = depth === 0 || muted;
 	const detailExpanded = filteredArrChildren.length > 1 ? !collapsed && selectedNav !== defaultPillId : !!collapsibleContent && !collapsed;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+	const card = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 		id: `event-panel-${eventNodeId}`,
 		className: clsx(className, EventPanel_module_default.card, isRoot ? EventPanel_module_default.root : void 0, detailExpanded ? EventPanel_module_default.expanded : void 0, selected ? EventPanel_module_default.selected : void 0, eventCallbacks?.isJumpTarget?.(eventNodeId) ? EventPanel_module_default.jumpTarget : void 0),
 		children: [
@@ -103464,6 +105851,7 @@ var EventPanel_module_default = {
 			}) : void 0
 		]
 	});
+	return cardExpand.wrap(card);
 };
 function hasDataDefault(node) {
 	return /*#__PURE__*/ (0, import_react.isValidElement)(node) && node.props !== null && typeof node.props === "object" && "data-default" in node.props;
@@ -103867,7 +106255,7 @@ var Snapshot = (t0) => {
 	if ($[7] !== details.additional_files || $[8] !== details.files) {
 		t4 = details.files && details.files.length > 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			className: CheckpointEventView_module_default.files,
-			children: [details.files.map(_temp$60), details.additional_files ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			children: [details.files.map(_temp$62), details.additional_files ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 				className: CheckpointEventView_module_default.fileOverflow,
 				children: [
 					"+",
@@ -104022,7 +106410,7 @@ var CheckpointEventView = (t0) => {
 	} else t19 = $[32];
 	return t19;
 };
-function _temp$60(file) {
+function _temp$62(file) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 		className: CheckpointEventView_module_default.file,
 		children: file
@@ -104477,18 +106865,187 @@ var LoggerEventView = (t0) => {
 	return t12;
 };
 //#endregion
+//#region ../../packages/inspect-components/src/pro-ux/modelCallFacts.ts
+var kSettingsFirst = [
+	"temperature",
+	"max_tokens",
+	"reasoning_effort",
+	"reasoning_tokens",
+	"top_p",
+	"top_k"
+];
+var rank = (key) => {
+	const i = kSettingsFirst.indexOf(key);
+	return i === -1 ? kSettingsFirst.length : i;
+};
+var settingValue = (value) => typeof value === "number" ? formatNumber(value) : typeof value === "string" ? value : JSON.stringify(value);
+var clock = (iso) => {
+	const date = new Date(iso);
+	return Number.isNaN(date.getTime()) ? iso : date.toLocaleTimeString(void 0, {
+		hour: "numeric",
+		minute: "2-digit",
+		second: "2-digit"
+	});
+};
+/** Everything upstream's model-call Info tab shows, as label and value pairs
+*  short enough to sit on one line under the call. */ var callFacts = (event) => {
+	const facts = [];
+	const usage = event.output.usage;
+	if (usage) {
+		const nonZero = [
+			["input", usage.input_tokens],
+			["cache read", usage.input_tokens_cache_read],
+			["cache write", usage.input_tokens_cache_write],
+			["output", usage.output_tokens],
+			["reasoning", usage.reasoning_tokens]
+		].filter(([, n]) => !!n);
+		if (nonZero.length === 0) facts.push({
+			label: "tokens",
+			value: "0"
+		});
+		for (const [label, n] of nonZero) facts.push({
+			label,
+			value: formatNumber(n ?? 0)
+		});
+		if (usage.total_cost != null) facts.push({
+			label: "cost",
+			value: formatCurrency(usage.total_cost)
+		});
+	}
+	const choice = event.output.choices[0];
+	if (choice && (choice.stop_reason !== "stop" || choice.stop_details)) facts.push({
+		label: "stop reason",
+		value: choice.stop_reason
+	});
+	for (const [key, value] of Object.entries(choice?.stop_details ?? {})) if (key !== "categories" && typeof value === "string" && value !== "") facts.push({
+		label: key.replaceAll("_", " "),
+		value
+	});
+	if (event.working_time != null) facts.push({
+		label: "working time",
+		value: formatTime$1(event.working_time)
+	});
+	if (event.timestamp) facts.push({
+		label: "window",
+		value: `${clock(event.timestamp)} → ${event.completed ? clock(event.completed) : "—"}`
+	});
+	const settings = Object.entries(event.config).filter(([key, value]) => key !== "max_connections" && value != null).sort(([a], [b]) => rank(a) - rank(b));
+	for (const [key, value] of settings) facts.push({
+		label: key.replaceAll("_", " "),
+		value: settingValue(value)
+	});
+	const providerIds = [];
+	if (event.output.response_id) providerIds.push({
+		label: "response",
+		id: event.output.response_id
+	});
+	for (const request of event.request_ids ?? []) providerIds.push({
+		label: request.header,
+		id: request.id,
+		status: request.status
+	});
+	return {
+		facts,
+		providerIds
+	};
+};
+//#endregion
+//#region ../../packages/inspect-components/src/pro-ux/CallFacts.tsx
+var kHint = "This call's token usage, stop reason, timing and generation settings.";
+/** The model call's usage and settings in one muted line, in place of
+*  upstream's Info tab. */ var CallFacts = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(9);
+	const { event } = t0;
+	let t1;
+	if ($[0] !== event) {
+		t1 = callFacts(event);
+		$[0] = event;
+		$[1] = t1;
+	} else t1 = $[1];
+	const { facts, providerIds } = t1;
+	if (facts.length === 0 && providerIds.length === 0) return null;
+	let t2;
+	if ($[2] !== facts) {
+		t2 = facts.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			className: "pro-call-facts-row",
+			children: facts.map(_temp$61)
+		});
+		$[2] = facts;
+		$[3] = t2;
+	} else t2 = $[3];
+	let t3;
+	if ($[4] !== providerIds) {
+		t3 = providerIds.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			className: "pro-call-facts-row",
+			children: providerIds.map(_temp2$43)
+		});
+		$[4] = providerIds;
+		$[5] = t3;
+	} else t3 = $[5];
+	let t4;
+	if ($[6] !== t2 || $[7] !== t3) {
+		t4 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: "pro-call-facts",
+			title: kHint,
+			children: [t2, t3]
+		});
+		$[6] = t2;
+		$[7] = t3;
+		$[8] = t4;
+	} else t4 = $[8];
+	return t4;
+};
+function _temp$61(fact, i) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+		className: "pro-call-fact",
+		children: [
+			/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-call-fact-label",
+				children: fact.label
+			}),
+			" ",
+			/*#__PURE__*/ (0, import_jsx_runtime.jsx)("b", { children: fact.value })
+		]
+	}, `${i}-${fact.label}`);
+}
+function _temp2$43(p, i_0) {
+	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+		className: "pro-call-fact",
+		children: [
+			/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: "pro-call-fact-label",
+				children: p.label
+			}),
+			" ",
+			/*#__PURE__*/ (0, import_jsx_runtime.jsx)("code", { children: p.id }),
+			p.status !== void 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+				className: p.status >= 400 ? "pro-call-fact-status pro-call-fact-failed" : "pro-call-fact-status",
+				children: p.status
+			}),
+			/*#__PURE__*/ (0, import_jsx_runtime.jsx)(CopyButton$1, {
+				value: p.id,
+				ariaLabel: `Copy ${p.label}`
+			})
+		]
+	}, `${p.label}-${i_0}`);
+}
+//#endregion
 //#region ../../packages/inspect-components/src/pro-ux/hints.ts
 var plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 /** Hover hints for a model call's tabs, keyed by tab name. */ var modelTabHints = ({ shown, total, toolCalls, tools }) => {
 	return {
-		Summary: (shown === 0 && total > 0 ? `Only the model's reply: its ${plural(total, "input message appears", "input messages appear")} earlier in this transcript.` : shown < total ? `The newest ${shown} of the ${plural(total, "input message", "input messages")} (the rest appear earlier in this transcript), then the model's reply.` : `All ${plural(total, "input message", "input messages")}, then the model's reply.`) + (toolCalls.length > 0 ? toolCalls.length === 1 ? ` The reply's tool call (${toolCalls[0]}) appears as the Tool event that follows.` : ` The reply's tool calls (${toolCalls.join(", ")}) appear as the Tool events that follow.` : ""),
-		Info: "Token usage, timing, stop reason, generation settings and provider request IDs for this call.",
-		Messages: `The exact list of ${plural(total, "message", "messages")} the model received as input, in the order sent, then its reply.`,
+		Summary: `${shown === 0 && total > 0 ? `Only the model's reply: its ${plural(total, "input message appears", "input messages appear")} earlier in this transcript.` : shown < total ? `The newest ${shown} of the ${plural(total, "input message", "input messages")} (the rest appear earlier in this transcript), then the model's reply.` : `All ${plural(total, "input message", "input messages")}, then the model's reply.`}${toolCalls.length > 0 ? toolCalls.length === 1 ? ` The reply's tool call (${toolCalls[0]}) appears as the Tool event that follows.` : ` The reply's tool calls (${toolCalls.join(", ")}) appear as the Tool events that follow.` : ""} Token usage and settings follow the reply.`,
+		Messages: `Full input: the exact ${plural(total, "message", "messages")} the model received, in the order sent, then its reply.`,
 		Tools: `The ${plural(tools, "tool", "tools")} offered to the model on this call, with their descriptions, and the tool-choice setting.`,
-		API: "The raw JSON request sent to the provider's API, and the raw response it returned."
+		API: "Raw API: the JSON request sent to the provider, and the JSON response it returned."
 	};
 };
-/** Appended to a model call header's hover text. */ var modelHeaderHint = (total) => `One call to the model. It received the ${plural(total, "message", "messages")} listed under Messages and replied. Tool calls in its reply run as the Tool events that follow, and each result is input to the model's next call.`;
+/** Tab labels for a model call, keyed by tab name (the tab's id). */ var modelTabLabels = ({ total, tools }) => ({
+	Messages: `Full input (${total})`,
+	Tools: `Tools (${tools})`,
+	API: "Raw API"
+});
+/** Appended to a model call header's hover text. */ var modelHeaderHint = (total) => `One call to the model. It received the ${plural(total, "message", "messages")} listed under Full input and replied. Tool calls in its reply run as the Tool events that follow, and each result is input to the model's next call.`;
 var withHint = (subTitle, hint) => hint ? subTitle ? `${subTitle}\n\n${hint}` : hint : subTitle;
 //#endregion
 //#region ../../packages/inspect-components/src/transcript/event/attemptDuration.ts
@@ -104664,7 +107221,7 @@ var RetryChip = (t0) => {
 	let t8;
 	let t9;
 	if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-		t8 = () => setOpen(_temp$59);
+		t8 = () => setOpen(_temp$60);
 		t9 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, {
 			name: "retry",
 			className: RetryChip_module_default.chipIcon
@@ -104768,7 +107325,7 @@ function formatAttemptDuration(event) {
 	const sec = attemptDurationSec(event);
 	return sec != null ? formatTime$1(sec) : null;
 }
-function _temp$59(v) {
+function _temp$60(v) {
 	return !v;
 }
 var StopReasonBadge_module_default = {
@@ -105023,7 +107580,7 @@ function groupRetryAttempts(events) {
 //#endregion
 //#region ../../packages/inspect-components/src/transcript/ModelEventView.tsx
 var ModelEventView = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(140);
+	const $ = (0, import_compiler_runtime.c)(151);
 	const { eventNode, showToolCalls, className, context, eventCallbacks } = t0;
 	const successEvent = eventNode.event;
 	const attempts = context?.retryAttempts?.get(retryAttemptKey(successEvent));
@@ -105054,7 +107611,7 @@ var ModelEventView = (t0) => {
 	const callTime = event.output.time;
 	let t4;
 	if ($[6] !== event.output.choices) {
-		t4 = event.output.choices.map(_temp$58);
+		t4 = event.output.choices.map(_temp$59);
 		$[6] = event.output.choices;
 		$[7] = t4;
 	} else t4 = $[7];
@@ -105094,10 +107651,10 @@ var ModelEventView = (t0) => {
 	let t8;
 	if ($[15] !== context?.toolEventIds || $[16] !== event.input || $[17] !== event.pending || $[18] !== isCancelled || $[19] !== outputMessages || $[20] !== showAllMessages || $[21] !== userMessages) {
 		t8 = () => {
-			const outputs = event.pending || isCancelled ? outputMessages.filter(_temp2$41) : outputMessages;
+			const outputs = event.pending || isCancelled ? outputMessages.filter(_temp2$42) : outputMessages;
 			const messages = showAllMessages ? [...event.input, ...outputs] : [...userMessages, ...outputs];
 			const toolEventIds = context?.toolEventIds;
-			return toolEventIds ? messages.map((m_0) => withoutToolCallsIn(m_0, toolEventIds)).filter(_temp3$28) : messages;
+			return toolEventIds ? messages.map((m_0) => withoutToolCallsIn(m_0, toolEventIds)).filter(_temp3$29) : messages;
 		};
 		$[15] = context?.toolEventIds;
 		$[16] = event.input;
@@ -105143,105 +107700,117 @@ var ModelEventView = (t0) => {
 		$[35] = t11;
 	} else t11 = $[35];
 	const hints = t11;
-	context?.messageLabels;
 	let t12;
+	if ($[36] !== event.input.length || $[37] !== event.tools.length || $[38] !== proHints) {
+		t12 = proHints ? modelTabLabels({
+			total: event.input.length,
+			tools: event.tools.length
+		}) : void 0;
+		$[36] = event.input.length;
+		$[37] = event.tools.length;
+		$[38] = proHints;
+		$[39] = t12;
+	} else t12 = $[39];
+	const labels = t12;
+	context?.messageLabels;
+	let t13;
 	bb0: {
 		const map = context?.messageLabels;
 		if (!map) {
-			let t13;
-			if ($[36] === Symbol.for("react.memo_cache_sentinel")) {
-				t13 = { show: false };
-				$[36] = t13;
-			} else t13 = $[36];
-			t12 = t13;
+			let t14;
+			if ($[40] === Symbol.for("react.memo_cache_sentinel")) {
+				t14 = { show: false };
+				$[40] = t14;
+			} else t14 = $[40];
+			t13 = t14;
 			break bb0;
 		}
-		let t13;
-		if ($[37] !== map) {
-			t13 = { messageLabels: map };
-			$[37] = map;
-			$[38] = t13;
-		} else t13 = $[38];
-		t12 = t13;
+		let t14;
+		if ($[41] !== map) {
+			t14 = { messageLabels: map };
+			$[41] = map;
+			$[42] = t14;
+		} else t14 = $[42];
+		t13 = t14;
 	}
-	const summaryLabels = t12;
+	const summaryLabels = t13;
 	const panelTitle = event.role ? `Model Call (${event.role}): ${event.model}` : `Model Call: ${event.model}`;
-	let t13;
-	if ($[39] !== callTime || $[40] !== event || $[41] !== isCancelled || $[42] !== isFailed || $[43] !== panelTitle || $[44] !== totalUsage) {
-		t13 = isFailed ? `${panelTitle} · FAILED${formatFailureTime(event)}` : isCancelled ? `${panelTitle} · Cancelled${formatFailureTime(event)}` : formatTitle(panelTitle, totalUsage, callTime);
-		$[39] = callTime;
-		$[40] = event;
-		$[41] = isCancelled;
-		$[42] = isFailed;
-		$[43] = panelTitle;
-		$[44] = totalUsage;
-		$[45] = t13;
-	} else t13 = $[45];
-	const titleString = t13;
-	const fallback = event.output.fallback;
 	let t14;
-	if ($[46] !== fallback) {
-		t14 = fallback ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
+	if ($[43] !== callTime || $[44] !== event || $[45] !== isCancelled || $[46] !== isFailed || $[47] !== panelTitle || $[48] !== totalUsage) {
+		t14 = isFailed ? `${panelTitle} · FAILED${formatFailureTime(event)}` : isCancelled ? `${panelTitle} · Cancelled${formatFailureTime(event)}` : formatTitle(panelTitle, totalUsage, callTime);
+		$[43] = callTime;
+		$[44] = event;
+		$[45] = isCancelled;
+		$[46] = isFailed;
+		$[47] = panelTitle;
+		$[48] = totalUsage;
+		$[49] = t14;
+	} else t14 = $[49];
+	const titleString = t14;
+	const fallback = event.output.fallback;
+	let t15;
+	if ($[50] !== fallback) {
+		t15 = fallback ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
 			className: ModelEventView_module_default.fallbackBadge,
 			children: ["· fallback → ", fallback.fallback_model]
 		}) : void 0;
-		$[46] = fallback;
-		$[47] = t14;
-	} else t14 = $[47];
-	const fallbackBadge = t14;
-	let t15;
-	if ($[48] !== context) {
-		t15 = context?.turnInfo ? {
+		$[50] = fallback;
+		$[51] = t15;
+	} else t15 = $[51];
+	const fallbackBadge = t15;
+	let t16;
+	if ($[52] !== context) {
+		t16 = context?.turnInfo ? {
 			turnNumber: context.turnInfo.turnNumber,
 			totalTurns: context.turnInfo.totalTurns,
 			isAnchor: context.turnIsAnchor ?? true
 		} : void 0;
-		$[48] = context;
-		$[49] = t15;
-	} else t15 = $[49];
-	const turnNav = t15;
-	let t16;
-	if ($[50] !== attempts || $[51] !== selectedAttemptKey || $[52] !== setSelectedAttemptKey) {
-		t16 = attempts ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(RetryChip, {
+		$[52] = context;
+		$[53] = t16;
+	} else t16 = $[53];
+	const turnNav = t16;
+	let t17;
+	if ($[54] !== attempts || $[55] !== selectedAttemptKey || $[56] !== setSelectedAttemptKey) {
+		t17 = attempts ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(RetryChip, {
 			attempts,
 			selectedKey: selectedAttemptKey,
 			onSelect: setSelectedAttemptKey,
 			keyOf: retryAttemptKey
 		}) : void 0;
-		$[50] = attempts;
-		$[51] = selectedAttemptKey;
-		$[52] = setSelectedAttemptKey;
-		$[53] = t16;
-	} else t16 = $[53];
-	const retryChip = t16;
-	const t17 = eventNode.id;
-	let t18;
-	if ($[54] !== event.input.length || $[55] !== event.timestamp || $[56] !== event.working_start || $[57] !== proHints) {
-		let t19;
-		if ($[59] !== event.input.length || $[60] !== proHints) {
-			t19 = proHints && modelHeaderHint(event.input.length);
-			$[59] = event.input.length;
-			$[60] = proHints;
-			$[61] = t19;
-		} else t19 = $[61];
-		t18 = withHint(event.timestamp ? formatTiming(event.timestamp, event.working_start) : void 0, t19);
-		$[54] = event.input.length;
-		$[55] = event.timestamp;
-		$[56] = event.working_start;
-		$[57] = proHints;
-		$[58] = t18;
-	} else t18 = $[58];
+		$[54] = attempts;
+		$[55] = selectedAttemptKey;
+		$[56] = setSelectedAttemptKey;
+		$[57] = t17;
+	} else t17 = $[57];
+	const retryChip = t17;
+	const t18 = eventNode.id;
 	let t19;
-	if ($[62] !== fallbackBadge || $[63] !== retryChip) {
-		t19 = fallbackBadge || retryChip ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [fallbackBadge, retryChip] }) : void 0;
-		$[62] = fallbackBadge;
-		$[63] = retryChip;
-		$[64] = t19;
-	} else t19 = $[64];
-	const t20 = hints?.Summary;
-	let t21;
-	if ($[65] !== context?.inlineExpansionUX || $[66] !== hasHiddenMessages || $[67] !== showAllMessages) {
-		t21 = context?.inlineExpansionUX && hasHiddenMessages && !showAllMessages && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+	if ($[58] !== event.input.length || $[59] !== event.timestamp || $[60] !== event.working_start || $[61] !== proHints) {
+		let t20;
+		if ($[63] !== event.input.length || $[64] !== proHints) {
+			t20 = proHints && modelHeaderHint(event.input.length);
+			$[63] = event.input.length;
+			$[64] = proHints;
+			$[65] = t20;
+		} else t20 = $[65];
+		t19 = withHint(event.timestamp ? formatTiming(event.timestamp, event.working_start) : void 0, t20);
+		$[58] = event.input.length;
+		$[59] = event.timestamp;
+		$[60] = event.working_start;
+		$[61] = proHints;
+		$[62] = t19;
+	} else t19 = $[62];
+	let t20;
+	if ($[66] !== fallbackBadge || $[67] !== retryChip) {
+		t20 = fallbackBadge || retryChip ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [fallbackBadge, retryChip] }) : void 0;
+		$[66] = fallbackBadge;
+		$[67] = retryChip;
+		$[68] = t20;
+	} else t20 = $[68];
+	const t21 = hints?.Summary;
+	let t22;
+	if ($[69] !== context?.inlineExpansionUX || $[70] !== hasHiddenMessages || $[71] !== showAllMessages) {
+		t22 = context?.inlineExpansionUX && hasHiddenMessages && !showAllMessages && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: clsx("text-size-small", ModelEventView_module_default.showAllLink),
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("button", {
 				type: "button",
@@ -105254,40 +107823,40 @@ var ModelEventView = (t0) => {
 				}), "Show all messages"]
 			})
 		});
-		$[65] = context?.inlineExpansionUX;
-		$[66] = hasHiddenMessages;
-		$[67] = showAllMessages;
-		$[68] = t21;
-	} else t21 = $[68];
-	const t22 = `${eventNode.id}-model-output`;
-	const t23 = context?.toolEventIds || showToolCalls ? "complete" : "omit";
-	let t24;
-	if ($[69] !== collapseSummaryToolMessages || $[70] !== t23) {
-		t24 = {
-			callStyle: t23,
+		$[69] = context?.inlineExpansionUX;
+		$[70] = hasHiddenMessages;
+		$[71] = showAllMessages;
+		$[72] = t22;
+	} else t22 = $[72];
+	const t23 = `${eventNode.id}-model-output`;
+	const t24 = context?.toolEventIds || showToolCalls ? "complete" : "omit";
+	let t25;
+	if ($[73] !== collapseSummaryToolMessages || $[74] !== t24) {
+		t25 = {
+			callStyle: t24,
 			collapseToolMessages: collapseSummaryToolMessages
 		};
-		$[69] = collapseSummaryToolMessages;
-		$[70] = t23;
-		$[71] = t24;
-	} else t24 = $[71];
-	let t25;
-	if ($[72] !== summaryLabels || $[73] !== summaryMessages || $[74] !== t22 || $[75] !== t24) {
-		t25 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ChatView, {
-			id: t22,
+		$[73] = collapseSummaryToolMessages;
+		$[74] = t24;
+		$[75] = t25;
+	} else t25 = $[75];
+	let t26;
+	if ($[76] !== summaryLabels || $[77] !== summaryMessages || $[78] !== t23 || $[79] !== t25) {
+		t26 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ChatView, {
+			id: t23,
 			messages: summaryMessages,
-			tools: t24,
+			tools: t25,
 			labels: summaryLabels
 		});
-		$[72] = summaryLabels;
-		$[73] = summaryMessages;
-		$[74] = t22;
-		$[75] = t24;
-		$[76] = t25;
-	} else t25 = $[76];
-	let t26;
-	if ($[77] !== event.error || $[78] !== event.pending || $[79] !== isCancelled) {
-		t26 = isCancelled ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+		$[76] = summaryLabels;
+		$[77] = summaryMessages;
+		$[78] = t23;
+		$[79] = t25;
+		$[80] = t26;
+	} else t26 = $[80];
+	let t27;
+	if ($[81] !== event.error || $[82] !== event.pending || $[83] !== isCancelled) {
+		t27 = isCancelled ? /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			className: ModelEventView_module_default.cancelled,
 			children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)(Icon, { name: "cancel" }), /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { children: event.error })]
 		}) : event.error ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EventSection, {
@@ -105300,33 +107869,42 @@ var ModelEventView = (t0) => {
 			className: clsx(ModelEventView_module_default.progress),
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(GeneratingIndicator, {})
 		}) : void 0;
-		$[77] = event.error;
-		$[78] = event.pending;
-		$[79] = isCancelled;
-		$[80] = t26;
-	} else t26 = $[80];
-	let t27;
-	if ($[81] !== t20 || $[82] !== t21 || $[83] !== t25 || $[84] !== t26) {
-		t27 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+		$[81] = event.error;
+		$[82] = event.pending;
+		$[83] = isCancelled;
+		$[84] = t27;
+	} else t27 = $[84];
+	let t28;
+	if ($[85] !== event || $[86] !== proHints) {
+		t28 = proHints && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(CallFacts, { event });
+		$[85] = event;
+		$[86] = proHints;
+		$[87] = t28;
+	} else t28 = $[87];
+	let t29;
+	if ($[88] !== t21 || $[89] !== t22 || $[90] !== t26 || $[91] !== t27 || $[92] !== t28) {
+		t29 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			"data-name": "Summary",
-			"data-hint": t20,
+			"data-hint": t21,
 			className: ModelEventView_module_default.container,
 			children: [
-				t21,
-				t25,
-				t26
+				t22,
+				t26,
+				t27,
+				t28
 			]
 		});
-		$[81] = t20;
-		$[82] = t21;
-		$[83] = t25;
-		$[84] = t26;
-		$[85] = t27;
-	} else t27 = $[85];
-	const t28 = hints?.Info;
-	let t29;
-	if ($[86] !== event.completed || $[87] !== event.output.usage || $[88] !== event.timestamp || $[89] !== event.working_time) {
-		t29 = event.output.usage ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ModelUsagePanel, {
+		$[88] = t21;
+		$[89] = t22;
+		$[90] = t26;
+		$[91] = t27;
+		$[92] = t28;
+		$[93] = t29;
+	} else t29 = $[93];
+	const t30 = proHints || void 0;
+	let t31;
+	if ($[94] !== event.completed || $[95] !== event.output.usage || $[96] !== event.timestamp || $[97] !== event.working_time) {
+		t31 = event.output.usage ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ModelUsagePanel, {
 			usage: event.output.usage,
 			timing: {
 				timestamp: event.timestamp,
@@ -105334,26 +107912,26 @@ var ModelEventView = (t0) => {
 				working_time: event.working_time
 			}
 		}) : void 0;
-		$[86] = event.completed;
-		$[87] = event.output.usage;
-		$[88] = event.timestamp;
-		$[89] = event.working_time;
-		$[90] = t29;
-	} else t29 = $[90];
-	let t30;
-	if ($[91] !== firstChoice || $[92] !== showStopReason || $[93] !== stopDetails) {
-		t30 = showStopReason && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StopReasonBadge, {
+		$[94] = event.completed;
+		$[95] = event.output.usage;
+		$[96] = event.timestamp;
+		$[97] = event.working_time;
+		$[98] = t31;
+	} else t31 = $[98];
+	let t32;
+	if ($[99] !== firstChoice || $[100] !== showStopReason || $[101] !== stopDetails) {
+		t32 = showStopReason && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StopReasonBadge, {
 			reason: firstChoice.stop_reason,
 			details: stopDetails
 		});
-		$[91] = firstChoice;
-		$[92] = showStopReason;
-		$[93] = stopDetails;
-		$[94] = t30;
-	} else t30 = $[94];
-	let t31;
-	if ($[95] !== entries) {
-		t31 = Object.keys(entries).length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EventSection, {
+		$[99] = firstChoice;
+		$[100] = showStopReason;
+		$[101] = stopDetails;
+		$[102] = t32;
+	} else t32 = $[102];
+	let t33;
+	if ($[103] !== entries) {
+		t33 = Object.keys(entries).length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EventSection, {
 			title: "Configuration",
 			className: clsx(ModelEventView_module_default.tableSelection, ModelEventView_module_default.config),
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(MetaDataGrid, {
@@ -105361,94 +107939,98 @@ var ModelEventView = (t0) => {
 				options: { plain: true }
 			})
 		});
-		$[95] = entries;
-		$[96] = t31;
-	} else t31 = $[96];
-	let t32;
-	if ($[97] !== event) {
-		t32 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ProviderIds, { event });
-		$[97] = event;
-		$[98] = t32;
-	} else t32 = $[98];
-	let t33;
-	if ($[99] !== t29 || $[100] !== t30 || $[101] !== t31 || $[102] !== t32) {
-		t33 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: ModelEventView_module_default.all,
-			children: [
-				t29,
-				t30,
-				t31,
-				t32
-			]
-		});
-		$[99] = t29;
-		$[100] = t30;
-		$[101] = t31;
-		$[102] = t32;
-		$[103] = t33;
-	} else t33 = $[103];
+		$[103] = entries;
+		$[104] = t33;
+	} else t33 = $[104];
 	let t34;
-	if ($[104] !== t28 || $[105] !== t33) {
-		t34 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-			"data-name": "Info",
-			"data-hint": t28,
-			className: ModelEventView_module_default.container,
-			children: t33
-		});
-		$[104] = t28;
-		$[105] = t33;
+	if ($[105] !== event) {
+		t34 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ProviderIds, { event });
+		$[105] = event;
 		$[106] = t34;
 	} else t34 = $[106];
-	const t35 = hints?.Messages;
-	const t36 = `${eventNode.id}-model-input-full`;
-	let t37;
-	if ($[107] !== event.input || $[108] !== outputMessages) {
-		t37 = [...event.input, ...outputMessages];
-		$[107] = event.input;
-		$[108] = outputMessages;
-		$[109] = t37;
-	} else t37 = $[109];
-	const t38 = context?.hasToolEvents !== false;
-	let t39;
-	if ($[110] !== t38) {
-		t39 = { collapseToolMessages: t38 };
-		$[110] = t38;
-		$[111] = t39;
-	} else t39 = $[111];
-	let t40;
-	if ($[112] === Symbol.for("react.memo_cache_sentinel")) {
-		t40 = { show: false };
-		$[112] = t40;
-	} else t40 = $[112];
-	let t41;
-	if ($[113] !== t36 || $[114] !== t37 || $[115] !== t39) {
-		t41 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ChatView, {
-			id: t36,
-			messages: t37,
-			tools: t39,
-			labels: t40
+	let t35;
+	if ($[107] !== t31 || $[108] !== t32 || $[109] !== t33 || $[110] !== t34) {
+		t35 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: ModelEventView_module_default.all,
+			children: [
+				t31,
+				t32,
+				t33,
+				t34
+			]
 		});
-		$[113] = t36;
-		$[114] = t37;
-		$[115] = t39;
-		$[116] = t41;
-	} else t41 = $[116];
-	let t42;
-	if ($[117] !== t35 || $[118] !== t41) {
-		t42 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
-			"data-name": "Messages",
-			"data-hint": t35,
+		$[107] = t31;
+		$[108] = t32;
+		$[109] = t33;
+		$[110] = t34;
+		$[111] = t35;
+	} else t35 = $[111];
+	let t36;
+	if ($[112] !== t30 || $[113] !== t35) {
+		t36 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			"data-name": "Info",
+			"data-hidden": t30,
 			className: ModelEventView_module_default.container,
-			children: t41
+			children: t35
 		});
-		$[117] = t35;
+		$[112] = t30;
+		$[113] = t35;
+		$[114] = t36;
+	} else t36 = $[114];
+	const t37 = labels?.Messages;
+	const t38 = hints?.Messages;
+	const t39 = `${eventNode.id}-model-input-full`;
+	let t40;
+	if ($[115] !== event.input || $[116] !== outputMessages) {
+		t40 = [...event.input, ...outputMessages];
+		$[115] = event.input;
+		$[116] = outputMessages;
+		$[117] = t40;
+	} else t40 = $[117];
+	const t41 = context?.hasToolEvents !== false;
+	let t42;
+	if ($[118] !== t41) {
+		t42 = { collapseToolMessages: t41 };
 		$[118] = t41;
 		$[119] = t42;
 	} else t42 = $[119];
 	let t43;
-	if ($[120] !== event.tool_choice || $[121] !== event.tools || $[122] !== hints?.Tools) {
-		t43 = event.tools.length > 1 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+	if ($[120] === Symbol.for("react.memo_cache_sentinel")) {
+		t43 = { show: false };
+		$[120] = t43;
+	} else t43 = $[120];
+	let t44;
+	if ($[121] !== t39 || $[122] !== t40 || $[123] !== t42) {
+		t44 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ChatView, {
+			id: t39,
+			messages: t40,
+			tools: t42,
+			labels: t43
+		});
+		$[121] = t39;
+		$[122] = t40;
+		$[123] = t42;
+		$[124] = t44;
+	} else t44 = $[124];
+	let t45;
+	if ($[125] !== t37 || $[126] !== t38 || $[127] !== t44) {
+		t45 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+			"data-name": "Messages",
+			"data-label": t37,
+			"data-hint": t38,
+			className: ModelEventView_module_default.container,
+			children: t44
+		});
+		$[125] = t37;
+		$[126] = t38;
+		$[127] = t44;
+		$[128] = t45;
+	} else t45 = $[128];
+	let t46;
+	if ($[129] !== event.tool_choice || $[130] !== event.tools || $[131] !== hints?.Tools || $[132] !== labels?.Tools) {
+		t46 = event.tools.length > 1 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			"data-name": "Tools",
+			"data-label": labels?.Tools,
 			"data-hint": hints?.Tools,
 			className: ModelEventView_module_default.container,
 			children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ToolsConfig, {
@@ -105456,58 +108038,61 @@ var ModelEventView = (t0) => {
 				toolChoice: event.tool_choice
 			})
 		});
-		$[120] = event.tool_choice;
-		$[121] = event.tools;
-		$[122] = hints?.Tools;
-		$[123] = t43;
-	} else t43 = $[123];
-	let t44;
-	if ($[124] !== event.call || $[125] !== hints?.API) {
-		t44 = event.call ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(APIView, {
+		$[129] = event.tool_choice;
+		$[130] = event.tools;
+		$[131] = hints?.Tools;
+		$[132] = labels?.Tools;
+		$[133] = t46;
+	} else t46 = $[133];
+	let t47;
+	if ($[134] !== event.call || $[135] !== hints?.API || $[136] !== labels?.API) {
+		t47 = event.call ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(APIView, {
 			"data-name": "API",
+			"data-label": labels?.API,
 			"data-hint": hints?.API,
 			call: event.call,
 			className: ModelEventView_module_default.container
 		}) : "";
-		$[124] = event.call;
-		$[125] = hints?.API;
-		$[126] = t44;
-	} else t44 = $[126];
-	let t45;
-	if ($[127] !== className || $[128] !== eventCallbacks || $[129] !== eventNode.id || $[130] !== t18 || $[131] !== t19 || $[132] !== t27 || $[133] !== t34 || $[134] !== t42 || $[135] !== t43 || $[136] !== t44 || $[137] !== titleString || $[138] !== turnNav) {
-		t45 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(EventPanel, {
-			eventNodeId: t17,
+		$[134] = event.call;
+		$[135] = hints?.API;
+		$[136] = labels?.API;
+		$[137] = t47;
+	} else t47 = $[137];
+	let t48;
+	if ($[138] !== className || $[139] !== eventCallbacks || $[140] !== eventNode.id || $[141] !== t19 || $[142] !== t20 || $[143] !== t29 || $[144] !== t36 || $[145] !== t45 || $[146] !== t46 || $[147] !== t47 || $[148] !== titleString || $[149] !== turnNav) {
+		t48 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(EventPanel, {
+			eventNodeId: t18,
 			className,
 			title: titleString,
-			subTitle: t18,
+			subTitle: t19,
 			icon: "model",
 			turnNav,
-			headerExtra: t19,
+			headerExtra: t20,
 			eventCallbacks,
 			collapsibleContent: true,
 			children: [
-				t27,
-				t34,
-				t42,
-				t43,
-				t44
+				t29,
+				t36,
+				t45,
+				t46,
+				t47
 			]
 		});
-		$[127] = className;
-		$[128] = eventCallbacks;
-		$[129] = eventNode.id;
-		$[130] = t18;
-		$[131] = t19;
-		$[132] = t27;
-		$[133] = t34;
-		$[134] = t42;
-		$[135] = t43;
-		$[136] = t44;
-		$[137] = titleString;
-		$[138] = turnNav;
-		$[139] = t45;
-	} else t45 = $[139];
-	return t45;
+		$[138] = className;
+		$[139] = eventCallbacks;
+		$[140] = eventNode.id;
+		$[141] = t19;
+		$[142] = t20;
+		$[143] = t29;
+		$[144] = t36;
+		$[145] = t45;
+		$[146] = t46;
+		$[147] = t47;
+		$[148] = titleString;
+		$[149] = turnNav;
+		$[150] = t48;
+	} else t48 = $[150];
+	return t48;
 };
 var ProviderIds = (t0) => {
 	const $ = (0, import_compiler_runtime.c)(11);
@@ -105834,13 +108419,13 @@ var withoutToolCallsIn = (message, toolEventIds) => {
 		tool_calls: toolCalls
 	};
 };
-function _temp$58(choice) {
+function _temp$59(choice) {
 	return choice.message;
 }
-function _temp2$41(m) {
+function _temp2$42(m) {
 	return !isLivePlaceholderMessage(m);
 }
-function _temp3$28(m_1) {
+function _temp3$29(m_1) {
 	return m_1.role !== "assistant" || hasVisibleContent(m_1) || (m_1.tool_calls?.length ?? 0) > 0;
 }
 function _temp4$22(m_2) {
@@ -106023,7 +108608,7 @@ var SampleInitEventView = (t0) => {
 			const t3 = `event-${eventNode.id}`;
 			let t4;
 			if ($[8] !== event.sample.files) {
-				t4 = Object.keys(event.sample.files).map(_temp$57);
+				t4 = Object.keys(event.sample.files).map(_temp$58);
 				$[8] = event.sample.files;
 				$[9] = t4;
 			} else t4 = $[9];
@@ -106087,7 +108672,7 @@ var SampleInitEventView = (t0) => {
 	} else t4 = $[21];
 	let t5;
 	if ($[22] !== event.sample.choices) {
-		t5 = event.sample.choices ? event.sample.choices.map(_temp2$40) : "";
+		t5 = event.sample.choices ? event.sample.choices.map(_temp2$41) : "";
 		$[22] = event.sample.choices;
 		$[23] = t5;
 	} else t5 = $[23];
@@ -106104,7 +108689,7 @@ var SampleInitEventView = (t0) => {
 	if ($[26] !== event.sample.target) {
 		t7 = event.sample.target ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(EventSection, {
 			title: "Target",
-			children: toArray(event.sample.target).map(_temp3$27)
+			children: toArray(event.sample.target).map(_temp3$28)
 		}) : void 0;
 		$[26] = event.sample.target;
 		$[27] = t7;
@@ -106162,20 +108747,20 @@ var SampleInitEventView = (t0) => {
 	} else t11 = $[42];
 	return t11;
 };
-function _temp$57(file) {
+function _temp$58(file) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("pre", {
 		className: SampleInitEventView_module_default.noMargin,
 		children: file
 	}, `sample-init-file-${file}`);
 }
-function _temp2$40(choice, index) {
+function _temp2$41(choice, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", { children: [
 		String.fromCharCode(65 + index),
 		") ",
 		choice
 	] }, "$choice-{choice}");
 }
-function _temp3$27(target) {
+function _temp3$28(target) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 		className: clsx("text-size-base"),
 		children: target
@@ -106186,8 +108771,8 @@ function _temp3$27(target) {
 var SampleLimitEventView = (t0) => {
 	const $ = (0, import_compiler_runtime.c)(12);
 	const { eventNode, className } = t0;
-	const resolve_title = _temp$56;
-	const resolve_icon = _temp2$39;
+	const resolve_title = _temp$57;
+	const resolve_icon = _temp2$40;
 	const baseTitle = resolve_title(eventNode.event.type);
 	let t1;
 	if ($[0] !== baseTitle || $[1] !== eventNode.event.timestamp) {
@@ -106231,7 +108816,7 @@ var SampleLimitEventView = (t0) => {
 	} else t5 = $[11];
 	return t5;
 };
-function _temp$56(type) {
+function _temp$57(type) {
 	switch (type) {
 		case "custom": return "Custom Limit Exceeded";
 		case "time": return "Time Limit Exceeded";
@@ -106243,7 +108828,7 @@ function _temp$56(type) {
 		case "cost": return "Cost Limit Exceeded";
 	}
 }
-function _temp2$39(type_0) {
+function _temp2$40(type_0) {
 	switch (type_0) {
 		case "custom": return "limitCustom";
 		case "time": return "limitTime";
@@ -107595,7 +110180,7 @@ var CheckDetail = (t0) => {
 		} else t7 = $[29];
 		t8 = scores ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 			className: SentinelEventView_module_default.scoreGrid,
-			children: scores.map(_temp$55)
+			children: scores.map(_temp$56)
 		}) : null;
 		$[8] = effectTone;
 		$[9] = event.stage;
@@ -107947,7 +110532,7 @@ var decisionClass = (decision) => {
 		case "proceed": return SentinelEventView_module_default.proceed;
 	}
 };
-function _temp$55(t0) {
+function _temp$56(t0) {
 	const [dimension, value] = t0;
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: SentinelEventView_module_default.scoreName,
@@ -107979,7 +110564,7 @@ function _temp$55(t0) {
 	const text = t2;
 	let t3;
 	if ($[4] !== childNodes) {
-		t3 = childNodes.map(_temp$54);
+		t3 = childNodes.map(_temp$55);
 		$[4] = childNodes;
 		$[5] = t3;
 	} else t3 = $[5];
@@ -108045,7 +110630,7 @@ var summarize = (children) => {
 	if (children.length === 1) return "1 event";
 	else return `${children.length} events`;
 };
-function _temp$54(child) {
+function _temp$55(child) {
 	return child.id;
 }
 //#endregion
@@ -108102,7 +110687,7 @@ var DiffChildren = (t0) => {
 	} else t2 = $[1];
 	let t3;
 	if ($[2] !== entry.children) {
-		t3 = entry.children.map(_temp$53);
+		t3 = entry.children.map(_temp$54);
 		$[2] = entry.children;
 		$[3] = t3;
 	} else t3 = $[3];
@@ -108246,7 +110831,7 @@ var DiffValue = (t0) => {
 	} else t2 = $[3];
 	return t2;
 };
-function _temp$53(child) {
+function _temp$54(child) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DiffRow, { child }, child.id);
 }
 var StateEventView_module_default = {
@@ -108501,7 +111086,7 @@ var SubtaskEventView = (t0) => {
 	} else t4 = $[17];
 	let t5;
 	if ($[18] !== childNodes) {
-		t5 = childNodes.map(_temp$52);
+		t5 = childNodes.map(_temp$53);
 		$[18] = childNodes;
 		$[19] = t5;
 	} else t5 = $[19];
@@ -108614,7 +111199,7 @@ var Rendered = (t0) => {
 	if (Array.isArray(values)) {
 		let t1;
 		if ($[0] !== values) {
-			t1 = values.map(_temp2$38);
+			t1 = values.map(_temp2$39);
 			$[0] = values;
 			$[1] = t1;
 		} else t1 = $[1];
@@ -108650,10 +111235,10 @@ var None = () => {
 	} else t0 = $[0];
 	return t0;
 };
-function _temp$52(child) {
+function _temp$53(child) {
 	return child.id;
 }
-function _temp2$38(val, index) {
+function _temp2$39(val, index) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(Rendered, { values: val }, index);
 }
 //#endregion
@@ -113852,7 +116437,7 @@ var isAutoApprove = (node) => node.event.approver === "auto" && node.event.decis
 			$[88] = goToLane;
 			$[89] = t26;
 		} else t26 = $[89];
-		t25 = lanes.filter(_temp$51).map(t26);
+		t25 = lanes.filter(_temp$52).map(t26);
 		$[85] = goToLane;
 		$[86] = lanes;
 		$[87] = t25;
@@ -113984,7 +116569,7 @@ var isAutoApprove = (node) => node.event.approver === "auto" && node.event.decis
 	} else t37 = $[130];
 	return t37;
 }
-function _temp$51(lane_1) {
+function _temp$52(lane_1) {
 	return lane_1.firstAnchorId;
 }
 //#endregion
@@ -115115,7 +117700,7 @@ function useTranscriptTimeline(options) {
 		t7 = () => {
 			const top = viewStack.at(-1);
 			if (!top) return;
-			setViewStack(_temp$50);
+			setViewStack(_temp$51);
 			timelineProps?.onSelect(top.priorSelected);
 		};
 		$[16] = timelineProps;
@@ -115126,7 +117711,7 @@ function useTranscriptTimeline(options) {
 	const state = useTimeline(timeline, timelineOptions, timelineProps);
 	let t8;
 	if ($[19] !== state.rows) {
-		t8 = state.rows.filter(_temp2$37);
+		t8 = state.rows.filter(_temp2$38);
 		$[19] = state.rows;
 		$[20] = t8;
 	} else t8 = $[20];
@@ -115289,7 +117874,7 @@ function useTranscriptTimeline(options) {
 	const highlightedKeys = t15;
 	let t16;
 	if ($[54] !== timeline.root.branches || $[55] !== timeline.root.content) {
-		t16 = timeline.root.content.length > 0 && (timeline.root.content.some(_temp3$26) || timeline.root.branches.length > 0);
+		t16 = timeline.root.content.length > 0 && (timeline.root.content.some(_temp3$27) || timeline.root.branches.length > 0);
 		$[54] = timeline.root.branches;
 		$[55] = timeline.root.content;
 		$[56] = t16;
@@ -115444,13 +118029,13 @@ function _temp4$21(row_3) {
 	const span = getAgents(rowSpan)[0];
 	return !!span && !PHASE_SPAN_TYPES.has(span.spanType ?? "");
 }
-function _temp3$26(item_0) {
+function _temp3$27(item_0) {
 	return item_0.type === "span" || item_0.event.event === "span_begin";
 }
-function _temp2$37(row) {
+function _temp2$38(row) {
 	return row.depth === 0 || rowHasEvents(row);
 }
-function _temp$50(s_0) {
+function _temp$51(s_0) {
 	return s_0.slice(0, -1);
 }
 var kBranchKeyPattern$1 = /\/branch-([^/]*)-(\d+)$/;
@@ -115548,7 +118133,7 @@ var AgentCardView = (t0) => {
 		$[2] = t1;
 	} else t1 = $[2];
 	const handleClick = t1;
-	const stopPropagation = _temp$49;
+	const stopPropagation = _temp$50;
 	let t2;
 	if ($[3] !== span) {
 		t2 = getSpanToolResult(span);
@@ -115766,7 +118351,7 @@ var AgentCardView = (t0) => {
 	} else t23 = $[55];
 	return t23;
 };
-function _temp$49(e) {
+function _temp$50(e) {
 	e.stopPropagation();
 }
 //#endregion
@@ -115851,6 +118436,7 @@ var isScoringSpan = (node) => node.event.event === "span_begin" && (node.event.t
 					seenPrompts.add(key);
 					push({
 						id: node.id,
+						...input.id ? { target: { messageId: input.id } } : {},
 						kind: input.role,
 						start,
 						end: start,
@@ -115863,9 +118449,14 @@ var isScoringSpan = (node) => node.event.event === "span_begin" && (node.event.t
 				const outputTokens = usage?.output_tokens ?? 0;
 				const reasoningShare = reasoning === 0 && reasoningTokens === 0 ? 0 : answer === 0 && outputTokens <= reasoningTokens ? 1 : outputTokens > reasoningTokens && reasoningTokens > 0 ? reasoningTokens / outputTokens : reasoning / (reasoning + answer);
 				const split = start + (end - start) * reasoningShare;
+				const inOutput = (part) => message?.id ? { target: {
+					messageId: message.id,
+					part
+				} } : {};
 				if (reasoningShare > 0) {
 					const span = {
 						id: node.id,
+						...inOutput("reasoning"),
 						kind: "reasoning",
 						start,
 						end: split,
@@ -115877,6 +118468,7 @@ var isScoringSpan = (node) => node.event.event === "span_begin" && (node.event.t
 				if (reasoningShare < 1) {
 					const span = {
 						id: node.id,
+						...inOutput("response"),
 						kind: "assistant",
 						start: split,
 						end,
@@ -116044,8 +118636,8 @@ var useKindLayout = (root, mapping) => {
 				},
 				title: span.label + where,
 				"aria-label": `Jump to ${span.label}`,
-				onPointerDown: _temp$48,
-				onClick: () => onSelect(span.id)
+				onPointerDown: _temp$49,
+				onClick: () => onSelect(span.id, span.target)
 			}, `${span.id}-${span.kind}-${i}`);
 			$[4] = onSelect;
 			$[5] = where;
@@ -116073,7 +118665,7 @@ var useKindLayout = (root, mapping) => {
 	const { layout } = placed;
 	let t1;
 	if ($[0] !== layout.spans) {
-		t1 = new Set(layout.spans.map(_temp2$36));
+		t1 = new Set(layout.spans.map(_temp2$37));
 		$[0] = layout.spans;
 		$[1] = t1;
 	} else t1 = $[1];
@@ -116088,7 +118680,7 @@ var useKindLayout = (root, mapping) => {
 	const [axis, why] = t2;
 	let t3;
 	if ($[5] !== present) {
-		t3 = kKindOrder.filter((kind) => present.has(kind)).map(_temp3$25);
+		t3 = kKindOrder.filter((kind) => present.has(kind)).map(_temp3$26);
 		$[5] = present;
 		$[6] = t3;
 	} else t3 = $[6];
@@ -116116,13 +118708,13 @@ var useKindLayout = (root, mapping) => {
 	} else t5 = $[12];
 	return t5;
 };
-function _temp$48(e) {
+function _temp$49(e) {
 	return e.stopPropagation();
 }
-function _temp2$36(s) {
+function _temp2$37(s) {
 	return s.kind;
 }
-function _temp3$25(kind_0) {
+function _temp3$26(kind_0) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("span", {
 		className: "pro-kind-key-item",
 		children: [/*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
@@ -116676,7 +119268,7 @@ var TimelineSelector = (t0) => {
 	if (!active) return null;
 	let t4;
 	if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
-		t4 = () => setIsOpen(_temp$47);
+		t4 = () => setIsOpen(_temp$48);
 		$[4] = t4;
 	} else t4 = $[4];
 	let t5;
@@ -116741,7 +119333,7 @@ var TimelineSelector = (t0) => {
 	} else t8 = $[17];
 	return t8;
 };
-function _temp$47(prev) {
+function _temp$48(prev) {
 	return !prev;
 }
 var TimelineSwimLanes_module_default = {
@@ -116867,7 +119459,7 @@ var TimelineSwimLanes = (t0) => {
 	let keys_0;
 	if ($[6] !== layouts || $[7] !== parentKeys) {
 		keys_0 = new Set(parentKeys);
-		for (const layout_0 of layouts) if (layout_0.markers.some(_temp$46)) keys_0.add(layout_0.key);
+		for (const layout_0 of layouts) if (layout_0.markers.some(_temp$47)) keys_0.add(layout_0.key);
 		$[6] = layouts;
 		$[7] = parentKeys;
 		$[8] = keys_0;
@@ -116917,7 +119509,7 @@ var TimelineSwimLanes = (t0) => {
 		t5 = (rowKey_0) => {
 			const current = isRowCollapsed(rowKey_0);
 			if (current && !header?.timelineConfig?.showBranches) {
-				if (layouts.find((l_0) => l_0.key === rowKey_0)?.markers.some(_temp2$35)) header?.timelineConfig?.setShowBranches(true);
+				if (layouts.find((l_0) => l_0.key === rowKey_0)?.markers.some(_temp2$36)) header?.timelineConfig?.setShowBranches(true);
 			}
 			setRowCollapsedById(rowKey_0, !current);
 		};
@@ -116974,7 +119566,7 @@ var TimelineSwimLanes = (t0) => {
 	let t10;
 	if ($[36] !== clearSelection || $[37] !== onSelect || $[38] !== selectedRowKey || $[39] !== visibleLayouts) {
 		t10 = (e) => {
-			const rowKeys = visibleLayouts.map(_temp3$24);
+			const rowKeys = visibleLayouts.map(_temp3$25);
 			const currentIndex = selectedRowKey ? rowKeys.indexOf(selectedRowKey) : -1;
 			bb210: switch (e.key) {
 				case "ArrowDown": {
@@ -118048,13 +120640,13 @@ var MarkerGlyph = (t0) => {
 	} else t6 = $[24];
 	return t6;
 };
-function _temp$46(m) {
+function _temp$47(m) {
 	return m.kind === "branch";
 }
-function _temp2$35(m_0) {
+function _temp2$36(m_0) {
 	return m_0.kind === "branch";
 }
-function _temp3$24(l_1) {
+function _temp3$25(l_1) {
 	return l_1.key;
 }
 //#endregion
@@ -118248,7 +120840,7 @@ function _temp3$24(l_1) {
 	if ($[18] !== selected) {
 		t8 = {
 			selected,
-			onSelect: _temp$45
+			onSelect: _temp$46
 		};
 		$[18] = selected;
 		$[19] = t8;
@@ -118257,7 +120849,7 @@ function _temp3$24(l_1) {
 	if ($[20] !== activeIndex) {
 		t9 = {
 			activeIndex,
-			onActiveChange: _temp2$34
+			onActiveChange: _temp2$35
 		};
 		$[20] = activeIndex;
 		$[21] = t9;
@@ -118315,8 +120907,8 @@ function _temp3$24(l_1) {
 	} else t14 = $[41];
 	return t14;
 }
-function _temp2$34() {}
-function _temp$45() {}
+function _temp2$35() {}
+function _temp$46() {}
 //#endregion
 //#region ../../packages/inspect-components/src/transcript/hooks/useListPositionManager.ts
 /** Strip `/branch-…` segments so all selections within a branch tree share
@@ -118888,7 +121480,7 @@ function _temp$45() {}
 	const sidebarsRef = useLatestRef(sidebars);
 	let t0;
 	if ($[0] !== sidebars) {
-		t0 = sidebars.map(_temp$44).join("|");
+		t0 = sidebars.map(_temp$45).join("|");
 		$[0] = sidebars;
 		$[1] = t0;
 	} else t0 = $[1];
@@ -118970,7 +121562,7 @@ function _temp$45() {}
 	} else t4 = $[13];
 	(0, import_react.useEffect)(t3, t4);
 }
-function _temp$44(s) {
+function _temp$45(s) {
 	return String(s.remountKey);
 }
 //#endregion
@@ -119056,7 +121648,7 @@ function _temp$44(s) {
 	const timelinesForBranchDetection = useTimelinesArray(eventsForTimeline, serverTimelines);
 	let t2;
 	if ($[5] !== timelinesForBranchDetection) {
-		t2 = timelinesForBranchDetection.some(_temp$43);
+		t2 = timelinesForBranchDetection.some(_temp$44);
 		$[5] = timelinesForBranchDetection;
 		$[6] = t2;
 	} else t2 = $[6];
@@ -119185,7 +121777,7 @@ function _temp$44(s) {
 	} else t11 = $[35];
 	return t11;
 }
-function _temp$43(tl) {
+function _temp$44(tl) {
 	return spanHasBranches(tl.root);
 }
 //#endregion
@@ -120018,12 +122610,12 @@ function getOrCreateMeasureRoot() {
 			$[2] = t1;
 		} else t1 = $[2];
 		const width = t1.width;
-		const max = outlineNodes.some(_temp$42) ? kDetailedMaxWidth : kMaxWidth;
+		const max = outlineNodes.some(_temp$43) ? kDetailedMaxWidth : kMaxWidth;
 		t0 = Math.min(max, Math.max(kMinWidth, Math.ceil(width)));
 	}
 	return t0;
 }
-function _temp$42(n) {
+function _temp$43(n) {
 	return outlineLabel(n) !== void 0;
 }
 /**
@@ -121040,7 +123632,10 @@ var TranscriptViewNodes = /*#__PURE__*/ (0, import_react.forwardRef)(function Tr
 	(0, import_react.useImperativeHandle)(ref, () => ({
 		scrollToEvent,
 		getFlattenedNodes: () => flattenedNodesLatest.current,
-		getVisibleRange: () => visibleRangeRef.current
+		getVisibleRange: () => visibleRangeRef.current,
+		markNavigated: (eventId) => {
+			lastScrolledKeyRef.current = `${eventId}:`;
+		}
 	}), [scrollToEvent, flattenedNodesLatest]);
 	const expandedForTargetRef = (0, import_react.useRef)(null);
 	(0, import_react.useEffect)(() => {
@@ -121379,7 +123974,7 @@ function renderAgentCard(node, agentCardClassName) {
 	});
 }
 var TranscriptLayout = (t0) => {
-	const $ = (0, import_compiler_runtime.c)(244);
+	const $ = (0, import_compiler_runtime.c)(246);
 	const { events, hiddenEventTypes, running: t1, backfilling: t2, scrollToTopOnFinish, scrollRef, offsetTop: t3, embedded: t4, timeline, deepLink, headroom, empty, listId, eventsListRef, getEventUrl, linkingEnabled, getEventFocusUrl, onOpenEventFocus, onNavigatedToEvent, keyboardNavDisabled, selection, bulkCollapse, collapseState, outline, rightRail, eventNodeContext, className } = t0;
 	const running = t1 === void 0 ? false : t1;
 	const backfilling = t2 === void 0 ? false : t2;
@@ -121447,7 +124042,7 @@ var TranscriptLayout = (t0) => {
 	const t14 = timelineSelection?.selected ?? null;
 	let t15;
 	if ($[17] !== timelineSelection?.onSelect) {
-		t15 = timelineSelection?.onSelect ?? _temp$41;
+		t15 = timelineSelection?.onSelect ?? _temp$42;
 		$[17] = timelineSelection?.onSelect;
 		$[18] = t15;
 	} else t15 = $[18];
@@ -121503,7 +124098,7 @@ var TranscriptLayout = (t0) => {
 	let keys;
 	if ($[35] !== timelineState.rows) {
 		keys = /* @__PURE__ */ new Set();
-		for (const row of timelineState.rows) if (row.depth === 0 || row.spans.some(_temp3$23)) keys.add(row.key);
+		for (const row of timelineState.rows) if (row.depth === 0 || row.spans.some(_temp3$24)) keys.add(row.key);
 		$[35] = timelineState.rows;
 		$[36] = keys;
 	} else keys = $[36];
@@ -121817,35 +124412,35 @@ var TranscriptLayout = (t0) => {
 	const scrollerHeight = useElementHeight(scrollRef);
 	const turnMarks = useTurnMarks(eventNodes);
 	let t47;
-	if ($[137] !== eventsListRef || $[138] !== onNavigatedToEvent) {
-		t47 = (eventId_0) => {
-			eventsListRef?.current?.scrollToEvent(eventId_0);
-			onNavigatedToEvent?.(eventId_0);
+	if ($[137] !== eventsListRef || $[138] !== initialEventId || $[139] !== onHeadroomResetAnchor || $[140] !== onHeadroomSetHidden || $[141] !== onNavigatedToEvent || $[142] !== scrollRef || $[143] !== turnMarks) {
+		t47 = {
+			turns: turnMarks,
+			eventsListRef,
+			scrollRef,
+			urlEventId: initialEventId,
+			onNavigatedToEvent,
+			onHeadroomSetHidden,
+			onHeadroomResetAnchor
 		};
 		$[137] = eventsListRef;
-		$[138] = onNavigatedToEvent;
-		$[139] = t47;
-	} else t47 = $[139];
+		$[138] = initialEventId;
+		$[139] = onHeadroomResetAnchor;
+		$[140] = onHeadroomSetHidden;
+		$[141] = onNavigatedToEvent;
+		$[142] = scrollRef;
+		$[143] = turnMarks;
+		$[144] = t47;
+	} else t47 = $[144];
+	const turnMarkers = useBarJump(t47);
 	let t48;
-	if ($[140] !== t47 || $[141] !== turnMarks) {
-		t48 = {
-			turns: turnMarks,
-			onSelect: t47
-		};
-		$[140] = t47;
-		$[141] = turnMarks;
-		$[142] = t48;
-	} else t48 = $[142];
-	const turnMarkers = t48;
+	if ($[145] !== className) {
+		t48 = clsx(TranscriptLayout_module_default.root, className);
+		$[145] = className;
+		$[146] = t48;
+	} else t48 = $[146];
 	let t49;
-	if ($[143] !== className) {
-		t49 = clsx(TranscriptLayout_module_default.root, className);
-		$[143] = className;
-		$[144] = t49;
-	} else t49 = $[144];
-	let t50;
-	if ($[145] !== handleLayoutShift || $[146] !== handleSwimLaneStickyChange || $[147] !== headroomHidden || $[148] !== highlightedKeys || $[149] !== isSwimLaneSticky || $[150] !== offsetTop || $[151] !== onMarkerNavigate || $[152] !== regionCounts || $[153] !== scrollRef || $[154] !== showSwimlanes || $[155] !== swimLaneStickyContentRef || $[156] !== swimlaneHeader || $[157] !== swimlaneNav || $[158] !== swimlanesDefaultCollapsed || $[159] !== timelineLayouts || $[160] !== views) {
-		t50 = showSwimlanes && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StickyScroll, {
+	if ($[147] !== handleLayoutShift || $[148] !== handleSwimLaneStickyChange || $[149] !== headroomHidden || $[150] !== highlightedKeys || $[151] !== isSwimLaneSticky || $[152] !== offsetTop || $[153] !== onMarkerNavigate || $[154] !== regionCounts || $[155] !== scrollRef || $[156] !== showSwimlanes || $[157] !== swimLaneStickyContentRef || $[158] !== swimlaneHeader || $[159] !== swimlaneNav || $[160] !== swimlanesDefaultCollapsed || $[161] !== timelineLayouts || $[162] !== views) {
+		t49 = showSwimlanes && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StickyScroll, {
 			scrollRef,
 			offsetTop,
 			zIndex: 500,
@@ -121868,50 +124463,50 @@ var TranscriptLayout = (t0) => {
 				})
 			})
 		});
-		$[145] = handleLayoutShift;
-		$[146] = handleSwimLaneStickyChange;
-		$[147] = headroomHidden;
-		$[148] = highlightedKeys;
-		$[149] = isSwimLaneSticky;
-		$[150] = offsetTop;
-		$[151] = onMarkerNavigate;
-		$[152] = regionCounts;
-		$[153] = scrollRef;
-		$[154] = showSwimlanes;
-		$[155] = swimLaneStickyContentRef;
-		$[156] = swimlaneHeader;
-		$[157] = swimlaneNav;
-		$[158] = swimlanesDefaultCollapsed;
-		$[159] = timelineLayouts;
-		$[160] = views;
-		$[161] = t50;
-	} else t50 = $[161];
-	const t51 = embedded && TranscriptLayout_module_default.embedded;
-	const t52 = !outline && TranscriptLayout_module_default.noOutline;
-	const t53 = outline && isOutlineCollapsed && TranscriptLayout_module_default.outlineCollapsed;
-	let t54;
-	if ($[162] !== t51 || $[163] !== t52 || $[164] !== t53) {
-		t54 = clsx(TranscriptLayout_module_default.container, t51, t52, t53);
-		$[162] = t51;
-		$[163] = t52;
-		$[164] = t53;
-		$[165] = t54;
-	} else t54 = $[165];
-	const t55 = `${effectiveOffsetTop}px`;
-	const t56 = scrollerHeight ? `${scrollerHeight}px` : "100vh";
-	let t57;
-	if ($[166] !== t55 || $[167] !== t56) {
-		t57 = cssVars$1({
-			"--outline-top": t55,
-			"--scroller-height": t56
+		$[147] = handleLayoutShift;
+		$[148] = handleSwimLaneStickyChange;
+		$[149] = headroomHidden;
+		$[150] = highlightedKeys;
+		$[151] = isSwimLaneSticky;
+		$[152] = offsetTop;
+		$[153] = onMarkerNavigate;
+		$[154] = regionCounts;
+		$[155] = scrollRef;
+		$[156] = showSwimlanes;
+		$[157] = swimLaneStickyContentRef;
+		$[158] = swimlaneHeader;
+		$[159] = swimlaneNav;
+		$[160] = swimlanesDefaultCollapsed;
+		$[161] = timelineLayouts;
+		$[162] = views;
+		$[163] = t49;
+	} else t49 = $[163];
+	const t50 = embedded && TranscriptLayout_module_default.embedded;
+	const t51 = !outline && TranscriptLayout_module_default.noOutline;
+	const t52 = outline && isOutlineCollapsed && TranscriptLayout_module_default.outlineCollapsed;
+	let t53;
+	if ($[164] !== t50 || $[165] !== t51 || $[166] !== t52) {
+		t53 = clsx(TranscriptLayout_module_default.container, t50, t51, t52);
+		$[164] = t50;
+		$[165] = t51;
+		$[166] = t52;
+		$[167] = t53;
+	} else t53 = $[167];
+	const t54 = `${effectiveOffsetTop}px`;
+	const t55 = scrollerHeight ? `${scrollerHeight}px` : "100vh";
+	let t56;
+	if ($[168] !== t54 || $[169] !== t55) {
+		t56 = cssVars$1({
+			"--outline-top": t54,
+			"--scroller-height": t55
 		});
-		$[166] = t55;
-		$[167] = t56;
-		$[168] = t57;
-	} else t57 = $[168];
-	let t58;
-	if ($[169] !== backfilling || $[170] !== collapseState || $[171] !== defaultCollapsedIds || $[172] !== effectiveOffsetTop || $[173] !== eventNodes || $[174] !== getEventUrl || $[175] !== isOutlineCollapsed || $[176] !== listId || $[177] !== onOutlineHasNodesChange || $[178] !== outline || $[179] !== outlineHasNodes || $[180] !== running || $[181] !== scrollRef || $[182] !== selectedRowName || $[183] !== showSwimlanes) {
-		t58 = outline && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(OutlineSidebar, {
+		$[168] = t54;
+		$[169] = t55;
+		$[170] = t56;
+	} else t56 = $[170];
+	let t57;
+	if ($[171] !== backfilling || $[172] !== collapseState || $[173] !== defaultCollapsedIds || $[174] !== effectiveOffsetTop || $[175] !== eventNodes || $[176] !== getEventUrl || $[177] !== isOutlineCollapsed || $[178] !== listId || $[179] !== onOutlineHasNodesChange || $[180] !== outline || $[181] !== outlineHasNodes || $[182] !== running || $[183] !== scrollRef || $[184] !== selectedRowName || $[185] !== showSwimlanes) {
+		t57 = outline && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(OutlineSidebar, {
 			outline,
 			isCollapsed: isOutlineCollapsed,
 			hasNodes: outlineHasNodes,
@@ -121927,26 +124522,26 @@ var TranscriptLayout = (t0) => {
 			collapseState,
 			getEventUrl
 		});
-		$[169] = backfilling;
-		$[170] = collapseState;
-		$[171] = defaultCollapsedIds;
-		$[172] = effectiveOffsetTop;
-		$[173] = eventNodes;
-		$[174] = getEventUrl;
-		$[175] = isOutlineCollapsed;
-		$[176] = listId;
-		$[177] = onOutlineHasNodesChange;
-		$[178] = outline;
-		$[179] = outlineHasNodes;
-		$[180] = running;
-		$[181] = scrollRef;
-		$[182] = selectedRowName;
-		$[183] = showSwimlanes;
-		$[184] = t58;
-	} else t58 = $[184];
-	let t59;
-	if ($[185] !== backfilling || $[186] !== collapseState?.transcript || $[187] !== defaultCollapsedIds || $[188] !== effectiveInitialEventId || $[189] !== effectiveListId || $[190] !== effectiveOffsetTop || $[191] !== emptyBusy || $[192] !== emptyText || $[193] !== eventNodes || $[194] !== eventsListRef || $[195] !== getEventFocusUrl || $[196] !== getEventUrl || $[197] !== hasMatchingEvents || $[198] !== initialFollowRequested || $[199] !== initialMessageId || $[200] !== keyboardNavDisabled || $[201] !== linkingEnabled || $[202] !== mergedEventNodeContext || $[203] !== navLanes.lanes || $[204] !== onCollapseTranscript || $[205] !== onExpandNodes || $[206] !== onHeadroomResetAnchor || $[207] !== onHeadroomSetHidden || $[208] !== onLaneNext || $[209] !== onLanePrev || $[210] !== onNavigatedToEvent || $[211] !== onOpenEventFocus || $[212] !== running || $[213] !== scrollRef || $[214] !== scrollToTopOnFinish || $[215] !== selection || $[216] !== showSwimlanes) {
-		t59 = hasMatchingEvents ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TranscriptViewNodes, {
+		$[171] = backfilling;
+		$[172] = collapseState;
+		$[173] = defaultCollapsedIds;
+		$[174] = effectiveOffsetTop;
+		$[175] = eventNodes;
+		$[176] = getEventUrl;
+		$[177] = isOutlineCollapsed;
+		$[178] = listId;
+		$[179] = onOutlineHasNodesChange;
+		$[180] = outline;
+		$[181] = outlineHasNodes;
+		$[182] = running;
+		$[183] = scrollRef;
+		$[184] = selectedRowName;
+		$[185] = showSwimlanes;
+		$[186] = t57;
+	} else t57 = $[186];
+	let t58;
+	if ($[187] !== backfilling || $[188] !== collapseState?.transcript || $[189] !== defaultCollapsedIds || $[190] !== effectiveInitialEventId || $[191] !== effectiveListId || $[192] !== effectiveOffsetTop || $[193] !== emptyBusy || $[194] !== emptyText || $[195] !== eventNodes || $[196] !== eventsListRef || $[197] !== getEventFocusUrl || $[198] !== getEventUrl || $[199] !== hasMatchingEvents || $[200] !== initialFollowRequested || $[201] !== initialMessageId || $[202] !== keyboardNavDisabled || $[203] !== linkingEnabled || $[204] !== mergedEventNodeContext || $[205] !== navLanes.lanes || $[206] !== onCollapseTranscript || $[207] !== onExpandNodes || $[208] !== onHeadroomResetAnchor || $[209] !== onHeadroomSetHidden || $[210] !== onLaneNext || $[211] !== onLanePrev || $[212] !== onNavigatedToEvent || $[213] !== onOpenEventFocus || $[214] !== running || $[215] !== scrollRef || $[216] !== scrollToTopOnFinish || $[217] !== selection || $[218] !== showSwimlanes) {
+		t58 = hasMatchingEvents ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TranscriptViewNodes, {
 			ref: eventsListRef,
 			id: effectiveListId,
 			eventNodes,
@@ -121980,66 +124575,66 @@ var TranscriptLayout = (t0) => {
 			text: emptyText,
 			busy: emptyBusy
 		}) : null;
-		$[185] = backfilling;
-		$[186] = collapseState?.transcript;
-		$[187] = defaultCollapsedIds;
-		$[188] = effectiveInitialEventId;
-		$[189] = effectiveListId;
-		$[190] = effectiveOffsetTop;
-		$[191] = emptyBusy;
-		$[192] = emptyText;
-		$[193] = eventNodes;
-		$[194] = eventsListRef;
-		$[195] = getEventFocusUrl;
-		$[196] = getEventUrl;
-		$[197] = hasMatchingEvents;
-		$[198] = initialFollowRequested;
-		$[199] = initialMessageId;
-		$[200] = keyboardNavDisabled;
-		$[201] = linkingEnabled;
-		$[202] = mergedEventNodeContext;
-		$[203] = navLanes.lanes;
-		$[204] = onCollapseTranscript;
-		$[205] = onExpandNodes;
-		$[206] = onHeadroomResetAnchor;
-		$[207] = onHeadroomSetHidden;
-		$[208] = onLaneNext;
-		$[209] = onLanePrev;
-		$[210] = onNavigatedToEvent;
-		$[211] = onOpenEventFocus;
-		$[212] = running;
-		$[213] = scrollRef;
-		$[214] = scrollToTopOnFinish;
-		$[215] = selection;
-		$[216] = showSwimlanes;
-		$[217] = t59;
-	} else t59 = $[217];
+		$[187] = backfilling;
+		$[188] = collapseState?.transcript;
+		$[189] = defaultCollapsedIds;
+		$[190] = effectiveInitialEventId;
+		$[191] = effectiveListId;
+		$[192] = effectiveOffsetTop;
+		$[193] = emptyBusy;
+		$[194] = emptyText;
+		$[195] = eventNodes;
+		$[196] = eventsListRef;
+		$[197] = getEventFocusUrl;
+		$[198] = getEventUrl;
+		$[199] = hasMatchingEvents;
+		$[200] = initialFollowRequested;
+		$[201] = initialMessageId;
+		$[202] = keyboardNavDisabled;
+		$[203] = linkingEnabled;
+		$[204] = mergedEventNodeContext;
+		$[205] = navLanes.lanes;
+		$[206] = onCollapseTranscript;
+		$[207] = onExpandNodes;
+		$[208] = onHeadroomResetAnchor;
+		$[209] = onHeadroomSetHidden;
+		$[210] = onLaneNext;
+		$[211] = onLanePrev;
+		$[212] = onNavigatedToEvent;
+		$[213] = onOpenEventFocus;
+		$[214] = running;
+		$[215] = scrollRef;
+		$[216] = scrollToTopOnFinish;
+		$[217] = selection;
+		$[218] = showSwimlanes;
+		$[219] = t58;
+	} else t58 = $[219];
+	let t59;
+	if ($[220] !== t53 || $[221] !== t56 || $[222] !== t57 || $[223] !== t58) {
+		t59 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: t53,
+			style: t56,
+			children: [t57, t58]
+		});
+		$[220] = t53;
+		$[221] = t56;
+		$[222] = t57;
+		$[223] = t58;
+		$[224] = t59;
+	} else t59 = $[224];
 	let t60;
-	if ($[218] !== t54 || $[219] !== t57 || $[220] !== t58 || $[221] !== t59) {
+	if ($[225] !== t49 || $[226] !== t59) {
 		t60 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: t54,
-			style: t57,
-			children: [t58, t59]
-		});
-		$[218] = t54;
-		$[219] = t57;
-		$[220] = t58;
-		$[221] = t59;
-		$[222] = t60;
-	} else t60 = $[222];
-	let t61;
-	if ($[223] !== t50 || $[224] !== t60) {
-		t61 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
 			className: TranscriptLayout_module_default.main,
-			children: [t50, t60]
+			children: [t49, t59]
 		});
-		$[223] = t50;
-		$[224] = t60;
-		$[225] = t61;
-	} else t61 = $[225];
-	let t62;
-	if ($[226] !== offsetTop || $[227] !== rightRail || $[228] !== scrollRef || $[229] !== scrollerHeight) {
-		t62 = rightRail && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(RailDock, {
+		$[225] = t49;
+		$[226] = t59;
+		$[227] = t60;
+	} else t60 = $[227];
+	let t61;
+	if ($[228] !== offsetTop || $[229] !== rightRail || $[230] !== scrollRef || $[231] !== scrollerHeight) {
+		t61 = rightRail && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(RailDock, {
 			rail: rightRail.rail,
 			panel: rightRail.panel,
 			scrollRef,
@@ -122053,66 +124648,125 @@ var TranscriptLayout = (t0) => {
 			panelMaxWidth: rightRail.panelMaxWidth,
 			label: rightRail.label
 		});
-		$[226] = offsetTop;
-		$[227] = rightRail;
-		$[228] = scrollRef;
-		$[229] = scrollerHeight;
-		$[230] = t62;
-	} else t62 = $[230];
-	let t63;
-	if ($[231] !== t49 || $[232] !== t61 || $[233] !== t62) {
-		t63 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
-			className: t49,
-			children: [t61, t62]
-		});
-		$[231] = t49;
+		$[228] = offsetTop;
+		$[229] = rightRail;
+		$[230] = scrollRef;
+		$[231] = scrollerHeight;
 		$[232] = t61;
-		$[233] = t62;
-		$[234] = t63;
-	} else t63 = $[234];
-	let t64;
-	if ($[235] !== selectByRowKey || $[236] !== t63) {
-		t64 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TimelineRowSelectContext.Provider, {
+	} else t61 = $[232];
+	let t62;
+	if ($[233] !== t48 || $[234] !== t60 || $[235] !== t61) {
+		t62 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: t48,
+			children: [t60, t61]
+		});
+		$[233] = t48;
+		$[234] = t60;
+		$[235] = t61;
+		$[236] = t62;
+	} else t62 = $[236];
+	let t63;
+	if ($[237] !== selectByRowKey || $[238] !== t62) {
+		t63 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TimelineRowSelectContext.Provider, {
 			value: selectByRowKey,
+			children: t62
+		});
+		$[237] = selectByRowKey;
+		$[238] = t62;
+		$[239] = t63;
+	} else t63 = $[239];
+	let t64;
+	if ($[240] !== selectBySpanId || $[241] !== t63) {
+		t64 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TimelineSelectContext.Provider, {
+			value: selectBySpanId,
 			children: t63
 		});
-		$[235] = selectByRowKey;
-		$[236] = t63;
-		$[237] = t64;
-	} else t64 = $[237];
+		$[240] = selectBySpanId;
+		$[241] = t63;
+		$[242] = t64;
+	} else t64 = $[242];
+	const content = t64;
 	let t65;
-	if ($[238] !== selectBySpanId || $[239] !== t64) {
-		t65 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TimelineSelectContext.Provider, {
-			value: selectBySpanId,
-			children: t64
-		});
-		$[238] = selectBySpanId;
-		$[239] = t64;
-		$[240] = t65;
-	} else t65 = $[240];
-	const content = t65;
-	let t66;
-	if ($[241] !== content || $[242] !== turnMarkers) {
-		t66 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TurnMarkersContext.Provider, {
+	if ($[243] !== content || $[244] !== turnMarkers) {
+		t65 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TurnMarkersContext.Provider, {
 			value: turnMarkers,
 			children: content
 		});
-		$[241] = content;
-		$[242] = turnMarkers;
-		$[243] = t66;
-	} else t66 = $[243];
-	return t66;
+		$[243] = content;
+		$[244] = turnMarkers;
+		$[245] = t65;
+	} else t65 = $[245];
+	return t65;
 };
-function _temp$41() {}
-function _temp2$33(a) {
+function _temp$42() {}
+function _temp2$34(a) {
 	return a.spanType === "agent";
 }
-function _temp3$23(s) {
-	return getAgents(s).some(_temp2$33);
+function _temp3$24(s) {
+	return getAgents(s).some(_temp2$34);
 }
 function _temp4$20(l_0) {
 	return l_0.key;
 }
+//#endregion
+//#region src/pro-ux/sampleTabs.ts
+var kTabs = {
+	[kSampleTranscriptTabId]: {
+		title: "Transcript",
+		hint: "Every event in the order it happened: model calls, tool calls, scoring and more, with timings."
+	},
+	[kSampleMessagesTabId]: {
+		title: "Conversation",
+		hint: "The sample's final conversation, message by message, without the events in between. Each model call in the Transcript lists its own input under Full input."
+	},
+	[kSampleTerminalsTabId]: {
+		title: "Terminals",
+		hint: "The sandbox's terminal sessions, played back."
+	},
+	[kSampleScoringTabId]: {
+		title: "Scoring",
+		hint: "Each scorer's score for this sample, with the answer it scored and its explanation."
+	},
+	[kSampleActivityTabId]: {
+		title: "Activity",
+		hint: "Charts of model and tool activity, context size and token use over time, then the notable events: errors, limits, scores."
+	},
+	[kSampleErrorTabId]: {
+		title: "Error",
+		hint: "The error that ended this sample, with its traceback."
+	},
+	[kSampleRetriesTabId]: {
+		title: "Retries",
+		hint: "Errors from earlier attempts at this sample, which were retried."
+	},
+	[kSampleJsonTabId]: {
+		title: "JSON",
+		hint: "The whole sample record as raw JSON."
+	}
+};
+/** Upstream's "Info" tab holds token usage and the sample's metadata; name
+*  it after whichever of the two it has. */ var infoTab = ({ usage, metadata }) => {
+	const title = usage && metadata ? "Usage & metadata" : usage ? "Usage" : "Metadata";
+	const parts = [usage && "token usage per model, with working and total time", metadata && "this sample's metadata and store"].filter(Boolean);
+	return {
+		title,
+		hint: parts.length > 0 ? `${parts.join(", then ")}.`.replace(/^./, (c) => c.toUpperCase()) : "Token usage and metadata: this sample has neither."
+	};
+};
+var proSampleTab = (id, upstream, contents) => id === kSampleInfoTabId ? infoTab(contents) : kTabs[id] ?? { title: upstream };
+/** A sample tab's title and hint: self-explaining names under the pro-UX
+*  skin, upstream's title otherwise. */ var useSampleTabTitle = (contents) => {
+	const $ = (0, import_compiler_runtime.c)(3);
+	const on = useHtmlFlag("data-pro-ux");
+	let t0;
+	if ($[0] !== contents || $[1] !== on) {
+		t0 = (id, upstream) => on ? proSampleTab(id, upstream, contents) : { title: upstream };
+		$[0] = contents;
+		$[1] = on;
+		$[2] = t0;
+	} else t0 = $[2];
+	return t0;
+};
 //#endregion
 //#region src/utils/cssVars.ts
 /**
@@ -123847,7 +126501,7 @@ var kNoScoreColorScales$1 = Object.freeze({});
 	const evalDefault = useEvalDefaultSamplesView();
 	const view = useResolvedSamplesView();
 	const logFile = useCurrentLogFile();
-	const setSampleListViewAction = useStore(_temp$40);
+	const setSampleListViewAction = useStore(_temp$41);
 	let t1;
 	if ($[2] !== logFile || $[3] !== setSampleListViewAction) {
 		t1 = (next) => {
@@ -123872,7 +126526,7 @@ var kNoScoreColorScales$1 = Object.freeze({});
 	if ($[7] !== allColumns || $[8] !== seedDefaultVisibility || $[9] !== setSampleListView || $[10] !== view) {
 		t2 = () => {
 			if (!allColumns || !seedDefaultVisibility) return;
-			const known = new Set(view.columns.map(_temp2$32));
+			const known = new Set(view.columns.map(_temp2$33));
 			const additions = [];
 			for (const col_0 of allColumns) {
 				const id = getFieldKey(col_0);
@@ -123963,7 +126617,7 @@ var kNoScoreColorScales$1 = Object.freeze({});
 				...view.userOverrides,
 				compactScores
 			},
-			columnWidths: view.columnWidths && Object.fromEntries(Object.entries(view.columnWidths).filter(_temp3$22))
+			columnWidths: view.columnWidths && Object.fromEntries(Object.entries(view.columnWidths).filter(_temp3$23))
 		});
 		$[22] = patchView;
 		$[23] = view.columnWidths;
@@ -124047,14 +126701,14 @@ var kNoScoreColorScales$1 = Object.freeze({});
 function _temp4$19(c_1) {
 	return [c_1.id, c_1.visible];
 }
-function _temp3$22(t0) {
+function _temp3$23(t0) {
 	const [id_1] = t0;
 	return !id_1.startsWith(SCORE_FIELD_RAW_PREFIX);
 }
-function _temp2$32(c) {
+function _temp2$33(c) {
 	return c.id;
 }
-function _temp$40(state) {
+function _temp$41(state) {
 	return state.logsActions.setSampleListView;
 }
 var ScorePanel_module_default = {
@@ -124438,7 +127092,7 @@ function formatPlainValue(v) {
 			$[10] = t2;
 		} else t2 = $[10];
 		const initial = scores.map(t2);
-		const numbers = initial.map(_temp$39).filter(_temp2$31);
+		const numbers = initial.map(_temp$40).filter(_temp2$32);
 		const min = numbers.length ? Math.min(...numbers) : 0;
 		const range = (numbers.length ? Math.max(...numbers) : 0) - min;
 		t1 = initial.map((s_0) => {
@@ -124620,7 +127274,7 @@ function formatPlainValue(v) {
 		t17 = view === "grid" ? sortedScores.map((s_1) => /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ScoreRow, {
 			score: s_1,
 			tight
-		}, s_1.key)) : sortedScores.map(_temp3$21);
+		}, s_1.key)) : sortedScores.map(_temp3$22);
 		$[44] = sortedScores;
 		$[45] = tight;
 		$[46] = view;
@@ -124789,13 +127443,13 @@ function makeCompare(column) {
 		return as.localeCompare(bs, void 0, { numeric: true });
 	};
 }
-function _temp$39(s) {
+function _temp$40(s) {
 	return typeof s.value === "number" ? s.value : null;
 }
-function _temp2$31(v) {
+function _temp2$32(v) {
 	return v !== null;
 }
-function _temp3$21(s_2) {
+function _temp3$22(s_2) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(ScoreChip, { score: s_2 }, s_2.key);
 }
 var SampleSummaryView_module_default = {
@@ -124875,7 +127529,7 @@ var MetaLine = (t0) => {
 	} else t1 = $[0];
 	let t2;
 	if ($[1] !== items) {
-		t2 = items.map(_temp$38);
+		t2 = items.map(_temp$39);
 		$[1] = items;
 		$[2] = t2;
 	} else t2 = $[2];
@@ -124993,7 +127647,7 @@ var FieldLabel = (t0) => {
 				key: "task",
 				content: taskName
 			});
-			const fallbackModels = [...new Set((fields.model_fallbacks ?? []).map(_temp2$30))];
+			const fallbackModels = [...new Set((fields.model_fallbacks ?? []).map(_temp2$31))];
 			if (modelText || fallbackModels.length > 0) {
 				const t21 = fallbackModels.length > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("em", { children: ` (fallback → ${fallbackModels.join(", ")})` });
 				let t22;
@@ -125063,7 +127717,7 @@ var FieldLabel = (t0) => {
 			showRight = scoreCount > 0 && !compactScores;
 			const scorePanelView = resolveScorePanelView(storedScoreView, evalScoreView, scoreCount);
 			const dynamicRightMax = showRight ? scorePanelView === "grid" ? 320 : (() => {
-				const avgNameLen = visibleScores.reduce(_temp3$20, 0) / scoreCount;
+				const avgNameLen = visibleScores.reduce(_temp3$21, 0) / scoreCount;
 				const cappedChipPx = Math.min(220, 41 + avgNameLen * 6.5);
 				const target = Math.round(3 * cappedChipPx + 8 + 24);
 				return Math.max(220, Math.min(560, target));
@@ -125367,7 +128021,7 @@ var FieldLabel = (t0) => {
 	} else t6 = $[11];
 	return t6;
 };
-function _temp$38(item, idx) {
+function _temp$39(item, idx) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsxs)(import_react.Fragment, { children: [idx > 0 && /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: SampleSummaryView_module_default.metaSep,
 		children: "·"
@@ -125376,10 +128030,10 @@ function _temp$38(item, idx) {
 		children: item.content
 	})] }, item.key);
 }
-function _temp2$30(f) {
+function _temp2$31(f) {
 	return f.fallback_model;
 }
-function _temp3$20(acc, s) {
+function _temp3$21(acc, s) {
 	return acc + s.name.length;
 }
 function _temp4$18(timestamp) {
@@ -126522,7 +129176,7 @@ var SampleScannerPicker = (t0) => {
 	const handleChange = t1;
 	let t2;
 	if ($[2] !== scanners) {
-		t2 = scanners.map(_temp$37);
+		t2 = scanners.map(_temp$38);
 		$[2] = scanners;
 		$[3] = t2;
 	} else t2 = $[3];
@@ -126546,7 +129200,7 @@ var SampleScannerPicker = (t0) => {
 	} else t3 = $[7];
 	return t3;
 };
-function _temp$37(scanner) {
+function _temp$38(scanner) {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(VscodeOption, {
 		value: scanner,
 		children: scanner
@@ -127137,7 +129791,7 @@ var SampleScoresView = (t0) => {
 		const scoreInput = inputString(sample.input);
 		if (sample.choices && sample.choices.length > 0) {
 			scoreInput.push("");
-			scoreInput.push(...sample.choices.map(_temp$36));
+			scoreInput.push(...sample.choices.map(_temp$37));
 		}
 		if ($[17] !== className) {
 			t7 = clsx("container-fluid", className, "font-size-base");
@@ -127274,7 +129928,7 @@ var SampleScoresView = (t0) => {
 	} else t15 = $[46];
 	return t15;
 };
-function _temp$36(choice, index) {
+function _temp$37(choice, index) {
 	return `${String.fromCharCode(65 + index)}) ${choice}`;
 }
 var Terminals_module_default = {
@@ -128907,7 +131561,7 @@ var kRulerMinGap = .05;
 	} else t5 = $[16];
 	let t6;
 	if ($[17] !== sample) {
-		t6 = rulerMarks(sample).map(_temp$35);
+		t6 = rulerMarks(sample).map(_temp$36);
 		$[17] = sample;
 		$[18] = t6;
 	} else t6 = $[18];
@@ -129367,7 +132021,7 @@ var useScrub = (playbackDuration, onScrub, onScrubStart) => {
 	} else t5 = $[12];
 	return t5;
 };
-function _temp$35(t0) {
+function _temp$36(t0) {
 	const { time: time_0, at, end } = t0;
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
 		className: clsx(Terminals_module_default.rulerLabel, end && Terminals_module_default.rulerLabelEnd),
@@ -129416,7 +132070,7 @@ var SharedTerminals = (t0) => {
 	const $ = (0, import_compiler_runtime.c)(92);
 	const { id, sample, agent, scrollRef, fill, onFullscreen, resume, onSuspend } = t0;
 	const rootRef = (0, import_react.useRef)(null);
-	const setTerminalsViewOpen = useStore(_temp$34);
+	const setTerminalsViewOpen = useStore(_temp$35);
 	let t1;
 	if ($[0] !== setTerminalsViewOpen) {
 		t1 = () => {
@@ -129681,7 +132335,7 @@ var SharedTerminals = (t0) => {
 		focusSession ? `${focusSession.name} focused` : void 0,
 		focusCommand ? `$ ${commandLabel(focusCommand.command)}` : void 0,
 		`${agent.sessions.filter((session_7) => sessionPhase(session_7, real) === "open").length} open`
-	].filter(_temp2$29).join(" · ") : void 0;
+	].filter(_temp2$30).join(" · ") : void 0;
 	let t14;
 	if ($[30] !== allocation || $[31] !== states) {
 		t14 = () => {
@@ -129888,10 +132542,10 @@ var SharedTerminals = (t0) => {
 	return t32;
 };
 var isEditable = (target) => target instanceof HTMLElement && (target.isContentEditable || target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement);
-function _temp$34(state) {
+function _temp$35(state) {
 	return state.sampleActions.setTerminalsViewOpen;
 }
-function _temp2$29(part) {
+function _temp2$30(part) {
 	return part !== void 0;
 }
 //#endregion
@@ -130412,7 +133066,7 @@ var eventTypes = {
 var useTranscriptFilter = (t0) => {
 	const $ = (0, import_compiler_runtime.c)(26);
 	const defaultExcludeEvents = t0 === void 0 ? kDefaultExcludeEvents : t0;
-	const stored = useStore(_temp$33);
+	const stored = useStore(_temp$34);
 	let t1;
 	if ($[0] !== defaultExcludeEvents || $[1] !== stored) {
 		t1 = stored ?? [...defaultExcludeEvents];
@@ -130421,7 +133075,7 @@ var useTranscriptFilter = (t0) => {
 		$[2] = t1;
 	} else t1 = $[2];
 	const filtered = t1;
-	const setFilteredEventTypes = useStore(_temp2$28);
+	const setFilteredEventTypes = useStore(_temp2$29);
 	let t2;
 	if ($[3] !== filtered || $[4] !== setFilteredEventTypes) {
 		t2 = (type, isFiltered) => {
@@ -130492,7 +133146,7 @@ var useTranscriptFilter = (t0) => {
 				columnArrays.push(sortedKeys.slice(start, end));
 			}
 			const arrangedKeys = [];
-			const maxItemsInColumn = Math.max(...columnArrays.map(_temp3$19));
+			const maxItemsInColumn = Math.max(...columnArrays.map(_temp3$20));
 			for (let row = 0; row < maxItemsInColumn; row++) for (let col_1 = 0; col_1 < columns; col_1++) {
 				const item = columnArrays[col_1]?.[row];
 				if (item !== void 0) arrangedKeys.push(item);
@@ -130530,13 +133184,13 @@ var useTranscriptFilter = (t0) => {
 	} else t8 = $[25];
 	return t8;
 };
-function _temp$33(state) {
+function _temp$34(state) {
 	return state.sample.eventFilter.filteredTypes;
 }
-function _temp2$28(state_0) {
+function _temp2$29(state_0) {
 	return state_0.sampleActions.setFilteredEventTypes;
 }
-function _temp3$19(col_0) {
+function _temp3$20(col_0) {
 	return col_0.length;
 }
 //#endregion
@@ -130698,7 +133352,7 @@ var useInspectSearchPanelState = (t0) => {
 		$[5] = t2;
 	} else t2 = $[5];
 	const stored = useStore(t2);
-	const setSearchPanelState = useStore(_temp$32);
+	const setSearchPanelState = useStore(_temp$33);
 	let t3;
 	if ($[6] !== stored) {
 		t3 = normalizeSearchPanelState(stored);
@@ -130728,8 +133382,8 @@ var useInspectSearchPanelState = (t0) => {
 };
 var useInspectSearchModelHistory = () => {
 	const $ = (0, import_compiler_runtime.c)(3);
-	const history = useUserSettings(_temp2$27);
-	const record = useUserSettings(_temp3$18);
+	const history = useUserSettings(_temp2$28);
+	const record = useUserSettings(_temp3$19);
 	let t0;
 	if ($[0] !== history || $[1] !== record) {
 		t0 = {
@@ -130761,13 +133415,13 @@ var useInspectSearchNavigation = (t0) => {
 	} else t1 = $[4];
 	return t1;
 };
-function _temp$32(s_0) {
+function _temp$33(s_0) {
 	return s_0.searchActions.setSearchPanelState;
 }
-function _temp2$27(s) {
+function _temp2$28(s) {
 	return s.searchModelHistory;
 }
-function _temp3$18(s_0) {
+function _temp3$19(s_0) {
 	return s_0.recordSearchModel;
 }
 //#endregion
@@ -131157,6 +133811,150 @@ var TranscriptFilterPopover = (t0) => {
 //#region src/pro-ux/enabled.ts
 var isProUxEnabled = () => document.documentElement.hasAttribute("data-pro-ux");
 //#endregion
+//#region src/pro-ux/cardSelect.ts
+var kEventCard = "[id^=\"event-panel-\"]";
+var kMessage = "[data-message-id]";
+var kCard = "[class*=\"_card_\"]";
+var kControl = "a, button, input, select, textarea, label, summary, [role=\"button\"], [role=\"tab\"], [role=\"link\"], [role=\"menuitem\"], [role=\"checkbox\"], [contenteditable], .cm-editor";
+/** A click this far from where the press began was a drag, e.g. selecting
+*  text. */ var kDragPx = 4;
+var quote = (value) => `"${CSS.escape(value)}"`;
+var eventCardSelection = (eventId) => ({
+	selector: `[id=${quote(`event-panel-${eventId}`)}]`,
+	eventId
+});
+var nextKey = 0;
+var tagged = (el) => {
+	let key = el.getAttribute("data-pro-select");
+	if (!key) {
+		key = String(++nextKey);
+		el.setAttribute("data-pro-select", key);
+	}
+	return `[data-pro-select=${quote(key)}]`;
+};
+/** What a click on `target` selects: the transcript event's card around it,
+*  else the message box, else any other card. */ var selectionAt = (target) => {
+	const event = target.closest(kEventCard);
+	if (event) return eventCardSelection(event.id.slice(12));
+	const message = target.closest(kMessage);
+	const box = message?.parentElement;
+	if (message && box) {
+		const id = message.getAttribute("data-message-id");
+		return { selector: id ? `[class*="_container_"]:has(> [data-message-id=${quote(id)}])` : tagged(box) };
+	}
+	const card = target.closest(kCard);
+	if (card) return { selector: card.id ? `[id=${quote(card.id)}]` : tagged(card) };
+	return null;
+};
+var selectionRule = (selection) => selection ? `:root[data-pro-ux] ${selection.selector} { box-shadow: 0 0 0 2px var(--pro-dark); }` : "";
+var current = null;
+var style = null;
+var listeners = /* @__PURE__ */ new Set();
+var show = (selection) => {
+	current = selection;
+	if (!style) {
+		style = document.createElement("style");
+		style.id = "pro-card-select";
+		document.head.appendChild(style);
+	}
+	style.textContent = selectionRule(selection);
+};
+var choose = (selection) => {
+	if (selection?.selector === current?.selector) return;
+	show(selection);
+	for (const listener of listeners) listener(selection);
+};
+/** Outline the event's card without telling listeners: the selection came
+*  from them (the outline, the address bar, j and k). */ var showEventCard = (eventId) => {
+	const next = eventId ? eventCardSelection(eventId) : null;
+	if (next?.selector !== current?.selector) show(next);
+};
+var onCardSelect = (listener) => {
+	listeners.add(listener);
+	return () => listeners.delete(listener);
+};
+/** For Esc: true when something was selected. */ var clearCardSelection = () => {
+	if (!current) return false;
+	choose(null);
+	return true;
+};
+var installCardSelect = () => {
+	let down = {
+		x: 0,
+		y: 0,
+		url: ""
+	};
+	document.addEventListener("pointerdown", (e) => {
+		down = {
+			x: e.clientX,
+			y: e.clientY,
+			url: window.location.href
+		};
+	}, true);
+	document.addEventListener("click", (e) => {
+		if (!isProUxEnabled() || e.button !== 0 || e.detail > 1) return;
+		if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+		if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > kDragPx) return;
+		if (window.getSelection()?.isCollapsed === false) return;
+		const target = e.target instanceof Element ? e.target : null;
+		if (!target?.isConnected || target.closest(kControl)) return;
+		const selection = selectionAt(target);
+		const url = down.url;
+		window.setTimeout(() => {
+			if (window.location.href === url) choose(selection);
+		}, 0);
+	});
+};
+//#endregion
+//#region src/pro-ux/useCardSelectSync.ts
+/** The selected event card is the address bar's `?event=`: clicking a card
+*  writes it without scrolling, Esc or a click elsewhere removes it, and an
+*  outline link, a deep link or j and k move the card's outline. */ var useCardSelectSync = (eventId, list, onNavigatedToEvent, setSearchParams) => {
+	const $ = (0, import_compiler_runtime.c)(6);
+	useMirrorToStore(eventId ?? "", _temp$32);
+	useUnmount(_temp2$27);
+	let t0;
+	if ($[0] !== list || $[1] !== onNavigatedToEvent || $[2] !== setSearchParams) {
+		t0 = {
+			list,
+			onNavigatedToEvent,
+			setSearchParams
+		};
+		$[0] = list;
+		$[1] = onNavigatedToEvent;
+		$[2] = setSearchParams;
+		$[3] = t0;
+	} else t0 = $[3];
+	const latest = useLatestRef(t0);
+	let t1;
+	if ($[4] !== latest) {
+		t1 = () => onCardSelect((selection) => {
+			const s = latest.current;
+			const selected = selection?.eventId;
+			if (selected) {
+				s.list.current?.markNavigated?.(selected);
+				s.onNavigatedToEvent(selected);
+				return;
+			}
+			s.setSearchParams(_temp3$18, { replace: true });
+		});
+		$[4] = latest;
+		$[5] = t1;
+	} else t1 = $[5];
+	useMountEffect(t1);
+};
+function _temp$32(id) {
+	return showEventCard(id || null);
+}
+function _temp2$27() {
+	return showEventCard(null);
+}
+function _temp3$18(prev) {
+	const next = new URLSearchParams(prev);
+	next.delete("event");
+	return next;
+}
+//#endregion
 //#region src/app/samples/transcript/TranscriptPanel.tsx
 /**
 * Renders the Transcript Virtual List, with optional timeline swimlanes
@@ -131294,6 +134092,7 @@ var isProUxEnabled = () => document.documentElement.hasAttribute("data-pro-ux");
 	const onOutlineNavigate = (0, import_react.useCallback)((eventId) => {
 		eventsListRef.current?.scrollToEvent(eventId);
 	}, []);
+	useCardSelectSync(initialEventId, eventsListRef, onNavigatedToEvent, setSearchParams);
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TranscriptLayout, {
 		events,
 		hiddenEventTypes: filteredEventTypes,
@@ -131605,6 +134404,10 @@ var kNoMessageRows = [];
 	const terminalAgent = terminalSample ? terminalSample.agents.find((agent) => agent.id === pickedTerminalAgent) ?? terminalSample.agents[0] : void 0;
 	const sampleUsages = usageViewsForSample(`${baseId}-${id}`, sample, evalSpec);
 	const sampleMetadatas = metadataViewsForSample(`${baseId}-${id}`, scrollRef, sample);
+	const tabTitle = useSampleTabTitle({
+		usage: sampleUsages.length > 0,
+		metadata: sampleMetadatas.length > 0
+	});
 	const tabsetId = `task-sample-details-tab-${id}`;
 	const isShowing = useStore((state_4) => state_4.app.dialogs.transcriptFilter);
 	const setShowing = useStore((state_5) => state_5.appActions.setShowingTranscriptFilterDialog);
@@ -131946,7 +134749,7 @@ var kNoMessageRows = [];
 						/*#__PURE__*/ (0, import_jsx_runtime.jsxs)(TabPanel, {
 							id: kSampleTranscriptTabId,
 							className: clsx("sample-tab", SampleDisplay_module_default.overflowVisible),
-							title: "Transcript",
+							...tabTitle(kSampleTranscriptTabId, "Transcript"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleTranscriptTabId),
 							selected: effectiveSelectedTab === kSampleTranscriptTabId || effectiveSelectedTab === kSampleActivityTabId && !hasActivityTab || effectiveSelectedTab === void 0,
@@ -131964,7 +134767,7 @@ var kNoMessageRows = [];
 									offsetTop: stickyOffsetTop,
 									chunked: sampleData.chunked
 								}, `${baseId}-chunked-transcript-${id}-${sampleData.chunked.shell.id}-${sampleData.chunked.shell.epoch}`)
-							}) : sampleEvents.length === 0 ? sampleData.status === "loading" ? null : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(NoContentsPanel, { text: eventsCleared ? "Transcript events were removed because this sample exceeds the browser's size limit. Use the Messages tab to view the conversation." : "No events to display." }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
+							}) : sampleEvents.length === 0 ? sampleData.status === "loading" ? null : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(NoContentsPanel, { text: eventsCleared ? `Transcript events were removed because this sample exceeds the browser's size limit. Use the ${tabTitle(kSampleMessagesTabId, "Messages").title} tab to view the conversation.` : "No events to display." }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)("div", {
 								className: SampleDisplay_module_default.tabContent,
 								children: /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TranscriptPanel, {
 									id: transcriptListId,
@@ -131991,7 +134794,7 @@ var kNoMessageRows = [];
 						/*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleMessagesTabId,
 							className: clsx("sample-tab", SampleDisplay_module_default.fullWidth, SampleDisplay_module_default.overflowVisible),
-							title: "Messages",
+							...tabTitle(kSampleMessagesTabId, "Messages"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleMessagesTabId),
 							selected: effectiveSelectedTab === kSampleMessagesTabId,
@@ -132032,7 +134835,7 @@ var kNoMessageRows = [];
 						terminalSample ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleTerminalsTabId,
 							className: "sample-tab",
-							title: "Terminals",
+							...tabTitle(kSampleTerminalsTabId, "Terminals"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleTerminalsTabId),
 							selected: effectiveSelectedTab === kSampleTerminalsTabId,
@@ -132056,7 +134859,7 @@ var kNoMessageRows = [];
 						/*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleScoringTabId,
 							className: "sample-tab",
-							title: "Scoring",
+							...tabTitle(kSampleScoringTabId, "Scoring"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleScoringTabId),
 							selected: effectiveSelectedTab === kSampleScoringTabId,
@@ -132069,7 +134872,7 @@ var kNoMessageRows = [];
 						hasActivityTab ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleActivityTabId,
 							className: clsx("sample-tab", SampleDisplay_module_default.fullWidth),
-							title: "Activity",
+							...tabTitle(kSampleActivityTabId, "Activity"),
 							onSelected: onSelectedTab,
 							selected: effectiveSelectedTab === kSampleActivityTabId,
 							scrollable: false,
@@ -132091,7 +134894,7 @@ var kNoMessageRows = [];
 						/*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleInfoTabId,
 							className: clsx("sample-tab"),
-							title: "Info",
+							...tabTitle(kSampleInfoTabId, "Info"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleInfoTabId),
 							selected: effectiveSelectedTab === kSampleInfoTabId,
@@ -132103,7 +134906,7 @@ var kNoMessageRows = [];
 						sample?.error && /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleErrorTabId,
 							className: "sample-tab",
-							title: "Error",
+							...tabTitle(kSampleErrorTabId, "Error"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleErrorTabId),
 							selected: effectiveSelectedTab === kSampleErrorTabId,
@@ -132122,7 +134925,7 @@ var kNoMessageRows = [];
 						sample?.error_retries && sample.error_retries.length > 0 ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleRetriesTabId,
 							className: "sample-tab",
-							title: "Retries",
+							...tabTitle(kSampleRetriesTabId, "Retries"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleRetriesTabId),
 							selected: effectiveSelectedTab === kSampleRetriesTabId,
@@ -132140,7 +134943,7 @@ var kNoMessageRows = [];
 						/*#__PURE__*/ (0, import_jsx_runtime.jsx)(TabPanel, {
 							id: kSampleJsonTabId,
 							className: "sample-tab",
-							title: "JSON",
+							...tabTitle(kSampleJsonTabId, "JSON"),
 							onSelected: onSelectedTab,
 							href: sampleTabHref(kSampleJsonTabId),
 							selected: effectiveSelectedTab === kSampleJsonTabId,
@@ -136541,7 +139344,7 @@ The default maximum length of a `TreeBuffer` node.
 */
 var DefaultBufferLength = 1024;
 var nextPropID = 0;
-var Range$1 = class {
+var Range$2 = class {
 	constructor(from, to) {
 		this.from = from;
 		this.to = to;
@@ -138022,7 +140825,7 @@ var Parser$1 = class {
 	*/
 	startParse(input, fragments, ranges) {
 		if (typeof input == "string") input = new StringInput(input);
-		ranges = !ranges ? [new Range$1(0, input.length)] : ranges.length ? ranges.map((r) => new Range$1(r.from, r.to)) : [new Range$1(0, 0)];
+		ranges = !ranges ? [new Range$2(0, input.length)] : ranges.length ? ranges.map((r) => new Range$2(r.from, r.to)) : [new Range$2(0, 0)];
 		return this.createParse(input, fragments || [], ranges);
 	}
 	/**
@@ -140796,7 +143599,7 @@ var RangeValue = class {
 	Create a [range](https://codemirror.net/6/docs/ref/#state.Range) with this value.
 	*/
 	range(from, to = from) {
-		return Range.create(from, to, this);
+		return Range$1.create(from, to, this);
 	}
 };
 RangeValue.prototype.startSide = RangeValue.prototype.endSide = 0;
@@ -140808,7 +143611,7 @@ function cmpVal(a, b) {
 /**
 A range associates a value with a range of positions.
 */
-var Range = class Range {
+var Range$1 = class Range$1 {
 	constructor(from, to, value) {
 		this.from = from;
 		this.to = to;
@@ -140818,7 +143621,7 @@ var Range = class Range {
 	@internal
 	*/
 	static create(from, to, value) {
-		return new Range(from, to, value);
+		return new Range$1(from, to, value);
 	}
 };
 function cmpRange(a, b) {
@@ -140957,7 +143760,7 @@ var RangeSet = class RangeSet {
 		} else if (cur.rangeIndex == 1 && cur.chunkIndex < this.chunk.length && (i == add.length || this.chunkEnd(cur.chunkIndex) < add[i].from) && (!filter || filterFrom > this.chunkEnd(cur.chunkIndex) || filterTo < this.chunkPos[cur.chunkIndex]) && builder.addChunk(this.chunkPos[cur.chunkIndex], this.chunk[cur.chunkIndex])) cur.nextChunk();
 		else {
 			if (!filter || filterFrom > cur.to || filterTo < cur.from || filter(cur.from, cur.to, cur.value)) {
-				if (!builder.addInner(cur.from, cur.to, cur.value, false)) spill.push(Range.create(cur.from, cur.to, cur.value));
+				if (!builder.addInner(cur.from, cur.to, cur.value, false)) spill.push(Range$1.create(cur.from, cur.to, cur.value));
 			}
 			cur.next();
 		}
@@ -141101,7 +143904,7 @@ var RangeSet = class RangeSet {
 	*/
 	static of(ranges, sort = false) {
 		let build = new RangeSetBuilder();
-		for (let range of ranges instanceof Range ? [ranges] : sort ? lazySort(ranges) : ranges) build.add(range.from, range.to, range.value);
+		for (let range of ranges instanceof Range$1 ? [ranges] : sort ? lazySort(ranges) : ranges) build.add(range.from, range.to, range.value);
 		return build.finish();
 	}
 	/**
@@ -169003,7 +171806,7 @@ var bindings = [
 	},
 	{
 		keys: ["Esc"],
-		label: "leave a field, else go up one level",
+		label: "leave a field, deselect, else go up one level",
 		group: "Anywhere",
 		run: () => {
 			const active = document.activeElement;
@@ -169013,6 +171816,7 @@ var bindings = [
 			}
 			if (actions.closeHelp()) return true;
 			if (overlayOpen()) return false;
+			if (clearCardSelection()) return true;
 			return click(byLabel("Back") ?? byLabel("back"));
 		}
 	},
@@ -169318,6 +172122,7 @@ setKeyActions({
 installKeys();
 installHelp();
 installCells();
+installCardSelect();
 //#endregion
 //#region src/main.tsx
 var backendCapabilities = getBootstrap().backend.capabilities;
