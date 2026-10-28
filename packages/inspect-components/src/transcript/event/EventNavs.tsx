@@ -8,7 +8,7 @@ import styles from "./EventNavs.module.css";
 import { EventNavsPicker } from "./EventNavsPicker";
 
 interface EventNavsProps {
-  navs: Array<{ id: string; title: string; target: string }>;
+  navs: Array<{ id: string; title: string; target: string; hint?: string }>;
   selectedNav: string;
   setSelectedNav: (target: string) => void;
 }
@@ -94,6 +94,7 @@ export const EventNavs: FC<EventNavsProps> = ({
               key={nav.title}
               target={nav.target}
               title={nav.title}
+              hint={nav.hint}
               selectedNav={selectedNav}
               setSelectedNav={setSelectedNav}
             />

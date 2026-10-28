@@ -1,4 +1,3 @@
-export { ModelContextCaption, ModelOutputCaption } from "./ModelTurnCaption";
 export { parseStructured, parseXml } from "./structured";
 export type { Structured, XmlNode } from "./structured";
 export { StructuredText } from "./StructuredText";

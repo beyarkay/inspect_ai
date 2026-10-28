@@ -64,6 +64,7 @@ interface EventPanelProps {
 
 interface ChildProps {
   "data-name"?: string;
+  "data-hint"?: string;
 }
 
 /**
@@ -355,6 +356,9 @@ export const EventPanel: FC<EventPanelProps> = ({
                   id: `eventpanel-${eventNodeId}-${index}`,
                   title: title,
                   target: pillId(index),
+                  hint: isValidElement<ChildProps>(child)
+                    ? child.props["data-hint"]
+                    : undefined,
                 };
               })}
               selectedNav={selectedNav || ""}

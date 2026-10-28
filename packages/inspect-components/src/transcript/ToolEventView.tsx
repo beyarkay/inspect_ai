@@ -19,6 +19,8 @@ import { getOwn } from "@tsmono/util";
 import { computeMaxLabelLength } from "../chat/labelLength";
 import { MessageLabel } from "../chat/MessageLabel";
 import { GeneratingIndicator } from "../indicators/GeneratingIndicator";
+import { kToolHeaderHint, withHint } from "../pro-ux/hints";
+import { isHtmlFlagOn } from "../pro-ux/outline";
 
 import { ApprovalInset } from "./ApprovalEventView";
 import { EventPanel } from "./event/EventPanel";
@@ -230,11 +232,12 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
       eventNodeId={eventNode.id}
       title={formatTitle(panelTitle, undefined, event.working_time)}
       className={className}
-      subTitle={
+      subTitle={withHint(
         event.timestamp
           ? formatTiming(event.timestamp, event.working_start)
-          : undefined
-      }
+          : undefined,
+        isHtmlFlagOn("data-pro-ux") && kToolHeaderHint
+      )}
       icon="solverUseTools"
       childIds={childNodes.map((child) => child.id)}
       collapseControl="bottom"

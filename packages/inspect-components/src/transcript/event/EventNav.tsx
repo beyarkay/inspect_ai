@@ -6,6 +6,7 @@ import styles from "./EventNav.module.css";
 interface EventNavProps {
   target: string;
   title: string;
+  hint?: string;
   selectedNav: string;
   setSelectedNav: (nav: string) => void;
 }
@@ -15,6 +16,7 @@ interface EventNavProps {
 export const EventNav: FC<EventNavProps> = ({
   target,
   title,
+  hint,
   selectedNav,
   setSelectedNav,
 }) => {
@@ -31,6 +33,7 @@ export const EventNav: FC<EventNavProps> = ({
         role="tab"
         aria-controls={target}
         aria-selected={active}
+        title={hint}
         className={clsx(
           "nav-link",
           active ? "active " : "",

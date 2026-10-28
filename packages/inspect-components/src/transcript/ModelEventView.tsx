@@ -19,10 +19,8 @@ import { formatTime } from "@tsmono/util";
 import { hasVisibleContent } from "../chat/rowsModel";
 import { GeneratingIndicator } from "../indicators/GeneratingIndicator";
 import { isLivePlaceholderMessage } from "../indicators/livePlaceholder";
-import {
-  ModelContextCaption,
-  ModelOutputCaption,
-} from "../pro-ux/ModelTurnCaption";
+import { modelHeaderHint, modelTabHints, withHint } from "../pro-ux/hints";
+import { useHtmlFlag } from "../pro-ux/useHtmlFlag";
 
 import { attemptDurationSec } from "./event/attemptDuration";
 import { EventPanel } from "./event/EventPanel";
@@ -153,6 +151,20 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
     context?.hasToolEvents !== false &&
     !userMessages.some((m) => m.role === "tool");
 
+  const proHints = useHtmlFlag("data-pro-ux");
+  const hints = proHints
+    ? modelTabHints({
+        shown: showAllMessages ? event.input.length : userMessages.length,
+        total: event.input.length,
+        toolCalls: outputMessages.flatMap((m) =>
+          (m.tool_calls ?? [])
+            .filter((c) => context?.toolEventIds?.has(c.id))
+            .map((c) => c.function)
+        ),
+        tools: event.tools.length,
+      })
+    : undefined;
+
   const summaryLabels = useMemo(() => {
     const map = context?.messageLabels;
     if (!map) return { show: false } as const;
@@ -198,11 +210,12 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       eventNodeId={eventNode.id}
       className={className}
       title={titleString}
-      subTitle={
+      subTitle={withHint(
         event.timestamp
           ? formatTiming(event.timestamp, event.working_start)
-          : undefined
-      }
+          : undefined,
+        proHints && modelHeaderHint(event.input.length)
+      )}
       icon="model"
       turnNav={turnNav}
       headerExtra={
@@ -216,7 +229,11 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       eventCallbacks={eventCallbacks}
       collapsibleContent
     >
-      <div data-name="Summary" className={styles.container}>
+      <div
+        data-name="Summary"
+        data-hint={hints?.Summary}
+        className={styles.container}
+      >
         {context?.inlineExpansionUX &&
           hasHiddenMessages &&
           !showAllMessages && (
@@ -232,12 +249,6 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
               </button>
             </div>
           )}
-        {!showAllMessages && (
-          <ModelContextCaption
-            shown={userMessages.length}
-            total={event.input.length}
-          />
-        )}
         <ChatView
           id={`${eventNode.id}-model-output`}
           messages={summaryMessages}
@@ -247,13 +258,6 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
             collapseToolMessages: collapseSummaryToolMessages,
           }}
           labels={summaryLabels}
-        />
-        <ModelOutputCaption
-          calls={outputMessages.flatMap((m) =>
-            (m.tool_calls ?? [])
-              .filter((c) => context?.toolEventIds?.has(c.id))
-              .map((c) => c.function)
-          )}
         />
         {isCancelled ? (
           <div className={styles.cancelled}>
@@ -270,7 +274,11 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
           </div>
         ) : undefined}
       </div>
-      <div data-name="Info" className={styles.container}>
+      <div
+        data-name="Info"
+        data-hint={hints?.Info}
+        className={styles.container}
+      >
         <div className={styles.all}>
           {event.output.usage ? (
             <ModelUsagePanel
@@ -303,7 +311,11 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
         </div>
       </div>
 
-      <div data-name="Messages" className={styles.container}>
+      <div
+        data-name="Messages"
+        data-hint={hints?.Messages}
+        className={styles.container}
+      >
         <ChatView
           id={`${eventNode.id}-model-input-full`}
           messages={[...event.input, ...outputMessages]}
@@ -317,7 +329,11 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       </div>
 
       {event.tools.length > 1 && (
-        <div data-name="Tools" className={styles.container}>
+        <div
+          data-name="Tools"
+          data-hint={hints?.Tools}
+          className={styles.container}
+        >
           <ToolsConfig tools={event.tools} toolChoice={event.tool_choice} />
         </div>
       )}
@@ -325,6 +341,7 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       {event.call ? (
         <APIView
           data-name="API"
+          data-hint={hints?.API}
           call={event.call}
           className={styles.container}
         />
