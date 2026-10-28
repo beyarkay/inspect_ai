@@ -35,7 +35,7 @@ import { isHostedEnvironment } from "@tsmono/util";
 
 import { Events } from "../../../@types/extraInspect";
 import { useLogDir } from "../../../app_config";
-import { isProUxEnabled } from "../../../pro-ux";
+import { isProUxEnabled } from "../../../pro-ux/enabled";
 import { useStore } from "../../../state/store";
 import { useCurrentLogFile } from "../../routing/currentSelection";
 import {

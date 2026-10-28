@@ -6,6 +6,7 @@ import "./trajectory.css";
 import "./search.css";
 
 import { installCells } from "./cells";
+import { isProUxEnabled } from "./enabled";
 import { closeHelp, installHelp, toggleHelp } from "./help";
 import { announceSkin, installKeys, setKeyActions } from "./keys";
 import { installSmallCaps } from "./smallCaps";
@@ -29,8 +30,7 @@ export const setProUxEnabled = (enabled: boolean): void => {
   }
 };
 
-export const isProUxEnabled = (): boolean =>
-  document.documentElement.hasAttribute("data-pro-ux");
+export { isProUxEnabled };
 
 setProUxEnabled(readEnabled());
 installSmallCaps();
