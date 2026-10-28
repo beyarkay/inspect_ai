@@ -10,11 +10,14 @@ import {
   buildTerminalSample,
   focusAt,
   kMaxScreenRows,
+  kPulseSeconds,
   kSharedIdleLimit,
   lastCommandAt,
   localTime,
   parseTerminalCasts,
   playbackToReal,
+  publishBoundaries,
+  publishWindow,
   realToPlayback,
   resultSnippet,
   rowStates,
@@ -157,6 +160,70 @@ describe("shared clock", () => {
   });
 });
 
+describe("publishWindow", () => {
+  const sample = buildTerminalSample(twoSessions);
+  const agent = sample.agents[0];
+  const p = (real: number) => realToPlayback(sample, real);
+  const windowAt = (real: number, speed = 1) =>
+    publishWindow(publishBoundaries(sample, agent!, speed), p(real));
+
+  it("spans from a command's pulse end to the next session start", () => {
+    // main's command at 1.51 pulses for kPulseSeconds; tests opens at 10.
+    expect(windowAt(5)).toEqual({
+      from: p(1.51) + kPulseSeconds,
+      to: p(10),
+    });
+  });
+
+  it("ends where a pending session first shows", () => {
+    // tests is pending from 10 until its first command at 15.51.
+    const window = windowAt(12);
+    expect(window).toEqual({ from: p(10), to: p(15.51) });
+    const tests = sample.sessions[1]!;
+    expect(sessionPhase(tests, playbackToReal(sample, window.to))).toBe("open");
+  });
+
+  it("ends at a session's end", () => {
+    // tests ends at 60; nothing else happens between its command and then.
+    expect(windowAt(58)).toEqual({
+      from: p(15.51) + kPulseSeconds,
+      to: p(60),
+    });
+  });
+
+  it("scales the pulse boundary with the speed", () => {
+    const at = p(1.51);
+    expect(publishBoundaries(sample, agent!, 1)).toContain(at + kPulseSeconds);
+    expect(publishBoundaries(sample, agent!, 4)).toContain(
+      at + kPulseSeconds * 4
+    );
+    expect(publishBoundaries(sample, agent!, 4)).not.toContain(
+      at + kPulseSeconds
+    );
+  });
+
+  it("starts at 0 and is open-ended past the end of playback", () => {
+    expect(windowAt(0).from).toBe(0);
+    expect(
+      publishWindow(
+        publishBoundaries(sample, agent!, 1),
+        sample.playbackDuration
+      )
+    ).toEqual({
+      from: sample.playbackDuration,
+      to: Infinity,
+    });
+  });
+
+  it("is the same window from either direction", () => {
+    // A backwards scrub to 5 lands in the window a forward play would.
+    const boundaries = publishBoundaries(sample, agent!, 1);
+    expect(publishWindow(boundaries, p(5))).toEqual(windowAt(5));
+    expect(publishWindow(boundaries, p(5)).from).toBeLessThanOrEqual(p(5));
+    expect(publishWindow(boundaries, p(5)).to).toBeGreaterThan(p(5));
+  });
+});
+
 describe("focus", () => {
   const sample = buildTerminalSample(twoSessions);
   const agent = sample.agents[0];
@@ -214,6 +281,20 @@ describe("adjacentCommand", () => {
 });
 
 describe("resultSnippet", () => {
+  it("orders output by time, so a late-written chunk isn't shown early", () => {
+    const sample = buildTerminalSample([
+      makeCast("main", 0, [
+        [0, "o", "a\r\n"],
+        [5, "o", "late\r\n"],
+        [2, "o", "b\r\n"],
+      ]),
+    ]);
+    const main = sample.sessions[0]!;
+    expect(resultSnippet(main, 2.5)).toBe("b");
+    expect(resultSnippet(main, 1)).toBe("a");
+    expect(resultSnippet(main, 6)).toBe("late");
+  });
+
   const { sessions } = buildTerminalSample([
     makeCast("build", 0, [
       [1, "m", "send build: 'npm run build\\n'"],

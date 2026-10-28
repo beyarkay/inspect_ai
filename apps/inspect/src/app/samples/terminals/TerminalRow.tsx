@@ -11,23 +11,29 @@ import { cssVars } from "../../../utils/cssVars";
 
 import { commandLabel } from "./asciicast";
 import { formatClock } from "./format";
+import { useTerminalClock, type TerminalClock } from "./terminalClock";
 import {
   kRowBodyPadding,
+  outputIndexAt,
+  playbackToReal,
+  resultSnippet,
+  resultSnippetAt,
   type RowState,
   type TerminalCommand,
+  type TerminalSample,
   type TerminalSession,
 } from "./terminalModel";
 import styles from "./Terminals.module.css";
 
 interface TerminalRowProps {
   id: string;
+  sample: TerminalSample;
   session: TerminalSession;
+  clock: TerminalClock;
   state: Exclude<RowState, "pending">;
   bodyRows: number;
   lineHeight: number;
   lastCommand?: TerminalCommand;
-  /** The last output line, for bars without a body. */
-  snippet?: string;
   /** Playing: a row that appears flashes its bar. */
   animate: boolean;
   /** A command just landed in this row while the user holds another. */
@@ -52,12 +58,13 @@ interface TerminalRowProps {
  */
 export const TerminalRow: FC<TerminalRowProps> = ({
   id,
+  sample,
   session,
+  clock,
   state,
   bodyRows,
   lineHeight,
   lastCommand,
-  snippet,
   animate,
   pulse,
   onHold,
@@ -136,7 +143,11 @@ export const TerminalRow: FC<TerminalRowProps> = ({
               $ {commandLabel(lastCommand.command)}
             </span>
           ) : null}
-          {snippet ? <span className={styles.snippet}>· {snippet}</span> : null}
+          {state === "folded" ? (
+            <LiveSnippet clock={clock} sample={sample} session={session} />
+          ) : state === "closed" ? (
+            <Snippet text={resultSnippet(session, session.end)} />
+          ) : null}
           {showPulse ? (
             <span className={styles.barMeta}>
               <span key={lastCommand.at} className={styles.newCommand}>
@@ -161,6 +172,24 @@ export const TerminalRow: FC<TerminalRowProps> = ({
       ) : null}
     </div>
   );
+};
+
+// The last output line, for bars without a body.
+const Snippet: FC<{ text: string | undefined }> = ({ text }) =>
+  text ? <span className={styles.snippet}>· {text}</span> : null;
+
+// A folded row's output keeps landing between commands, so its snippet
+// follows the clock itself: the subscription selects the output index (so
+// the per-frame work is a bisection) and the line is derived from that.
+const LiveSnippet: FC<{
+  clock: TerminalClock;
+  sample: TerminalSample;
+  session: TerminalSession;
+}> = ({ clock, sample, session }) => {
+  const index = useTerminalClock(clock, (playback) =>
+    outputIndexAt(session, playbackToReal(sample, playback))
+  );
+  return <Snippet text={resultSnippetAt(session, index)} />;
 };
 
 interface TerminalBodyProps {

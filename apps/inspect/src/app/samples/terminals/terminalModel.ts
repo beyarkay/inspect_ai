@@ -14,6 +14,8 @@ import {
 // On the shared clock a gap is shortened to this only while every terminal is
 // idle (single-session playback shortens each session's own gaps).
 export const kSharedIdleLimit = 2;
+// How long (wall seconds) a new command pulses its row's bar.
+export const kPulseSeconds = 0.6;
 
 export const kPlaybackSpeeds = [1, 2, 4];
 
@@ -128,9 +130,12 @@ export const buildTerminalSample = (
           end: start + length,
           shownFrom: start,
           agentId: header.agentSpanId ?? "",
+          // Sorted so outputIndexAt can bisect; recorders write in order,
+          // but nothing upstream checks.
           output: castEventList
             .filter((event) => event.type === "o")
-            .map(({ time, data }) => ({ time, data })),
+            .map(({ time, data }) => ({ time, data }))
+            .sort((a, b) => a.time - b.time),
         };
         return { session, header, events: castEventList, markers };
       }
@@ -331,6 +336,47 @@ export const playbackToReal = (
   playback: number
 ): number => interpolate(sample.knots, playback, 1, 0);
 
+/**
+ * The playback times at which something the view derives from the clock
+ * changes: each command (and the end of its pulse), each session's start,
+ * first showing and end, and the ends of playback. Sorted, without
+ * duplicates. Between two adjacent boundaries the view renders the same
+ * thing, apart from the readout, playhead and folded snippets, which follow
+ * the clock themselves.
+ */
+export const publishBoundaries = (
+  sample: TerminalSample,
+  agent: TerminalAgent,
+  speed: number
+): number[] => {
+  const times = new Set<number>([0, sample.playbackDuration]);
+  for (const command of agent.commands) {
+    const at = realToPlayback(sample, command.at);
+    times.add(at);
+    times.add(at + kPulseSeconds * speed);
+  }
+  for (const session of agent.sessions) {
+    for (const real of [session.start, session.shownFrom, session.end]) {
+      times.add(realToPlayback(sample, real));
+    }
+  }
+  return [...times].sort((a, b) => a - b);
+};
+
+/** The interval `from <= playback < to` between adjacent boundaries; past
+ *  the last one, `to` is Infinity. */
+export const publishWindow = (
+  boundaries: number[],
+  playback: number
+): { from: number; to: number } => {
+  let from = 0;
+  for (const boundary of boundaries) {
+    if (boundary > playback) return { from, to: boundary };
+    from = boundary;
+  }
+  return { from, to: Infinity };
+};
+
 const interpolate = (
   knots: [number, number][],
   x: number,
@@ -450,6 +496,24 @@ export const adjacentCommand = (
 const kPromptOnly = /^[$#>%]\s*$/;
 const kEchoLine = /^\$ /;
 
+/** Index of the session's last output chunk at or before a real time (-1
+ *  before any). Bisects: a folded row's snippet asks every frame. */
+export const outputIndexAt = (
+  session: TerminalSession,
+  real: number
+): number => {
+  const local = real - session.start;
+  const { output } = session;
+  let lo = 0;
+  let hi = output.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if ((output[mid]?.time ?? Infinity) <= local) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo - 1;
+};
+
 /**
  * The last non-empty output line a session had shown by a real time, ANSI
  * stripped, skipping bare prompts and command echoes: what a folded or closed
@@ -458,11 +522,17 @@ const kEchoLine = /^\$ /;
 export const resultSnippet = (
   session: TerminalSession,
   real: number
+): string | undefined => resultSnippetAt(session, outputIndexAt(session, real));
+
+/** resultSnippet from an output index (outputIndexAt), so a subscriber that
+ *  selects the index rescans only when it changes. */
+export const resultSnippetAt = (
+  session: TerminalSession,
+  index: number
 ): string | undefined => {
-  const local = real - session.start;
-  for (let i = session.output.length - 1; i >= 0; i--) {
+  for (let i = index; i >= 0; i--) {
     const chunk = session.output[i];
-    if (!chunk || chunk.time > local) continue;
+    if (!chunk) continue;
     const lines = stripAnsi(chunk.data).split(/\r?\n|\r/);
     for (let j = lines.length - 1; j >= 0; j--) {
       const line = (lines[j] ?? "").trim();

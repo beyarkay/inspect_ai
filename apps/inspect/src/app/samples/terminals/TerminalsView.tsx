@@ -15,16 +15,19 @@ import { useStore } from "../../../state/store";
 
 import { commandLabel } from "./asciicast";
 import { PlayerSync } from "./playerSync";
+import { createTerminalClock } from "./terminalClock";
 import { TerminalControls } from "./TerminalControls";
 import {
   adjacentCommand,
   allocateRows,
   focusAt,
+  kPulseSeconds,
   lastCommandAt,
   localTime,
   playbackToReal,
+  publishBoundaries,
+  publishWindow,
   realToPlayback,
-  resultSnippet,
   rowStates,
   sessionPhase,
   type RowAllocation,
@@ -41,8 +44,6 @@ import { FoldedTimeline, TerminalTimeline } from "./TerminalTimeline";
 // Agent focus switches closer together than this collapse into one while
 // playing (the stage's reflow eases over 200 ms).
 const kFocusSwitchMs = 400;
-// How long (wall seconds) a new command pulses its row's bar.
-const kPulseSeconds = 0.6;
 // Until a player has drawn and its line height can be measured.
 const kDefaultLineHeight = 19.5;
 const kMinViewHeight = 420;
@@ -157,9 +158,11 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const [lineHeight, setLineHeight] = useState(kDefaultLineHeight);
   const [pinned, setPinned] = useState<ReadonlySet<string>>(new Set());
 
-  // The clock's source of truth: the frame loop and scrubs advance it between
-  // renders, so it can't wait on state.
-  const clockRef = useRef(playback);
+  // The clock's source of truth: the frame loop and scrubs advance it every
+  // frame; `playback` (state) follows it only when it crosses a boundary of
+  // what the view renders (publishWindow), so the tree isn't rebuilt per
+  // frame. The readout, playhead and folded snippets subscribe to the clock.
+  const [clock] = useState(() => createTerminalClock(playback));
   const lastSwitchRef = useRef(0);
   const [players] = useState(
     () =>
@@ -174,34 +177,47 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   );
   useUnmount(() => {
     players.dispose();
-    onSuspend?.({ playback: clockRef.current, playing });
+    onSuspend?.({ playback: clock.getState().playback, playing });
   });
 
   const locate = (key: string) => {
     const session = sample.sessions.find((candidate) => candidate.key === key);
     return session
-      ? localTime(session, playbackToReal(sample, clockRef.current))
+      ? localTime(session, playbackToReal(sample, clock.getState().playback))
       : undefined;
   };
 
+  const boundaries = publishBoundaries(sample, agent, speed);
+  const published = publishWindow(boundaries, playback);
+  const publish = () => setPlaybackState(clock.getState().playback);
+  // A discrete move (seek, step, replay) always publishes, so the next
+  // frame is exact; the frame loop's setClock publishes at boundaries only.
+  const seek = (next: number) => {
+    setClock(next);
+    publish();
+  };
+
   const setClock = (next: number) => {
-    clockRef.current = Math.min(Math.max(next, 0), sample.playbackDuration);
-    setPlaybackState(clockRef.current);
+    clock.setState({
+      playback: Math.min(Math.max(next, 0), sample.playbackDuration),
+    });
+    const now = clock.getState().playback;
+    if (now < published.from || now >= published.to) publish();
     players.request(locate);
     // Once the agent is in the held session, following it is the same view,
     // so the hold is over (as when the user clicks the agent's row).
     if (
       held !== undefined &&
-      focusAt(agent, playbackToReal(sample, clockRef.current)) === held
+      focusAt(agent, playbackToReal(sample, now)) === held
     ) {
       setHeld(undefined);
     }
   };
 
   useAnimationFrameLoop((elapsed, now) => {
-    setClock(clockRef.current + elapsed * speed);
-    if (clockRef.current >= sample.playbackDuration) setPlaying(false);
-    const clockReal = playbackToReal(sample, clockRef.current);
+    setClock(clock.getState().playback + elapsed * speed);
+    if (clock.getState().playback >= sample.playbackDuration) setPlaying(false);
+    const clockReal = playbackToReal(sample, clock.getState().playback);
 
     const target = focusAt(agent, clockReal);
     if (
@@ -262,8 +278,9 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const togglePlay = () => {
     if (playing) {
       setPlaying(false);
+      publish();
     } else {
-      if (ended) setClock(0);
+      if (ended) seek(0);
       setPlayingFocus(ended ? undefined : agentFocus);
       setPlaying(true);
     }
@@ -273,6 +290,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const endScrub = () => {
     if (!scrubbing) return;
     setScrubLayout(undefined);
+    publish();
     if (ended) return;
     setPlayingFocus(agentFocus);
     setPlaying(true);
@@ -289,7 +307,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
 
   const seekToCommand = (command: TerminalCommand) => {
     setHeld(undefined);
-    setClock(realToPlayback(sample, command.at));
+    seek(realToPlayback(sample, command.at));
   };
 
   const viewTools = fill ? (
@@ -330,9 +348,12 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     setHeld(undefined);
   };
 
+  // From the clock, not the published `real`: that sits at a command's
+  // time for its whole window, and adjacentCommand would skip the command.
   const stepCommand = (step: 1 | -1) => {
-    const command = adjacentCommand(agent.commands, real, step);
-    if (command) setClock(realToPlayback(sample, command.at));
+    const clockReal = playbackToReal(sample, clock.getState().playback);
+    const command = adjacentCommand(agent.commands, clockReal, step);
+    if (command) seek(realToPlayback(sample, command.at));
   };
 
   const holdAdjacent = (step: 1 | -1) => {
@@ -407,6 +428,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   const timelineProps = {
     sample,
     agent,
+    clock,
     real,
     focusKey,
     agentFocusKey: agentFocus,
@@ -445,16 +467,13 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
             <TerminalRow
               key={key}
               id={`${id}-${session.name}`}
+              sample={sample}
               session={session}
+              clock={clock}
               state={state}
               bodyRows={allocation.bodyRows.get(key) ?? 0}
               lineHeight={lineHeight}
               lastCommand={lastCommands.get(key)}
-              snippet={
-                state === "folded" || state === "closed"
-                  ? resultSnippet(session, real)
-                  : undefined
-              }
               animate={playing}
               pulse={
                 playing &&
@@ -480,11 +499,14 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         playing={playing}
         ended={ended}
         onTogglePlay={togglePlay}
-        real={real}
-        duration={sample.duration}
-        playbackDuration={sample.playbackDuration}
+        clock={clock}
+        sample={sample}
         speed={speed}
-        onSpeedChange={setSpeed}
+        onSpeedChange={(next) => {
+          // The pulse boundaries depend on the speed.
+          setSpeed(next);
+          publish();
+        }}
         hold={
           heldName ? { session: heldName, agentSession: agentName } : undefined
         }

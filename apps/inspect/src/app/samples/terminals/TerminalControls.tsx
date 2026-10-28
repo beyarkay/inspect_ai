@@ -5,7 +5,13 @@ import { useUnmount } from "@tsmono/react/hooks";
 import { Icon } from "@tsmono/react/icons";
 
 import { formatClock } from "./format";
-import { kPlaybackSpeeds, kSharedIdleLimit } from "./terminalModel";
+import { useTerminalClock, type TerminalClock } from "./terminalClock";
+import {
+  kPlaybackSpeeds,
+  kSharedIdleLimit,
+  playbackToReal,
+  type TerminalSample,
+} from "./terminalModel";
 import styles from "./Terminals.module.css";
 
 // Hovering the folded timeline this long (ms) peeks the full lanes.
@@ -15,9 +21,8 @@ interface TerminalControlsProps {
   playing: boolean;
   ended: boolean;
   onTogglePlay: () => void;
-  real: number;
-  duration: number;
-  playbackDuration: number;
+  clock: TerminalClock;
+  sample: TerminalSample;
   speed: number;
   onSpeedChange: (speed: number) => void;
   /** Shown while the user holds a row other than the agent's. */
@@ -44,9 +49,8 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
   playing,
   ended,
   onTogglePlay,
-  real,
-  duration,
-  playbackDuration,
+  clock,
+  sample,
   speed,
   onSpeedChange,
   hold,
@@ -81,14 +85,11 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
         >
           <Icon name={playing ? "pause" : ended ? "retry" : "play"} />
         </button>
-        <span className={styles.readout} aria-label="Elapsed in the run">
-          <span className={styles.readoutElapsed}>{formatClock(real)}</span>
-          <span className={styles.readoutTotal}>/ {formatClock(duration)}</span>
-        </span>
+        <ClockReadout clock={clock} sample={sample} />
         {timelineFolded ? null : (
           <span
             className={styles.readoutNote}
-            title={`Replays in ${formatClock(playbackDuration)}: stretches where every terminal is idle are shortened to ${kSharedIdleLimit} s.`}
+            title={`Replays in ${formatClock(sample.playbackDuration)}: stretches where every terminal is idle are shortened to ${kSharedIdleLimit} s.`}
           >
             idle time skipped
           </span>
@@ -168,5 +169,24 @@ export const TerminalControls: FC<TerminalControlsProps> = ({
       </div>
       {timelineFolded ? null : timeline}
     </div>
+  );
+};
+
+// Follows the clock itself, once a second, so the view needn't re-render for
+// it.
+const ClockReadout: FC<{ clock: TerminalClock; sample: TerminalSample }> = ({
+  clock,
+  sample,
+}) => {
+  const seconds = useTerminalClock(clock, (playback) =>
+    Math.round(playbackToReal(sample, playback))
+  );
+  return (
+    <span className={styles.readout} aria-label="Elapsed in the run">
+      <span className={styles.readoutElapsed}>{formatClock(seconds)}</span>
+      <span className={styles.readoutTotal}>
+        / {formatClock(sample.duration)}
+      </span>
+    </span>
   );
 };

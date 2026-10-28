@@ -3,6 +3,7 @@ import { FC, PointerEvent, useRef, useState } from "react";
 
 import { commandLabel } from "./asciicast";
 import { formatClock } from "./format";
+import { useTerminalClock, type TerminalClock } from "./terminalClock";
 import {
   realToPlayback,
   sessionPhase,
@@ -21,6 +22,9 @@ const kRulerMinGap = 0.05;
 interface TimelineProps {
   sample: TerminalSample;
   agent: TerminalAgent;
+  clock: TerminalClock;
+  /** The published clock (see TerminalsView): lane states and ticks follow
+   *  it; the playhead follows `clock` itself. */
   real: number;
   /** The row the stage shows as focused (agent's or held). */
   focusKey?: string;
@@ -43,6 +47,7 @@ interface TimelineProps {
 export const TerminalTimeline: FC<TimelineProps> = ({
   sample,
   agent,
+  clock,
   real,
   focusKey,
   agentFocusKey,
@@ -117,7 +122,7 @@ export const TerminalTimeline: FC<TimelineProps> = ({
             />
           </div>
         ))}
-        <div className={styles.playhead} style={{ left: percent(x(real)) }} />
+        <Playhead clock={clock} sample={sample} />
         {hovered ? <TickChip hover={hovered} x={x} /> : null}
       </div>
     </div>
@@ -152,7 +157,7 @@ const TickChip: FC<{ hover: TickHover; x: (time: number) => number }> = ({
 export const FoldedTimeline: FC<TimelineProps> = ({
   sample,
   agent,
-  real,
+  clock,
   focusKey,
   onScrub,
   onScrubStart,
@@ -179,7 +184,7 @@ export const FoldedTimeline: FC<TimelineProps> = ({
             />
           </div>
         ) : null}
-        <div className={styles.playhead} style={{ left: percent(x(real)) }} />
+        <Playhead clock={clock} sample={sample} />
       </div>
     </>
   );
@@ -243,6 +248,21 @@ const SessionLane: FC<SessionLaneProps> = ({
       ))}
   </>
 );
+
+// Follows the clock itself (one element per frame, at most), so the lanes
+// needn't re-render for it. Rounded to 0.01% of the track: finer moves
+// aren't visible.
+const Playhead: FC<{ clock: TerminalClock; sample: TerminalSample }> = ({
+  clock,
+  sample,
+}) => {
+  const at = useTerminalClock(clock, (playback) =>
+    sample.playbackDuration > 0
+      ? Math.round((playback / sample.playbackDuration) * 10_000) / 10_000
+      : 0
+  );
+  return <div className={styles.playhead} style={{ left: percent(at) }} />;
+};
 
 const fraction = (sample: TerminalSample, real: number): number =>
   sample.playbackDuration > 0
