@@ -1,4 +1,9 @@
-import { createMarker, highlightSupported, textMatches } from "./findHighlight";
+import {
+  createMarker,
+  highlightSupported,
+  scrollerOf,
+  textMatches,
+} from "./findHighlight";
 import { stepIndex } from "./textFind";
 
 /** Pro-UX Cmd-F: steps through rendered matches in document order and
@@ -43,25 +48,6 @@ const pageSelection = (): Range | null => {
     return null;
   }
   return range;
-};
-
-/** The tallest scrolling ancestor: the page's main scroller, not a code
- *  block or panel that scrolls inside it. */
-const scrollerOf = (node: Node | null): HTMLElement => {
-  let best: HTMLElement = document.documentElement;
-  let el = node instanceof Element ? node : (node?.parentElement ?? null);
-  for (; el && el !== document.body; el = el.parentElement) {
-    const { overflowY } = getComputedStyle(el);
-    if (
-      (overflowY === "auto" || overflowY === "scroll") &&
-      el.scrollHeight > el.clientHeight + 1 &&
-      el instanceof HTMLElement &&
-      (best === document.documentElement || el.clientHeight > best.clientHeight)
-    ) {
-      best = el;
-    }
-  }
-  return best;
 };
 
 /** The scroller of `node`, else the one under the middle of the window. */

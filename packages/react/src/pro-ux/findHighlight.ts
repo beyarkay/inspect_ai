@@ -12,9 +12,40 @@ export const highlightSupported = (): boolean =>
   "highlights" in CSS &&
   typeof Highlight === "function";
 
-/** Every rendered occurrence of `term` under `root`, in document order. */
-export const textMatches = (root: Node, term: string): Range[] => {
-  if (!term) return [];
+/** The tallest scrolling ancestor: the page's main scroller, not a code
+ *  block or panel that scrolls inside it. */
+export const scrollerOf = (node: Node | null): HTMLElement => {
+  let best: HTMLElement = document.documentElement;
+  let el = node instanceof Element ? node : (node?.parentElement ?? null);
+  for (; el && el !== document.body; el = el.parentElement) {
+    const { overflowY } = getComputedStyle(el);
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      el.scrollHeight > el.clientHeight + 1 &&
+      el instanceof HTMLElement &&
+      (best === document.documentElement || el.clientHeight > best.clientHeight)
+    ) {
+      best = el;
+    }
+  }
+  return best;
+};
+
+export interface TextMatch {
+  range: Range;
+  /** Rendered text just before and after the match. */
+  before: string;
+  after: string;
+}
+
+/** Every rendered occurrence of `pattern` under `root`, in document order,
+ *  with `radius` characters of text either side. */
+export const textMatchesIn = (
+  root: Node,
+  pattern: string | RegExp,
+  radius = 0
+): TextMatch[] => {
+  if (!pattern) return [];
   const skipped = new Map<Element, boolean>();
   const skip = (el: Element): boolean => {
     let hit = skipped.get(el);
@@ -37,19 +68,28 @@ export const textMatches = (root: Node, term: string): Range[] => {
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     if (node instanceof Text) nodes.push(node);
   }
-  return findInChunks(
-    nodes.map((n) => n.data),
-    term
-  ).flatMap(({ start, end }) => {
-    const from = nodes[start[0]];
-    const to = nodes[end[0]];
-    if (!from || !to) return [];
+  const texts = nodes.map((n) => n.data);
+  const joined = radius > 0 ? texts.join("") : "";
+  return findInChunks(texts, pattern).flatMap(({ start, end, from, to }) => {
+    const first = nodes[start[0]];
+    const last = nodes[end[0]];
+    if (!first || !last) return [];
     const range = document.createRange();
-    range.setStart(from, start[1]);
-    range.setEnd(to, end[1]);
-    return [range];
+    range.setStart(first, start[1]);
+    range.setEnd(last, end[1]);
+    return [
+      {
+        range,
+        before: joined.slice(Math.max(0, from - radius), from),
+        after: joined.slice(to, to + radius),
+      },
+    ];
   });
 };
+
+/** Every rendered occurrence of `term` under `root`, in document order. */
+export const textMatches = (root: Node, term: string): Range[] =>
+  textMatchesIn(root, term).map((m) => m.range);
 
 /** Paints matches with the CSS highlight API, so they show whatever the
  *  browser does with the selection (Firefox hides it while the find box has

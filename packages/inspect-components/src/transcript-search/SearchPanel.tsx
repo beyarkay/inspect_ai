@@ -32,6 +32,7 @@ import {
   AutosizeTextareaConfig,
 } from "@tsmono/util";
 
+import { useGrepResultJump } from "../pro-ux/grepJump";
 import { searchModeSegments } from "../pro-ux/searchModes";
 import { autoRunKey, useAutoRun } from "../pro-ux/useAutoRun";
 
@@ -740,6 +741,7 @@ const SearchResult: FC<{
   getEventUrl,
   getEventMessageUrl,
 }) => {
+  const jumpToMatch = useGrepResultJump();
   const markdownRefs = useMemo((): MarkdownReference[] => {
     const seen = new Set<string>();
     const refs: MarkdownReference[] = [];
@@ -774,7 +776,7 @@ const SearchResult: FC<{
 
   if (searchType === "grep") {
     return (
-      <div className={styles.resultCard}>
+      <div className={styles.resultCard} onClickCapture={jumpToMatch}>
         {result.explanation && (
           <MarkdownDivWithReferences
             markdown={result.explanation}

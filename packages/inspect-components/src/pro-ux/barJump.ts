@@ -41,6 +41,14 @@ export const spanTargetIn = (
     : message;
 };
 
+let activeList: RefObject<TranscriptViewNodesHandle | null> | null = null;
+
+/** Scroll the mounted transcript to an event, for jumps from outside it (a
+ *  grep result citing the event already in the URL). */
+export const scrollTranscriptToEvent = (eventId: string): void => {
+  activeList?.current?.scrollToEvent(eventId);
+};
+
 interface BarJumpOptions {
   turns: EventNode[];
   eventsListRef?: RefObject<TranscriptViewNodesHandle | null>;
@@ -72,6 +80,15 @@ export const useBarJump = ({
   const pendingRef = useRef<{ eventId: string; land: () => void } | null>(null);
   const urlEventRef = useLatestRef(urlEventId);
   useUnmount(() => stopRef.current?.());
+
+  // eslint-disable-next-line tsmono/no-raw-use-effect -- registers this transcript for jumps from the search panel
+  useEffect(() => {
+    if (!eventsListRef) return;
+    activeList = eventsListRef;
+    return () => {
+      if (activeList === eventsListRef) activeList = null;
+    };
+  }, [eventsListRef]);
 
   const onSelect = useCallback(
     (eventId: string, target?: SpanTarget) => {

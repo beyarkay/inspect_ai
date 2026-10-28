@@ -1,8 +1,10 @@
 /** A match across consecutive text chunks: [chunk index, offset] at each end,
- *  the end exclusive. */
+ *  the end exclusive, and its span in the joined text. */
 export interface ChunkMatch {
   start: [number, number];
   end: [number, number];
+  from: number;
+  to: number;
 }
 
 const escapeRegExp = (text: string): string =>
@@ -26,14 +28,22 @@ const locate = (
   return [lo, at - (starts[lo] ?? 0)];
 };
 
-/** Every case-insensitive occurrence of `term` in the chunks read as one
- *  text, so a match may cross element boundaries (syntax-highlighted code
- *  splits words into spans). Empty chunks are not allowed. */
+/** Every occurrence of `pattern` (text, matched ignoring case, or a regular
+ *  expression) in the chunks read as one text, so a match may cross element
+ *  boundaries (syntax-highlighted code splits words into spans). Empty
+ *  chunks are not allowed; empty matches are skipped. */
 export const findInChunks = (
   chunks: readonly string[],
-  term: string
+  pattern: string | RegExp
 ): ChunkMatch[] => {
-  if (!term || chunks.length === 0) return [];
+  if (!pattern || chunks.length === 0) return [];
+  const regex =
+    typeof pattern === "string"
+      ? new RegExp(escapeRegExp(pattern), "gi")
+      : new RegExp(
+          pattern.source,
+          pattern.flags.includes("g") ? pattern.flags : `${pattern.flags}g`
+        );
   const starts: number[] = [];
   let joined = "";
   for (const chunk of chunks) {
@@ -41,12 +51,15 @@ export const findInChunks = (
     joined += chunk;
   }
   const matches: ChunkMatch[] = [];
-  for (const found of joined.matchAll(new RegExp(escapeRegExp(term), "gi"))) {
+  for (const found of joined.matchAll(regex)) {
     const from = found.index;
     const to = from + found[0].length;
+    if (to === from) continue;
     matches.push({
       start: locate(starts, from, false),
       end: locate(starts, to, true),
+      from,
+      to,
     });
   }
   return matches;

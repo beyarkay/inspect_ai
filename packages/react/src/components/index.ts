@@ -50,3 +50,8 @@ export * from "./inAppLink";
 export * from "./useFindBandShortcut";
 export * from "./MarkdownDivWithReferences";
 export * from "./NextPreviousNav";
+export {
+  createMarker,
+  scrollerOf,
+  textMatchesIn,
+} from "../pro-ux/findHighlight";
