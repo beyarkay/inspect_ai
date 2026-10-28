@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  castGeometry,
   castHeader,
   highlightCommandEchoes,
   storeCasts,
@@ -26,18 +25,6 @@ describe("storeCasts", () => {
 
   it("skips non-string values under the prefix", () => {
     expect(storeCasts({ "asciinema:odd": 42 })).toEqual([]);
-  });
-});
-
-describe("castGeometry", () => {
-  it("reads width/height from the header line", () => {
-    const cast = '{"version": 2, "width": 160, "height": 40}\n[0.1, "o", "x"]';
-    expect(castGeometry(cast)).toEqual({ rows: 40, cols: 160 });
-  });
-
-  it("falls back to 80x24 on an unparseable or bare header", () => {
-    expect(castGeometry("not json\nmore")).toEqual({ rows: 24, cols: 80 });
-    expect(castGeometry('{"version": 2}')).toEqual({ rows: 24, cols: 80 });
   });
 });
 
@@ -66,6 +53,10 @@ describe("castHeader", () => {
     expect(
       castHeader('{"version": 2, "timestamp": "soon", "ir_session": ""}')
     ).toEqual({ rows: 24, cols: 80 });
+  });
+
+  it("falls back to 80x24 on an unparseable header", () => {
+    expect(castHeader("not json\nmore")).toEqual({ rows: 24, cols: 80 });
   });
 });
 

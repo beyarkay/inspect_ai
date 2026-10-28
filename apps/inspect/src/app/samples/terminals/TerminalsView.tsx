@@ -5,10 +5,13 @@ import {
   useAnimationFrameLoop,
   useElementHeight,
   useEventListener,
+  useMountEffect,
   useSpaceBelow,
   useUnmount,
 } from "@tsmono/react/hooks";
 import { Icon } from "@tsmono/react/icons";
+
+import { useStore } from "../../../state/store";
 
 import { commandLabel } from "./asciicast";
 import { PlayerSync } from "./playerSync";
@@ -24,6 +27,8 @@ import {
   resultSnippet,
   rowStates,
   sessionPhase,
+  type RowAllocation,
+  type RowState,
   type TerminalAgent,
   type TerminalCommand,
   type TerminalSample,
@@ -42,12 +47,17 @@ const kPulseSeconds = 0.6;
 const kDefaultLineHeight = 19.5;
 const kMinViewHeight = 420;
 // The stage's vertical padding (see Terminals.module.css).
-const kStagePadding = 24;
-// Control row heights (see Terminals.module.css): the folded row, and what
-// each timeline lane adds when unfolded.
-const kFoldedControlsHeight = 51;
-const kTimelineBaseHeight = 30;
+const kStagePadding = 16;
+// Control strip heights (see Terminals.module.css): folded (the control row
+// alone), and what the unfolded timeline's ruler and each lane add.
+const kFoldedControlsHeight = 37;
+const kTimelineBaseHeight = 22;
 const kTimelineLaneHeight = 18;
+
+interface StageLayout {
+  states: Map<string, RowState>;
+  allocation: RowAllocation;
+}
 
 interface TerminalsViewProps {
   id: string;
@@ -58,16 +68,27 @@ interface TerminalsViewProps {
   /** The agent whose terminals show (default: the first). Changing it keeps
    *  the clock. */
   agentId?: string;
-  /** Fullscreen: the view covers the viewport under its own header (title,
-   *  agents note, the host's tools and an exit). The players and clock carry
-   *  over; Escape or the exit control leaves it. */
+  /** Fullscreen: the view covers the viewport, with the host's tools and an
+   *  exit in its control row. The players and clock carry over; Escape or the
+   *  exit control leaves it. */
   fill?: TerminalsFill;
-  /** Enters fullscreen from the top row's bar. */
+  /** Enters fullscreen from the control row. */
   onFullscreen?: () => void;
+  /** Where the view left off when it last unmounted (the tab only mounts it
+   *  while selected). Without one, it plays from the start. */
+  resume?: TerminalsResume;
+  /** Called on unmount with where the view left off. */
+  onSuspend?: (resume: TerminalsResume) => void;
+}
+
+export interface TerminalsResume {
+  playback: number;
+  /** Whether to play on return (false once the user pauses). */
+  playing: boolean;
 }
 
 export interface TerminalsFill {
-  /** Tab-toolbar controls that move into the top row's bar (the agent
+  /** Tab-toolbar controls that move into the control row (the agent
    *  picker). */
   tools?: ReactNode;
   onExit: () => void;
@@ -98,14 +119,23 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
   scrollRef,
   fill,
   onFullscreen,
+  resume,
+  onSuspend,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
+  const setTerminalsViewOpen = useStore(
+    (state) => state.sampleActions.setTerminalsViewOpen
+  );
+  useMountEffect(() => {
+    setTerminalsViewOpen(true);
+    return () => setTerminalsViewOpen(false);
+  });
   const space = useSpaceBelow(rootRef, scrollRef);
   // Filling the window, the root is the viewport (CSS).
   const rootHeight = useElementHeight(rootRef, fill !== undefined);
 
-  const [playback, setPlaybackState] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playback, setPlaybackState] = useState(resume?.playback ?? 0);
+  const [playing, setPlaying] = useState(resume?.playing ?? true);
   const [speed, setSpeed] = useState(1);
   const [held, setHeld] = useState<string>();
   const [folded, setFolded] = useState<ReadonlySet<string>>(new Set());
@@ -115,7 +145,11 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     folded: boolean;
     auto: boolean;
   }>();
-  const [scrubbing, setScrubbing] = useState(false);
+  // While a scrub drags the playhead, the stage keeps the layout it had when
+  // the drag began (rows opening, closing or resizing, or the timeline
+  // folding, would move things under the pointer); it settles on release.
+  const [scrubLayout, setScrubLayout] = useState<StageLayout>();
+  const scrubbing = scrubLayout !== undefined;
   // While playing, the agent's focus as the stage shows it: switches closer
   // together than kFocusSwitchMs collapse, so rapid switching doesn't thrash
   // the layout.
@@ -138,7 +172,10 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         })
       )
   );
-  useUnmount(() => players.dispose());
+  useUnmount(() => {
+    players.dispose();
+    onSuspend?.({ playback: clockRef.current, playing });
+  });
 
   const locate = (key: string) => {
     const session = sample.sessions.find((candidate) => candidate.key === key);
@@ -188,7 +225,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     (session) => session.key === held && sessionPhase(session, real) === "open"
   );
   const focusKey = heldSession?.key ?? agentFocus;
-  const states = rowStates(agent.sessions, real, focusKey, folded);
+  const liveStates = rowStates(agent.sessions, real, focusKey, folded);
   const lastCommands = new Map(
     agent.sessions.map((session) => [
       session.key,
@@ -203,7 +240,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     allocateRows({
       rows: agent.sessions.map((session) => ({
         key: session.key,
-        state: states.get(session.key) ?? "pending",
+        state: liveStates.get(session.key) ?? "pending",
         lastCommandAt: lastCommands.get(session.key)?.at,
       })),
       stageHeight:
@@ -213,10 +250,14 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       timeline,
     });
   const autoAllocation = allocate("auto");
-  const allocation =
+  const liveAllocation =
     timelineOverride?.auto === autoAllocation.timelineFolded
       ? allocate(timelineOverride.folded ? "folded" : "unfolded")
       : autoAllocation;
+  const { states, allocation } = scrubLayout ?? {
+    states: liveStates,
+    allocation: liveAllocation,
+  };
 
   const togglePlay = () => {
     if (playing) {
@@ -228,8 +269,20 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     }
   };
 
+  // Playback resumes from wherever a scrub leaves the playhead.
+  const endScrub = () => {
+    if (!scrubbing) return;
+    setScrubLayout(undefined);
+    if (ended) return;
+    setPlayingFocus(agentFocus);
+    setPlaying(true);
+  };
+
+  // Compared against the live focus, as the hold's release is (setClock):
+  // during a focus switch's collapse window the stage still shows the
+  // previous row, and a hold on the new one would be cleared next frame.
   const hold = (key: string) => {
-    setHeld(key === agentFocus ? undefined : key);
+    setHeld(key === focusAt(agent, real) ? undefined : key);
   };
 
   const follow = () => setHeld(undefined);
@@ -263,11 +316,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       <Icon name="fullscreen" />
     </button>
   ) : undefined;
-
-  const topKey = agent.sessions.find((session) => {
-    const state = states.get(session.key);
-    return state !== undefined && state !== "pending";
-  })?.key;
 
   const toggleFold = (key: string) => {
     const next = new Set(folded);
@@ -334,7 +382,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
       foldHeld(heldSession.key);
     }
   };
-  const endScrub = () => setScrubbing(false);
   useEventListener(document, "pointerup", endScrub);
   useEventListener(document, "pointercancel", endScrub);
   // The tab only mounts this view while it's selected, so the document is
@@ -367,7 +414,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
     // A drag owns the clock: the frame loop would run away from the pointer.
     onScrubStart: () => {
       setPlaying(false);
-      setScrubbing(true);
+      setScrubLayout({ states, allocation });
     },
     onHold: hold,
     onSeekCommand: seekToCommand,
@@ -393,7 +440,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         {agent.sessions.map((session) => {
           const state = states.get(session.key);
           if (!state || state === "pending") return null;
-          const topRow = session.key === topKey;
           const key = session.key;
           return (
             <TerminalRow
@@ -417,13 +463,15 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
               }
               onHold={() => hold(key)}
               onToggleFold={() => toggleFold(key)}
+              onFoldHeld={
+                heldSession?.key === key ? () => foldHeld(key) : undefined
+              }
               onTogglePlay={togglePlay}
               onKey={onKey}
               onPlayer={(player) => players.setPlayer(key, player, locate)}
               scrollerRef={(scroller) => players.setScroller(key, scroller)}
               pinned={pinned.has(key)}
               onJumpToLatest={() => players.jumpToLatest(key)}
-              tools={topRow ? viewTools : undefined}
             />
           );
         })}
@@ -434,7 +482,6 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         onTogglePlay={togglePlay}
         real={real}
         duration={sample.duration}
-        playback={playback}
         playbackDuration={sample.playbackDuration}
         speed={speed}
         onSpeedChange={setSpeed}
@@ -443,6 +490,7 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
         }
         onFollow={follow}
         scrubPreview={scrubPreview}
+        tools={viewTools}
         timelineFolded={allocation.timelineFolded}
         onToggleTimeline={() =>
           setTimelineOverride({
@@ -450,25 +498,15 @@ const SharedTerminals: FC<SharedTerminalsProps> = ({
             auto: autoAllocation.timelineFolded,
           })
         }
-        foldedTimeline={
-          allocation.timelineFolded ? (
-            <FoldedTimeline key={agent.id} {...timelineProps} />
-          ) : undefined
-        }
-        peekTimeline={<TerminalTimeline key={agent.id} {...timelineProps} />}
-      >
-        {/* Keyed by agent so a tick hovered for one agent doesn't leave its
-            chip over another's lanes. */}
-        {allocation.timelineFolded ? null : (
-          <TerminalTimeline key={agent.id} {...timelineProps} />
-        )}
-      </TerminalControls>
+        foldedTimeline={<FoldedTimeline key={agent.id} {...timelineProps} />}
+        // Keyed by agent so a tick hovered for one agent doesn't leave its
+        // chip over another's lanes.
+        timeline={<TerminalTimeline key={agent.id} {...timelineProps} />}
+      />
     </div>
   );
 };
 
-// The filled window's header (brief §9's dialog header): title, agents note,
-// the host's tools and the exit, which takes focus so the view's keys apply.
 const isEditable = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&
   (target.isContentEditable ||

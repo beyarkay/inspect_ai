@@ -228,20 +228,24 @@ export class PlayerSync {
   // picks up the line height the player's width-fit produced.
   private clip(element: HTMLElement): void {
     const clip = element.querySelector<HTMLElement>("[data-terminal-clip]");
-    const term = element.querySelector(".ap-term");
     const lines = element.querySelectorAll(".ap-line");
-    if (!clip || !term || lines.length === 0) return;
-    const termRect = term.getBoundingClientRect();
-    // The line pitch: a line's own box can be shorter than the spacing the
-    // terminal lays lines out at.
-    const pitch = termRect.height / lines.length;
-    if (pitch > 0 && Math.abs(pitch - this.lineHeight) > 0.25) {
-      this.lineHeight = pitch;
-      this.onLineHeight(pitch);
+    const first = lines[0];
+    if (!clip || !first) return;
+    // Measured from the lines themselves: the terminal's border sits above
+    // the first line, and a line's own box can be shorter than its pitch.
+    const firstTop = first.getBoundingClientRect().top;
+    const lastLine = lines[lines.length - 1];
+    if (lastLine && lines.length > 1) {
+      const pitch =
+        (lastLine.getBoundingClientRect().top - firstTop) / (lines.length - 1);
+      if (pitch > 0 && Math.abs(pitch - this.lineHeight) > 0.25) {
+        this.lineHeight = pitch;
+        this.onLineHeight(pitch);
+      }
     }
     let last = lines.length - 1;
     while (last > 0 && !lines[last]?.textContent.trim()) last--;
-    const termTop = termRect.top - clip.getBoundingClientRect().top;
-    clip.style.height = `${termTop + (last + 1) * this.lineHeight}px`;
+    const top = firstTop - clip.getBoundingClientRect().top;
+    clip.style.height = `${Math.ceil(top + (last + 1) * this.lineHeight)}px`;
   }
 }

@@ -9,7 +9,6 @@ import {
 } from "@tsmono/react/components";
 import { useScrollDirection } from "@tsmono/react/hooks";
 
-import { kLogViewSamplesTabId, kSampleTerminalsTabId } from "../../constants";
 import { refreshLog } from "../../state/actions";
 import {
   useEvalSpec,
@@ -20,7 +19,6 @@ import { useSelectedLogLoading } from "../../state/selectedLogDetails";
 import { useStore } from "../../state/store";
 import { useCurrentLogFile } from "../routing/currentSelection";
 import { useLogNavigationAction } from "../routing/logNavigation";
-import { useLogRouteParams } from "../routing/routeParams";
 import { toFullUrlMaybe } from "../routing/url";
 
 import styles from "./LogView.module.css";
@@ -113,13 +111,10 @@ export const LogView: FC = () => {
   });
 
   const selectedTab = useStore((state) => state.app.tabs.workspace);
-  // A sample's Terminals tab wants the height: the title shows collapsed
-  // there (derived, so leaving the tab shows its scroll state again).
-  const storedSampleTab = useStore((state) => state.app.tabs.sample);
-  const { sampleTabId } = useLogRouteParams();
-  const onSampleTerminals =
-    selectedTab === kLogViewSamplesTabId &&
-    (sampleTabId ?? storedSampleTab) === kSampleTerminalsTabId;
+  // A sample's terminals view wants the height: the title shows collapsed
+  // while one is mounted (derived, so leaving it shows the scroll state
+  // again).
+  const onSampleTerminals = useStore((state) => state.sample.terminalsViewOpen);
   const setSelectedTab = useStore((state) => state.appActions.setWorkspaceTab);
 
   const onSelected = (e: MouseEvent<HTMLElement>) => {

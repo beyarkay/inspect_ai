@@ -354,26 +354,6 @@ const interpolate = (
   return a[to] + ((x - a[from]) / (b[from] - a[from])) * (b[to] - a[to]);
 };
 
-/**
- * The shortened gap containing a real time, when every terminal is idle and
- * the shared clock is skipping: real seconds from `start` to `end` play in
- * `kSharedIdleLimit`.
- */
-export const idleGapAt = (
-  sample: TerminalSample,
-  real: number
-): { start: number; end: number } | undefined => {
-  const { knots } = sample;
-  for (let i = 1; i < knots.length; i++) {
-    const [start = 0] = knots[i - 1] ?? [];
-    const [end = 0] = knots[i] ?? [];
-    if (end < real) continue;
-    if (start > real) return undefined;
-    return end - start > kSharedIdleLimit ? { start, end } : undefined;
-  }
-  return undefined;
-};
-
 export type SessionPhase = "pending" | "open" | "closed";
 
 export const sessionPhase = (
@@ -570,7 +550,7 @@ export const rowStates = (
     })
   );
 
-export const kRowBarHeight = 30;
+export const kRowBarHeight = 26;
 export const kRowGap = 10;
 export const kRowBodyPadding = 14;
 export const kTailRows = 3;

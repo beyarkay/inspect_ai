@@ -129,7 +129,7 @@ import {
   buildTerminalSample,
   parseTerminalCasts,
 } from "./terminals/terminalModel";
-import { TerminalsView } from "./terminals/TerminalsView";
+import { TerminalsView, type TerminalsResume } from "./terminals/TerminalsView";
 import { ChunkedTranscriptPanel } from "./transcript/chunked/ChunkedTranscriptPanel";
 import { useTranscriptFilter } from "./transcript/hooks";
 import { useInspectSearchContext } from "./transcript/search/inspectSearchAdapters";
@@ -366,6 +366,14 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
   );
   const [pickedTerminalAgent, setPickedTerminalAgent] = useState<string>();
   const [terminalsFill, setTerminalsFill] = useState(false);
+  const terminalsKey = sample
+    ? sample.uuid || `${sample.id}:${sample.epoch}`
+    : undefined;
+  // Where this sample's terminals left off when the tab was last left.
+  const [terminalsResume, setTerminalsResume] = useState<{
+    key: string;
+    resume: TerminalsResume;
+  }>();
   const terminalAgent = terminalSample
     ? (terminalSample.agents.find(
         (agent) => agent.id === pickedTerminalAgent
@@ -1156,6 +1164,7 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                 selected={effectiveSelectedTab === kSampleTerminalsTabId}
               >
                 <TerminalsView
+                  key={terminalsKey}
                   id={`${baseId}-${id}-terminal-sessions`}
                   sample={terminalSample}
                   scrollRef={scrollRef}
@@ -1169,6 +1178,15 @@ export const SampleDisplay: FC<SampleDisplayProps> = ({
                       : undefined
                   }
                   onFullscreen={() => setTerminalsFill(true)}
+                  resume={
+                    terminalsResume?.key === terminalsKey
+                      ? terminalsResume?.resume
+                      : undefined
+                  }
+                  onSuspend={(resume) =>
+                    terminalsKey &&
+                    setTerminalsResume({ key: terminalsKey, resume })
+                  }
                 />
               </TabPanel>
             ) : null}

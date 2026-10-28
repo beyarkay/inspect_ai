@@ -68,12 +68,6 @@ export const castHeader = (cast: string): CastHeader => {
   return result;
 };
 
-/** Terminal geometry from the asciicast header. */
-export const castGeometry = (cast: string): { rows: number; cols: number } => {
-  const { rows, cols } = castHeader(cast);
-  return { rows, cols };
-};
-
 export interface CastEvent {
   time: number;
   type: string;

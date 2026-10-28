@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { FC, ReactNode, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 
 import {
   AsciinemaPlayer,
@@ -34,6 +34,8 @@ interface TerminalRowProps {
   pulse: boolean;
   onHold: () => void;
   onToggleFold: () => void;
+  /** Set on a held row: its chevron folds it, releasing the hold. */
+  onFoldHeld?: () => void;
   onTogglePlay: () => void;
   onKey: (e: KeyboardEvent) => void;
   onPlayer: (player: AsciinemaPlayerHandle | null) => void;
@@ -41,9 +43,6 @@ interface TerminalRowProps {
   /** The user scrolled the body up, away from the newest output. */
   pinned: boolean;
   onJumpToLatest: () => void;
-  /** The view's controls (fullscreen, and in fullscreen the agent picker);
-   *  given to the top row only. */
-  tools?: ReactNode;
 }
 
 /**
@@ -63,19 +62,18 @@ export const TerminalRow: FC<TerminalRowProps> = ({
   pulse,
   onHold,
   onToggleFold,
+  onFoldHeld,
   onTogglePlay,
   onKey,
   onPlayer,
   scrollerRef,
   pinned,
   onJumpToLatest,
-  tools,
 }) => {
   const hasBody = bodyRows > 0;
   // Only a session opening during playback flashes, not every row on load.
   const [flashOnOpen] = useState(animate);
   const showPulse = pulse && state !== "focused" && lastCommand !== undefined;
-  const canFold = state === "open" || state === "folded";
   const mainTitle =
     state === "focused" || state === "closed"
       ? undefined
@@ -104,23 +102,27 @@ export const TerminalRow: FC<TerminalRowProps> = ({
             aria-hidden="true"
           />
         ) : null}
+        {state === "focused" && !onFoldHeld ? (
+          // The agent's own row: folding it would show nothing until the
+          // agent moves on, so the chevron is a plain glyph.
+          <span className={styles.chevron} aria-hidden="true">
+            ▾
+          </span>
+        ) : (
+          <button
+            type="button"
+            className={clsx(styles.barButton, styles.chevron)}
+            onClick={onFoldHeld ?? onToggleFold}
+            aria-expanded={hasBody}
+            aria-label={`${hasBody ? "Fold" : "Unfold"} ${session.name}`}
+            disabled={state === "closed"}
+          >
+            {hasBody ? "▾" : "▸"}
+          </button>
+        )}
         <button
           type="button"
-          className={clsx(styles.barButton, styles.chevron)}
-          onClick={canFold ? onToggleFold : onHold}
-          aria-expanded={hasBody}
-          aria-label={
-            canFold
-              ? `${hasBody ? "Fold" : "Unfold"} ${session.name}`
-              : `Focus ${session.name}`
-          }
-          disabled={state === "closed"}
-        >
-          {hasBody ? "▾" : "▸"}
-        </button>
-        <button
-          type="button"
-          className={clsx(styles.barButton, styles.barName)}
+          className={clsx(styles.barButton, styles.barMain)}
           onClick={onHold}
           title={mainTitle}
           disabled={state === "closed"}
@@ -129,38 +131,20 @@ export const TerminalRow: FC<TerminalRowProps> = ({
           {state === "closed" ? (
             <span>ended {formatClock(session.end)}</span>
           ) : null}
-        </button>
-        {lastCommand ? (
-          <span className={styles.lastCommand}>
-            $ {commandLabel(lastCommand.command)}
-          </span>
-        ) : null}
-        {/* The rest of the bar is the same target as the name, kept out of
-            the tab order so each bar is one stop plus its controls. */}
-        <button
-          type="button"
-          className={clsx(styles.barButton, styles.barRest)}
-          onClick={onHold}
-          title={mainTitle}
-          tabIndex={-1}
-          disabled={state === "closed"}
-        >
+          {lastCommand ? (
+            <span className={styles.lastCommand}>
+              $ {commandLabel(lastCommand.command)}
+            </span>
+          ) : null}
           {snippet ? <span className={styles.snippet}>· {snippet}</span> : null}
-          <span className={styles.barMeta}>
-            {showPulse ? (
+          {showPulse ? (
+            <span className={styles.barMeta}>
               <span key={lastCommand.at} className={styles.newCommand}>
                 new command
               </span>
-            ) : null}
-            {state === "open" || state === "folded" ? (
-              <span>
-                <span className={styles.liveDot} aria-hidden="true" />
-                {state === "folded" ? "open · folded" : "open"}
-              </span>
-            ) : null}
-          </span>
+            </span>
+          ) : null}
         </button>
-        {tools ? <span className={styles.barTools}>{tools}</span> : null}
       </div>
       {hasBody ? (
         <TerminalBody

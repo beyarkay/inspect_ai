@@ -108,6 +108,7 @@ export const iconClasses = {
   next: "bi bi-chevron-right",
   noSamples: "bi bi-ban",
   options: "bi bi-gear",
+  pause: "bi bi-pause-fill",
   pencil: "bi bi-pencil",
   pendingTask: "bi bi-clock-fill",
   pendingTaskSubtle: "bi bi-clock",
