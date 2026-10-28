@@ -3,6 +3,9 @@ import { cellsOf, cellText, columnsOf } from "./grid";
 
 const kIdentityColumns = ["task", "id", "name", "sample", "file"];
 
+// The home log list already shows every field in full; a card adds nothing.
+const kNoCardGrids = new Set(["Evaluation logs"]);
+
 let card: HTMLDivElement | null = null;
 let currentRow: HTMLElement | null = null;
 
@@ -81,7 +84,12 @@ export const installTip = (enabled: () => boolean): void => {
       const target = e.target instanceof Element ? e.target : null;
       const row = target?.closest<HTMLElement>("[role=row]") ?? null;
       const grid = row?.closest<HTMLElement>("[role=grid]") ?? null;
-      if (!row || !grid || !row.querySelector("[role=gridcell]")) {
+      if (
+        !row ||
+        !grid ||
+        kNoCardGrids.has(grid.getAttribute("aria-label") ?? "") ||
+        !row.querySelector("[role=gridcell]")
+      ) {
         if (currentRow) hide();
         return;
       }
