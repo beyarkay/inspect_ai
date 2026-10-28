@@ -1,14 +1,14 @@
 # Hooks for the pro-ux branch: install with
 #   pre-commit install -c .pre-commit-config.pro-ux.yaml
 # Upstream's .pre-commit-config.yaml lints the whole monorepo; this one covers
-# the pro-ux layers and runs the inspect app and inspect-components test
-# suites (~35s) under en_US, which their time-format assertions assume.
+# the pro-ux layers and runs the inspect app, inspect-components and react
+# test suites (~45s) under en_US, which their time-format assertions assume.
 repos:
   - repo: local
     hooks:
       - id: pro-ux-prettier
         name: prettier --write (pro-ux)
-        entry: pnpm -C apps/inspect exec prettier --write src/pro-ux src/main.tsx ../../packages/inspect-components/src/pro-ux
+        entry: pnpm -C apps/inspect exec prettier --write src/pro-ux src/main.tsx ../../packages/inspect-components/src/pro-ux ../../packages/react/src/pro-ux
         language: system
         pass_filenames: false
         always_run: true
@@ -24,6 +24,12 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: pro-ux-eslint-react
+        name: eslint --fix (react pro-ux)
+        entry: env TSMONO_TYPED_LINT=1 pnpm -C packages/react exec eslint --fix --max-warnings 0 src/pro-ux
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: inspect-vitest
         name: vitest (apps/inspect, all tests)
         entry: env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 pnpm -C apps/inspect exec vitest run
@@ -33,6 +39,12 @@ repos:
       - id: components-vitest
         name: vitest (packages/inspect-components, all tests)
         entry: env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 pnpm -C packages/inspect-components exec vitest run
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: react-vitest
+        name: vitest (packages/react, all tests)
+        entry: env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 pnpm -C packages/react exec vitest run
         language: system
         pass_filenames: false
         always_run: true
