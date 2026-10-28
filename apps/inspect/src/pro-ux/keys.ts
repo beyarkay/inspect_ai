@@ -6,7 +6,7 @@ import {
   onDomSettled,
   overlayOpen,
 } from "./dom";
-import { toggleSidebarPinned } from "./sidebarState";
+import { toggleSidebarDocked } from "./sidebarState";
 import { toast } from "./toast";
 
 export interface Binding {
@@ -127,7 +127,7 @@ export const bindings: Binding[] = [
     label: "dock or float the samples and preferences sidebar",
     group: "Anywhere",
     run: () => {
-      toggleSidebarPinned();
+      toggleSidebarDocked();
       return true;
     },
   },

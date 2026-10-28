@@ -1,38 +1,57 @@
-const kPinKey = "pro-ux-sidebar-pinned";
+/** The user's explicit dock choice; null means automatic: docked while a
+ *  sample is open in a wide window, floating otherwise. */
+export type DockChoice = "docked" | "floating" | null;
 
-const read = (): boolean => {
+const kChoiceKey = "pro-ux-sidebar-choice";
+
+/** Wide enough for the 300px sample list beside a readable transcript. */
+export const kWideQuery = "(min-width: 1200px)";
+
+const read = (): DockChoice => {
   try {
-    return localStorage.getItem(kPinKey) === "1";
+    const stored = localStorage.getItem(kChoiceKey);
+    return stored === "docked" || stored === "floating" ? stored : null;
   } catch {
-    return false;
+    return null;
   }
 };
 
-let pinned = read();
+let choice = read();
 const listeners = new Set<() => void>();
 
-const apply = (): void => {
-  document.documentElement.toggleAttribute("data-pro-sidebar-pinned", pinned);
-};
+export const getDockChoice = (): DockChoice => choice;
 
-export const isSidebarPinned = (): boolean => pinned;
-
-export const setSidebarPinned = (next: boolean): void => {
-  pinned = next;
+export const setDockChoice = (next: DockChoice): void => {
+  choice = next;
   try {
-    localStorage.setItem(kPinKey, next ? "1" : "0");
+    if (next === null) localStorage.removeItem(kChoiceKey);
+    else localStorage.setItem(kChoiceKey, next);
   } catch {
-    // Storage unavailable: the pin lasts for this page only.
+    // Storage unavailable: the choice lasts for this page only.
   }
-  apply();
   for (const listener of listeners) listener();
 };
 
-export const toggleSidebarPinned = (): void => setSidebarPinned(!pinned);
+export const resolveDocked = (
+  choice: DockChoice,
+  autoDock: boolean
+): boolean => (choice === null ? autoDock : choice === "docked");
+
+/** Flip whatever is on screen now, automatic or not. */
+export const toggleSidebarDocked = (): void =>
+  setDockChoice(
+    document.querySelector(".pro-sidebar[data-docked]") ? "floating" : "docked"
+  );
 
 export const subscribeSidebar = (listener: () => void): (() => void) => {
   listeners.add(listener);
   return () => listeners.delete(listener);
 };
 
-if (typeof document !== "undefined") apply();
+export const subscribeWide = (listener: () => void): (() => void) => {
+  const query = window.matchMedia(kWideQuery);
+  query.addEventListener("change", listener);
+  return () => query.removeEventListener("change", listener);
+};
+
+export const isWide = (): boolean => window.matchMedia(kWideQuery).matches;

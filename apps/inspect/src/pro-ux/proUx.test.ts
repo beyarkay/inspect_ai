@@ -4,6 +4,7 @@ import { scaleTop } from "./cells";
 import { css, inferno, isDark, prgn, sequential } from "./colour";
 import { emptyColumnIds, moveToEnd } from "./emptyColumns";
 import { parseDuration, parseNumber } from "./grid";
+import { allSame, commonIdPrefix } from "./sampleLabels";
 
 describe("parseDuration", () => {
   it.each([
@@ -96,5 +97,27 @@ describe("moveToEnd", () => {
       "a",
       "b",
     ]);
+  });
+});
+
+describe("commonIdPrefix", () => {
+  it("cuts the shared prefix back to a separator", () => {
+    expect(
+      commonIdPrefix(["eval-aggregate-rate", "eval-aggregate-next", "eval-a"])
+    ).toBe("eval-");
+  });
+  it("keeps whole ids when nothing is shared or one id is the prefix", () => {
+    expect(commonIdPrefix(["alpha", "beta"])).toBe("");
+    expect(commonIdPrefix(["run-", "run-1"])).toBe("");
+    expect(commonIdPrefix(["run-1", "run-1-retry"])).toBe("run-");
+    expect(commonIdPrefix(["only"])).toBe("");
+  });
+});
+
+describe("allSame", () => {
+  it("needs two or more equal values", () => {
+    expect(allSame(["a", "a"])).toBe(true);
+    expect(allSame(["a", "b"])).toBe(false);
+    expect(allSame(["a"])).toBe(false);
   });
 });

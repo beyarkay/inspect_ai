@@ -17,10 +17,14 @@ import {
   setPref,
   subscribePrefs,
 } from "./prefs";
+import { allSame, commonIdPrefix } from "./sampleLabels";
 import {
-  isSidebarPinned,
-  setSidebarPinned,
+  getDockChoice,
+  isWide,
+  resolveDocked,
+  setDockChoice,
   subscribeSidebar,
+  subscribeWide,
 } from "./sidebarState";
 
 const kCloseDelayMs = 250;
@@ -176,7 +180,12 @@ export const ProSidebar: FC = () => {
   const current = useCurrentSampleHandle();
   const { getSampleUrl } = useSampleNavigationActions();
   const [open, setOpen] = useState(false);
-  const pinned = useSyncExternalStore(subscribeSidebar, isSidebarPinned);
+  const choice = useSyncExternalStore(subscribeSidebar, getDockChoice);
+  const wide = useSyncExternalStore(subscribeWide, isWide);
+  const pinned = resolveDocked(
+    choice,
+    wide && current !== undefined && samples.length > 0
+  );
   const [query, setQuery] = useState("");
   const closeTimer = useRef<number | undefined>(undefined);
 
@@ -186,6 +195,14 @@ export const ProSidebar: FC = () => {
       .filter((v): v is number => typeof v === "number");
     return scaleTop(numeric);
   }, [samples]);
+
+  const { idPrefix, sharedInput } = useMemo(
+    () => ({
+      idPrefix: commonIdPrefix(samples.map((s) => String(s.id))),
+      sharedInput: allSame(samples.map(inputPreview)),
+    }),
+    [samples]
+  );
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -223,7 +240,7 @@ export const ProSidebar: FC = () => {
         onMouseLeave={scheduleClose}
         onClick={() => {
           setOpen(true);
-          setSidebarPinned(!pinned);
+          setDockChoice(pinned ? "floating" : "docked");
         }}
       >
         <SidebarIcon pinned={pinned} />
@@ -231,6 +248,7 @@ export const ProSidebar: FC = () => {
       {show && (
         <aside
           className="pro-sidebar"
+          data-docked={pinned || undefined}
           aria-label="Samples and preferences"
           onMouseEnter={cancelClose}
           onMouseLeave={scheduleClose}
@@ -241,6 +259,24 @@ export const ProSidebar: FC = () => {
             </span>
             <span className="pro-sb-state">
               <kbd>b</kbd> {pinned ? "docked" : "floating"}
+              {choice === null ? (
+                <span title="Docked while a sample is open in a wide window">
+                  {" "}
+                  · auto
+                </span>
+              ) : (
+                <>
+                  {" · "}
+                  <button
+                    type="button"
+                    className="pro-sb-auto"
+                    title="Dock while a sample is open in a wide window, float otherwise"
+                    onClick={() => setDockChoice(null)}
+                  >
+                    auto
+                  </button>
+                </>
+              )}
             </span>
           </div>
           {samples.length > 0 ? (
@@ -251,6 +287,22 @@ export const ProSidebar: FC = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
+              {(idPrefix || sharedInput) && (
+                <div className="pro-sb-shared">
+                  {idPrefix && (
+                    <div>
+                      ids start <b>{idPrefix}</b>
+                    </div>
+                  )}
+                  {sharedInput && (
+                    <div
+                      title={samples[0] ? inputPreview(samples[0]) : undefined}
+                    >
+                      every sample has the same input
+                    </div>
+                  )}
+                </div>
+              )}
               <nav className="pro-sb-list">
                 {visible.map((sample) => {
                   const href = getSampleUrl(sample.id, sample.epoch);
@@ -268,8 +320,8 @@ export const ProSidebar: FC = () => {
                       to={href?.replace(/^#/, "") ?? "."}
                       className={on ? "pro-sb-row on" : "pro-sb-row"}
                     >
-                      <span className="pro-sb-id">
-                        {String(sample.id)}
+                      <span className="pro-sb-id" title={String(sample.id)}>
+                        {String(sample.id).slice(idPrefix.length)}
                         <small> · {sample.epoch}</small>
                       </span>
                       {score !== undefined && (
@@ -287,9 +339,11 @@ export const ProSidebar: FC = () => {
                           {formatScore(score)}
                         </span>
                       )}
-                      <span className="pro-sb-preview">
-                        {inputPreview(sample)}
-                      </span>
+                      {!sharedInput && (
+                        <span className="pro-sb-preview">
+                          {inputPreview(sample)}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}
