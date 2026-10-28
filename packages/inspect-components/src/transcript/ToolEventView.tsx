@@ -220,6 +220,7 @@ export const ToolEventView: FC<ToolEventViewProps> = ({
       selfAnnotation={context?.selfAnnotation}
       inputScreenshot={context?.inputScreenshot}
       error={showError && event.error ? event.error : undefined}
+      args={ran.arguments}
       view={resolvedView}
       afterInput={beforeInsets}
       afterOutput={afterInset}

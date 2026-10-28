@@ -185,6 +185,7 @@ export const ChatMessageRow = memo(function ChatMessageRow({
             contentType={contentType}
             output={resolvedToolOutput}
             error={toolMessage?.error ?? undefined}
+            args={tool_call.arguments}
             view={resolvedToolView}
             getCustomToolView={getCustomToolView}
             // The head chat message is skipped for tool-only turns, so the

@@ -8,6 +8,7 @@ import type {
 import { ExpandablePanel } from "@tsmono/react/components";
 
 import { useCustomContent } from "../../content/DisplayModeContext";
+import { useShellView } from "../../pro-ux/shellCommand";
 
 import { AnnotatedScreenshotOutput } from "./AnnotatedScreenshot";
 import styles from "./ClientToolCall.module.css";
@@ -32,6 +33,9 @@ export interface ClientToolCallProps {
   selfAnnotation?: ToolCallViewProps["selfAnnotation"];
   inputScreenshot?: ToolCallViewProps["inputScreenshot"];
   error?: ToolCallError;
+  /** The raw call arguments; pro-ux prints a simple shell command as the
+   *  header line. */
+  args?: Record<string, unknown>;
   className?: string | string[];
   getCustomToolView?: (props: ToolCallViewProps) => ReactNode | undefined;
   /** Rendered between the input zone and the output. */
@@ -63,6 +67,7 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
   selfAnnotation,
   inputScreenshot,
   error,
+  args,
   className,
   getCustomToolView,
   afterInput,
@@ -71,6 +76,10 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
   headerLeading,
 }) => {
   const customContent = useCustomContent();
+  const shell = useShellView(tool, args);
+  const shellLine = shell.line;
+  const shownInput = shell.block ?? input;
+  const shownType = shell.block !== undefined ? "bash" : contentType;
 
   // Custom views render the call and its result as one self-contained UI —
   // give them the block frame without the header.
@@ -102,7 +111,9 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
   }
 
   const hasInput =
-    (input !== undefined && input !== null && input !== "") || !!view?.content;
+    !shellLine &&
+    ((shownInput !== undefined && shownInput !== null && shownInput !== "") ||
+      !!view?.content);
   // Tools without a dedicated input descriptor carry all their args in the
   // functionCall string; args too long for the one-line header summary get a
   // real input zone instead (mirroring ServerToolCall's multi-line args).
@@ -111,7 +122,8 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
   // `coordinate: [100, 200]` are multi-line as a formatting artifact.
   const argsBody = hasInput ? undefined : fullArgs(functionCall, title || tool);
   const argsSummary = argsBody?.replace(/\s+/g, " ").trim();
-  const argsInInputZone = !!argsSummary && argsSummary.length > kMaxSummaryArgs;
+  const argsInInputZone =
+    !shellLine && !!argsSummary && argsSummary.length > kMaxSummaryArgs;
   const showError = !!error;
   const showAnnotation = !!selfAnnotation && !!inputScreenshot;
   const showOutput = !showError && (hasOutputContent(output) || showAnnotation);
@@ -120,9 +132,13 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
     <ToolBlock
       id={id}
       icon={iconForTool(tool)}
-      title={title || tool}
-      summary={description ?? (argsInInputZone ? undefined : argsSummary)}
-      className={className}
+      title={shellLine ?? (title || tool)}
+      summary={
+        shellLine
+          ? description
+          : (description ?? (argsInInputZone ? undefined : argsSummary))
+      }
+      className={clsx(className, shellLine && "pro-shell-line")}
       headerLeading={headerLeading}
     >
       {hasInput || argsInInputZone ? (
@@ -135,8 +151,8 @@ export const ClientToolCall: FC<ClientToolCallProps> = ({
             className={clsx("text-size-small")}
           >
             <ToolInput
-              contentType={hasInput ? contentType : undefined}
-              contents={hasInput ? input : argsBody}
+              contentType={hasInput ? shownType : undefined}
+              contents={hasInput ? shownInput : argsBody}
               toolCallView={hasInput ? view : undefined}
             />
           </ExpandablePanel>
