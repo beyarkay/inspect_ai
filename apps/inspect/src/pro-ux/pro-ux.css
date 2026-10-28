@@ -450,81 +450,6 @@
   padding: 0 4px;
 }
 
-/* ── Data card: fixed position, away from the cursor ── */
-
-.pro-tip {
-  display: none;
-  position: fixed;
-  top: 60px;
-  z-index: 1400;
-  width: 380px;
-  max-height: calc(100vh - 80px);
-  overflow: hidden;
-  pointer-events: none;
-  background: var(--pro-surface);
-  color: var(--pro-fg);
-  border: 1px solid var(--pro-line);
-  border-radius: 2px;
-  box-shadow: var(--pro-shadow);
-  font:
-    15px/1.4 "EB Garamond",
-    Garamond,
-    Georgia,
-    serif;
-  font-variant-numeric: tabular-nums;
-}
-
-.pro-tip-info {
-  padding: 7px 12px 9px;
-}
-
-.pro-tip-head {
-  font-weight: 600;
-  margin-bottom: 1px;
-  overflow-wrap: anywhere;
-}
-
-.pro-tip-sub {
-  color: var(--pro-mute);
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.pro-tip table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.pro-tip td {
-  vertical-align: top;
-  padding: 1px 0;
-  border-top: 1px solid var(--pro-soft);
-}
-
-.pro-tip td:first-child {
-  color: var(--pro-mute);
-  padding-right: 12px;
-  white-space: nowrap;
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.04em;
-}
-
-.pro-tip td:last-child {
-  text-align: right;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-  display: -webkit-box;
-  -webkit-line-clamp: 8;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.pro-tip-note {
-  margin-top: 5px;
-  font-size: 13px;
-  color: var(--pro-mute);
-}
-
 /* ── Scores: diverging badge, value over its scale ── */
 
 :root[data-pro-ux][data-pro-scorebadges] [data-pro-badge] {
@@ -559,31 +484,6 @@
   [class*="_headerText_"] {
   border-bottom: 3px solid transparent;
   border-image: var(--pro-ramp) 1;
-}
-
-.pro-tip td.pro-tip-long {
-  text-align: left;
-  display: table-cell;
-  padding: 1px 0 3px;
-  color: inherit;
-  white-space: normal;
-  font-variant-caps: normal;
-  letter-spacing: 0;
-}
-
-.pro-tip td.pro-tip-long > div:first-child {
-  color: var(--pro-mute);
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.04em;
-}
-
-.pro-tip td.pro-tip-long > div:last-child {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 10;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* ── Model-call captions: what the model saw, where its tool calls went ── */

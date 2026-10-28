@@ -5,9 +5,7 @@ import "./dark.css";
 import { installCells } from "./cells";
 import { closeHelp, installHelp, toggleHelp } from "./help";
 import { announceSkin, installKeys, setKeyActions } from "./keys";
-import { getPrefs } from "./prefs";
 import { installSmallCaps } from "./smallCaps";
-import { installTip } from "./tip";
 
 const kStorageKey = "pro-ux-enabled";
 
@@ -45,5 +43,4 @@ setKeyActions({
 
 installKeys();
 installHelp();
-installTip(() => isProUxEnabled() && getPrefs().hoverCard);
 installCells();

@@ -3,7 +3,6 @@ import { useSyncExternalStore } from "react";
 export interface ProPrefs {
   collapseEmptyColumns: boolean;
   wrapCells: boolean;
-  hoverCard: boolean;
   scoreBadges: boolean;
   quantityUnderlines: boolean;
   printedKeys: boolean;
@@ -15,7 +14,6 @@ export interface ProPrefs {
 export const kPrefDefaults: ProPrefs = {
   collapseEmptyColumns: true,
   wrapCells: false,
-  hoverCard: true,
   scoreBadges: true,
   quantityUnderlines: true,
   printedKeys: true,
@@ -27,7 +25,6 @@ export const kPrefDefaults: ProPrefs = {
 export const kPrefKeys: (keyof ProPrefs)[] = [
   "collapseEmptyColumns",
   "wrapCells",
-  "hoverCard",
   "scoreBadges",
   "quantityUnderlines",
   "printedKeys",
@@ -45,7 +42,6 @@ export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
     "Soft-wrap table cells",
     "Show whole cell contents; rows grow to fit",
   ],
-  hoverCard: ["Hover card on sample rows", "Every field of the hovered row"],
   scoreBadges: ["Score badges", "Scores coloured on a purple–green scale"],
   quantityUnderlines: [
     "Underline tokens and durations",
