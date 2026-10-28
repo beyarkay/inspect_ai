@@ -1,0 +1,308 @@
+/* pro-UX skin. Everything is gated on <html data-pro-ux> so `T` flips back to
+   upstream for comparison. Upstream CSS-module classes are matched by their
+   stable `_name_` fragment; a rename upstream just drops that one rule. */
+
+:root[data-pro-ux] {
+  --pro-fg: #2a2a2e;
+  --pro-mute: #77777f;
+  --pro-faint: #a0a0a8;
+  --pro-sub: #55555c;
+  --pro-soft: #e2e2e6;
+  --pro-line: #d3d3d9;
+  --pro-bg: #f4f4f6;
+  --pro-tint: #eef1f6;
+  --pro-hover-line: #b9bec9;
+  --pro-dark: #3a3a40;
+  --pro-bad: #b00020;
+  --pro-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  --pro-font: "EB Garamond", Garamond, Georgia, serif;
+  --pro-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --pro-role-user: #0072b2;
+  --pro-role-assistant: #d55e00;
+  --pro-role-system: #77777f;
+  --pro-role-tool: #009e73;
+  --pro-role-reasoning: #cc79a7;
+
+  --bs-body-font-family: var(--pro-font);
+  --bs-font-sans-serif: var(--pro-font);
+  --bs-font-monospace: var(--pro-mono);
+  --bs-body-font-size: 16px;
+  --bs-border-radius: 2px;
+  --bs-border-radius-sm: 2px;
+  --bs-border-radius-lg: 2px;
+  --bs-border-radius-xl: 2px;
+  --bs-border-radius-xxl: 2px;
+
+  --inspect-font-size-title: 1.4rem;
+  --inspect-font-size-title-secondary: 1.25rem;
+  --inspect-font-size-largest: 1.2rem;
+  --inspect-font-size-larger: 1.1rem;
+  --inspect-font-size-large: 1.05rem;
+  --inspect-font-size-base: 1rem;
+  --inspect-font-size-small: 0.94rem;
+  --inspect-font-size-smaller: 0.9rem;
+  --inspect-font-size-smallest: 0.86rem;
+  --inspect-font-size-smallestest: 0.8rem;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) {
+  --bs-body-color: var(--pro-fg);
+  --bs-body-color-rgb: 42, 42, 46;
+  --bs-emphasis-color: #111;
+  --bs-secondary-color: var(--pro-mute);
+  --bs-secondary: var(--pro-mute);
+  --bs-tertiary-color: var(--pro-faint);
+  --bs-border-color: var(--pro-line);
+  --bs-light-border-subtle: var(--pro-soft);
+  --bs-border-color-translucent: var(--pro-soft);
+  --bs-tertiary-bg: var(--pro-bg);
+  --bs-secondary-bg: var(--pro-bg);
+  --bs-light-bg-subtle: #fff;
+  --bs-primary: var(--pro-dark);
+  --bs-primary-rgb: 58, 58, 64;
+  --bs-primary-bg-subtle: var(--pro-tint);
+  --bs-primary-text-emphasis: var(--pro-dark);
+  --bs-link-color: var(--pro-fg);
+  --bs-link-color-rgb: 42, 42, 46;
+  --bs-link-hover-color: #000;
+  --bs-link-hover-color-rgb: 0, 0, 0;
+  --bs-danger: var(--pro-bad);
+  --bs-code-color: var(--pro-fg);
+  --inspect-focus-border-color: var(--pro-dark);
+  --inspect-focus-border-shadow: 0 0 0 2px var(--pro-tint);
+  --inspect-active-selection-background: var(--pro-tint);
+  --inspect-tool-output-bg: #fbfbfc;
+  --inspect-tool-block-header-bg: #fbfbfc;
+  --inspect-msg-label-bg: #fff;
+  --inspect-msg-label-bg-hover: var(--pro-tint);
+  --inspect-msg-label-border: var(--pro-line);
+  --inspect-msg-label-text: var(--pro-mute);
+
+  /* Event Colors (the readable variant) becomes a hairline rule per role, no fills. */
+  --inspect-readable-user-bg: #fff;
+  --inspect-readable-user-border: var(--pro-role-user);
+  --inspect-readable-assistant-bg: #fff;
+  --inspect-readable-assistant-border: var(--pro-role-assistant);
+  --inspect-readable-thinking-bg: #fff;
+  --inspect-readable-thinking-border: var(--pro-role-reasoning);
+  --inspect-readable-tool-call-bg: #fbfbfc;
+  --inspect-readable-tool-call-border: var(--pro-role-tool);
+  --inspect-readable-system-bg: #fff;
+  --inspect-readable-system-border: var(--pro-role-system);
+  --inspect-readable-body-color: var(--pro-fg);
+}
+
+:root[data-pro-ux] body {
+  font-family: var(--pro-font);
+  font-size: 16px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] button,
+:root[data-pro-ux] input,
+:root[data-pro-ux] select,
+:root[data-pro-ux] textarea {
+  font-family: inherit;
+}
+
+/* ── Labels: small caps instead of shouty uppercase ── */
+
+:root[data-pro-ux] .text-style-label,
+:root[data-pro-ux] [class*="_headerCell_"],
+:root[data-pro-ux] [class*="_rotatedText_"] {
+  text-transform: none !important;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+}
+
+/* ── Links: black, underline on hover ── */
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) a:not(.nav-link):not(.btn) {
+  color: var(--pro-fg);
+  text-decoration: none;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"])
+  a:not(.nav-link):not(.btn):hover {
+  text-decoration: underline 1px;
+  text-underline-offset: 3px;
+}
+
+/* ── Buttons: white, hairline, tint on hover ── */
+
+:root[data-pro-ux] .btn {
+  border-radius: 2px;
+  font-family: var(--pro-font);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-tools,
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-outline-secondary {
+  background: #fff;
+  border: 1px solid var(--pro-line);
+  color: var(--pro-fg);
+  padding: 1px 10px;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-tools:hover,
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-outline-secondary:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-primary {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: #fff;
+}
+
+/* ── Tabs: active is dark ── */
+
+:root[data-pro-ux] .nav-link {
+  border-radius: 2px;
+  font-weight: 400;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link {
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link:hover {
+  background: var(--pro-tint);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-pills .nav-link.active,
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link.active,
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-tabs .nav-link.active {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: #fff;
+}
+
+:root[data-pro-ux] .nav-link.text-size-smallest {
+  font-size: 1rem !important;
+}
+
+/* ── Top bar ── */
+
+:root[data-pro-ux] nav[class*="_header_"] {
+  font-size: 15px !important;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) nav[class*="_header_"] {
+  background: #fff;
+  border-bottom: 1px solid var(--pro-line);
+}
+
+/* ── Data grids ── */
+
+:root[data-pro-ux] [class*="_headerCell_"] {
+  font-size: 14px !important;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] [class*="_cell_"] {
+  font-size: 15px !important;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_row_"] {
+  border-bottom-color: var(--pro-soft);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_row_"]:hover,
+:root[data-pro-ux]:not([data-bs-theme="dark"])
+  [class*="_row_"]:hover
+  [class*="_cellPinned_"] {
+  background: var(--pro-tint);
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_rowSelected_"],
+:root[data-pro-ux]:not([data-bs-theme="dark"])
+  [class*="_rowSelected_"]
+  [class*="_cellPinned_"] {
+  background: var(--pro-tint) !important;
+  box-shadow: inset 3px 0 0 var(--pro-dark);
+}
+
+/* ── Inputs ── */
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) input.form-control,
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .form-control {
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+}
+
+:root[data-pro-ux]:not([data-bs-theme="dark"]) .form-control:focus {
+  border-color: #8a8f9c;
+  box-shadow: 0 0 0 2px var(--pro-tint);
+}
+
+/* ── Messages: role is a coloured hairline rule + small-caps label, no fill ── */
+
+:root[data-pro-ux][data-theme-variant="readable"] [data-message-role] {
+  border-left-width: 3px;
+}
+
+:root[data-pro-ux] [data-message-role] .text-style-label,
+:root[data-pro-ux] [class*="_fieldLabel_"],
+:root[data-pro-ux] [class*="_columnLabel_"] {
+  font-size: 14px !important;
+}
+
+:root[data-pro-ux] [data-message-role="user"] .text-style-label {
+  color: var(--pro-role-user);
+}
+
+:root[data-pro-ux] [data-message-role="assistant"] .text-style-label {
+  color: var(--pro-role-assistant);
+}
+
+:root[data-pro-ux] [data-message-role="system"] .text-style-label {
+  color: var(--pro-role-system);
+}
+
+:root[data-pro-ux] [data-message-role="tool"] .text-style-label {
+  color: var(--pro-role-tool);
+}
+
+/* ── Identity text: serif, not monospace ── */
+
+:root[data-pro-ux] [class*="_metaId_"] {
+  font-family: var(--pro-font);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+:root[data-pro-ux] [class*="_taskText_"] {
+  font-size: 15px;
+}
+
+/* ── Floating things keep their shadow ── */
+
+:root[data-pro-ux] .popover,
+:root[data-pro-ux] .dropdown-menu,
+:root[data-pro-ux] .modal-content {
+  border-radius: 2px;
+  border: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+}
+
+/* ── Code stays monospace, a touch smaller than the serif body ── */
+
+:root[data-pro-ux] pre,
+:root[data-pro-ux] code,
+:root[data-pro-ux] kbd,
+:root[data-pro-ux] samp {
+  font-family: var(--pro-mono);
+  font-size: 0.82em;
+}
+
+:root[data-pro-ux] kbd {
+  font-family: var(--pro-font);
+  font-size: 0.85em;
+  color: var(--pro-faint);
+  background: none;
+  padding: 0;
+}

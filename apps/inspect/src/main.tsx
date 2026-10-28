@@ -11,6 +11,8 @@ import { Capabilities } from "./client/api/types";
 import storage from "./client/storage";
 import { initializeStore } from "./state/store";
 
+import "./pro-ux";
+
 // No api instance exists yet — construction needs the resolved log dir
 // (below the gate). The backend's transport facts are a sync bootstrap fact.
 const backendCapabilities = getBootstrap().backend.capabilities;
