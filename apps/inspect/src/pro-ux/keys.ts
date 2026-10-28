@@ -124,7 +124,7 @@ export const bindings: Binding[] = [
   },
   {
     keys: ["b"],
-    label: "pin or unpin the samples and preferences sidebar",
+    label: "dock or float the samples and preferences sidebar",
     group: "Anywhere",
     run: () => {
       toggleSidebarPinned();

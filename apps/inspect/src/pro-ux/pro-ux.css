@@ -684,28 +684,45 @@
     center / 2px 100% no-repeat;
 }
 
-/* ── Left sidebar: hover the rail to float it open, b / pin to dock it ── */
+/* ── Left sidebar: hover the top-left button to float it open, click or b to dock it ── */
 
-.pro-rail,
+.pro-sb-button,
 .pro-sidebar {
   display: none;
 }
 
-:root[data-pro-ux] .pro-rail {
-  display: block;
+:root[data-pro-ux] .pro-sb-button {
+  display: grid;
+  place-items: center;
   position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 8px;
-  z-index: 1200;
+  left: 5px;
+  top: 5px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  z-index: 1310;
+  border: 1px solid transparent;
+  border-radius: 2px;
   background: transparent;
-  border-left: 3px solid transparent;
-  transition: border-color 120ms;
+  color: var(--pro-mute);
 }
 
-:root[data-pro-ux] .pro-rail:hover {
-  border-left-color: var(--pro-line);
+:root[data-pro-ux] .pro-sb-button:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-sb-button[aria-pressed="true"] {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] nav[class*="_header_"] {
+  padding-left: 36px;
+}
+
+:root[data-pro-ux][data-pro-sidebar-pinned] nav[class*="_header_"] {
+  padding-left: 0.5em;
 }
 
 :root[data-pro-ux] .pro-sidebar {
@@ -736,7 +753,7 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 8px 10px 6px;
+  padding: 8px 10px 6px 38px;
   border-bottom: 1px solid var(--pro-soft);
 }
 
@@ -752,23 +769,9 @@
   color: var(--pro-faint);
 }
 
-.pro-sb-pin {
-  border: 1px solid var(--pro-line);
-  background: var(--pro-surface);
-  color: var(--pro-fg);
-  padding: 0 8px;
-  font: 14px var(--pro-font);
-  border-radius: 2px;
-}
-
-.pro-sb-pin.on {
-  background: var(--pro-dark);
-  color: var(--pro-on-dark);
-  border-color: var(--pro-dark);
-}
-
-.pro-sb-pin kbd {
-  margin-right: 5px;
+.pro-sb-state {
+  font-size: 14px;
+  color: var(--pro-mute);
 }
 
 .pro-sb-filter {

@@ -139,8 +139,38 @@ const PrefsPane: FC = () => {
   );
 };
 
-/** A Claude-Code-style rail on the left edge: hover (or b) floats the panel
- *  open; the pin docks it. Lists the current log's samples, then preferences. */
+const SidebarIcon: FC<{ pinned: boolean }> = ({ pinned }) => (
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+    <rect
+      x="1.5"
+      y="2.5"
+      width="13"
+      height="11"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+    />
+    <rect
+      x="2"
+      y="3"
+      width="4.5"
+      height="10"
+      fill={pinned ? "currentColor" : "none"}
+    />
+    <line
+      x1="6.5"
+      y1="2.5"
+      x2="6.5"
+      y2="13.5"
+      stroke="currentColor"
+      strokeWidth="1.3"
+    />
+  </svg>
+);
+
+/** A fixed top-left button: hover floats the panel open, click (or b) docks
+ *  it, click again floats it. The button never moves. Lists the current
+ *  log's samples, then preferences. */
 export const ProSidebar: FC = () => {
   const samples = useFilteredSamples();
   const current = useCurrentSampleHandle();
@@ -176,36 +206,42 @@ export const ProSidebar: FC = () => {
 
   return (
     <>
-      <div
-        className="pro-rail"
+      <button
+        type="button"
+        className="pro-sb-button"
+        aria-pressed={pinned}
+        aria-label={pinned ? "Float the sidebar" : "Dock the sidebar"}
+        title={
+          pinned
+            ? "Sidebar docked: click (or b) to float it"
+            : "Hover to peek at samples and preferences; click (or b) to dock"
+        }
         onMouseEnter={() => {
           cancelClose();
           setOpen(true);
         }}
-        aria-hidden="true"
-      />
+        onMouseLeave={scheduleClose}
+        onClick={() => {
+          setOpen(true);
+          setSidebarPinned(!pinned);
+        }}
+      >
+        <SidebarIcon pinned={pinned} />
+      </button>
       {show && (
         <aside
           className="pro-sidebar"
           aria-label="Samples and preferences"
           onMouseEnter={cancelClose}
-          onMouseLeave={() => {
-            if (!pinned) scheduleClose();
-          }}
+          onMouseLeave={scheduleClose}
         >
           <div className="pro-sb-head">
             <span className="pro-sb-heading">
               Samples <small>{samples.length || ""}</small>
             </span>
-            <button
-              type="button"
-              className={pinned ? "pro-sb-pin on" : "pro-sb-pin"}
-              onClick={() => setSidebarPinned(!pinned)}
-              title="Pin the sidebar open (b)"
-            >
-              <kbd>b</kbd>
-              {pinned ? "unpin" : "pin"}
-            </button>
+            <span className="pro-sb-state">
+              <kbd>b</kbd> {pinned ? "docked" : "floating"}
+            </span>
           </div>
           {samples.length > 0 ? (
             <>
