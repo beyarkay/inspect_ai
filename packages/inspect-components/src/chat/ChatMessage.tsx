@@ -16,6 +16,7 @@ import {
 
 import { useDisplayMode } from "../content/DisplayModeContext";
 import { RecordTree } from "../content/RecordTree";
+import { useMessageCopyButton } from "../pro-ux/MessageCopy";
 
 import styles from "./ChatMessage.module.css";
 import { MessageContent } from "./MessageContent";
@@ -64,6 +65,7 @@ export const ChatMessage: FC<ChatMessageProps> = memo(function ChatMessage({
   const messageUrl = getMessageUrl?.(message.id || "");
 
   const [mouseOver, setMouseOver] = useState(false);
+  const copyButton = useMessageCopyButton(message, mouseOver);
 
   const isNonSubagentTool =
     message.role === "tool" &&
@@ -139,7 +141,7 @@ export const ChatMessage: FC<ChatMessageProps> = memo(function ChatMessage({
           ""
         )}
       </div>
-      {(message.timestamp && formatDateTime) || label ? (
+      {(message.timestamp && formatDateTime) || label || copyButton ? (
         <div className={styles.headerEnd}>
           {message.timestamp && formatDateTime && (
             <span className={styles.timestamp} title={message.timestamp}>
@@ -147,6 +149,7 @@ export const ChatMessage: FC<ChatMessageProps> = memo(function ChatMessage({
             </span>
           )}
           {label}
+          {copyButton}
         </div>
       ) : null}
     </div>
