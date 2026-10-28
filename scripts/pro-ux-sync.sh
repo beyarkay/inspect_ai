@@ -48,11 +48,13 @@ if ! $build_only; then
   pinned=$(git -C "$ROOT" ls-tree upstream/main "$GITLINK" | awk '{print $3}')
   [ -n "$pinned" ] || die "could not read the pinned ts-mono commit"
   echo "── merging ts-mono $pinned"
-  git -C "$VIEW" merge -q --no-edit "$pinned" ||
+  git -C "$VIEW" merge -q --no-ff --no-edit "$pinned" ||
     die "merge stopped in $VIEW: resolve, commit, then rerun"
 
   echo "── merging upstream/main"
-  if ! git -C "$ROOT" merge -q --no-edit upstream/main; then
+  if ! git -C "$ROOT" merge -q --no-ff --no-edit upstream/main; then
+    git -C "$ROOT" rev-parse -q --verify MERGE_HEAD >/dev/null ||
+      die "merging upstream/main failed in $ROOT before any conflict"
     # The bundle and the viewer pin conflict on every upstream bump; both are
     # regenerated below, so keep ours for now.
     git -C "$ROOT" checkout -q HEAD -- "$DIST"
