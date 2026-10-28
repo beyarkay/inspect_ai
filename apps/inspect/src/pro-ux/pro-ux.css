@@ -308,7 +308,7 @@
 
 /* ── Keys printed on the controls they drive ── */
 
-:root[data-pro-ux] [data-pro-key]::before {
+:root[data-pro-ux][data-pro-printedkeys] [data-pro-key]::before {
   content: attr(data-pro-key);
   font-family: var(--pro-font);
   font-size: 12.5px;
@@ -318,7 +318,8 @@
   letter-spacing: 0;
 }
 
-:root[data-pro-ux] .nav-link.active[data-pro-key]::before {
+:root[data-pro-ux][data-pro-printedkeys]
+  .nav-link.active[data-pro-key]::before {
   color: var(--pro-on-dark-faint);
 }
 
@@ -525,7 +526,7 @@
 
 /* ── Scores: diverging badge, value over its scale ── */
 
-:root[data-pro-ux] [data-pro-badge] {
+:root[data-pro-ux][data-pro-scorebadges] [data-pro-badge] {
   display: inline-block;
   min-width: 3.2em;
   text-align: center;
@@ -538,7 +539,7 @@
   line-height: 1.3;
 }
 
-:root[data-pro-ux] [data-pro-badge]::after {
+:root[data-pro-ux][data-pro-scorebadges] [data-pro-badge]::after {
   content: attr(data-pro-of);
   opacity: 0.75;
   font-size: 0.85em;
@@ -546,13 +547,15 @@
 
 /* ── Ranked quantities: sequential underline, with a key in the header ── */
 
-:root[data-pro-ux] [data-pro-q] {
+:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q] {
   text-decoration: underline 2.5px var(--q);
   text-underline-offset: 4px;
   text-decoration-skip-ink: none;
 }
 
-:root[data-pro-ux] [data-pro-ramp] [class*="_headerText_"] {
+:root[data-pro-ux][data-pro-quantityunderlines]
+  [data-pro-ramp]
+  [class*="_headerText_"] {
   border-bottom: 3px solid transparent;
   border-image: var(--pro-ramp) 1;
 }
@@ -767,4 +770,259 @@
       transparent 3px 5px
     )
     center / 2px 100% no-repeat;
+}
+
+/* ── Left sidebar: hover the rail to float it open, b / pin to dock it ── */
+
+.pro-rail,
+.pro-sidebar {
+  display: none;
+}
+
+:root[data-pro-ux] .pro-rail {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  z-index: 1200;
+  background: transparent;
+  border-left: 3px solid transparent;
+  transition: border-color 120ms;
+}
+
+:root[data-pro-ux] .pro-rail:hover {
+  border-left-color: var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-sidebar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 1300;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border-right: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+  font: 15px/1.35 var(--pro-font);
+}
+
+:root[data-pro-ux][data-pro-sidebar-pinned] .pro-sidebar {
+  box-shadow: none;
+}
+
+:root[data-pro-ux][data-pro-sidebar-pinned] #app {
+  margin-left: 300px;
+}
+
+.pro-sb-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid var(--pro-soft);
+}
+
+.pro-sb-heading {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--pro-mute);
+  font-size: 15px;
+}
+
+.pro-sb-heading small {
+  font-variant-caps: normal;
+  color: var(--pro-faint);
+}
+
+.pro-sb-pin {
+  border: 1px solid var(--pro-line);
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  padding: 0 8px;
+  font: 14px var(--pro-font);
+  border-radius: 2px;
+}
+
+.pro-sb-pin.on {
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
+  border-color: var(--pro-dark);
+}
+
+.pro-sb-pin kbd {
+  margin-right: 5px;
+}
+
+.pro-sb-filter {
+  margin: 6px 10px;
+  padding: 2px 7px;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  font: 14px var(--pro-font);
+}
+
+.pro-sb-list {
+  flex: 1 1 auto;
+  overflow: auto;
+  border-top: 1px solid var(--pro-soft);
+}
+
+:root[data-pro-ux] a.pro-sb-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 8px;
+  padding: 4px 10px 5px;
+  border-bottom: 1px solid var(--pro-soft);
+  color: var(--pro-fg);
+  text-decoration: none;
+}
+
+:root[data-pro-ux] a.pro-sb-row:hover {
+  background: var(--pro-tint);
+  text-decoration: none;
+}
+
+:root[data-pro-ux] a.pro-sb-row.on {
+  background: var(--pro-tint);
+  box-shadow: inset 3px 0 0 var(--pro-dark);
+}
+
+.pro-sb-id {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pro-sb-id small {
+  font-weight: 400;
+  color: var(--pro-mute);
+}
+
+.pro-sb-score {
+  align-self: start;
+  min-width: 2.4em;
+  text-align: center;
+  padding: 0 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pro-sb-preview {
+  grid-column: 1 / -1;
+  font-size: 13.5px;
+  color: var(--pro-sub);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pro-sb-empty {
+  padding: 10px;
+  color: var(--pro-mute);
+  font-style: italic;
+  flex: 1 1 auto;
+}
+
+.pro-sb-prefs {
+  flex: 0 0 auto;
+  max-height: 55vh;
+  overflow: auto;
+  border-top: 1px solid var(--pro-line);
+  padding: 6px 10px 10px;
+}
+
+.pro-seg {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  margin: 4px 0 6px;
+  font-size: 14px;
+}
+
+.pro-seg > span {
+  padding: 0 8px;
+  color: var(--pro-mute);
+}
+
+.pro-seg button {
+  border: none;
+  border-left: 1px solid var(--pro-soft);
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  padding: 0 8px;
+  font: inherit;
+}
+
+.pro-seg button.on {
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+.pro-sb-pref {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.pro-sb-pref input {
+  accent-color: var(--pro-dark);
+}
+
+.pro-sb-pref small {
+  display: block;
+  color: var(--pro-mute);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.pro-sb-foot {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--pro-mute);
+}
+
+.pro-sb-toggle {
+  border: none;
+  background: none;
+  padding: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pro-sb-toggle:hover {
+  color: var(--pro-fg);
+}
+
+/* ── Soft-wrapped tables: whole cell contents, rows grow (measured) ── */
+
+:root[data-pro-ux][data-pro-wrapcells] [role="gridcell"] {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  align-items: flex-start;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+:root[data-pro-ux][data-pro-wrapcells] [role="gridcell"] * {
+  white-space: normal !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  line-clamp: unset !important;
+  max-height: none !important;
 }

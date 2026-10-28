@@ -6,6 +6,7 @@ import {
   onDomSettled,
   overlayOpen,
 } from "./dom";
+import { toggleSidebarPinned } from "./sidebarState";
 import { toast } from "./toast";
 
 export interface Binding {
@@ -118,6 +119,15 @@ export const bindings: Binding[] = [
     group: "Anywhere",
     run: () => {
       actions.toggleSkin();
+      return true;
+    },
+  },
+  {
+    keys: ["b"],
+    label: "pin or unpin the samples and preferences sidebar",
+    group: "Anywhere",
+    run: () => {
+      toggleSidebarPinned();
       return true;
     },
   },

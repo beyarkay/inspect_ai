@@ -43,6 +43,7 @@ import {
   moveToEnd,
   useCollapsedEmptyColumns,
 } from "../../../pro-ux/emptyColumns";
+import { useProPref } from "../../../pro-ux/prefs";
 import { useStableValue } from "../useStableValue";
 
 import { computeAutoSizeWidth } from "./autoSize";
@@ -318,6 +319,7 @@ export function DataGrid<TRow extends RowData>({
   ariaLabel,
 }: DataGridProps<TRow>): ReactElement {
   const { columns, emptyIds } = useCollapsedEmptyColumns(rawColumns, data);
+  const wrapCells = useProPref("wrapCells");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const getRowHref = isVscode() ? undefined : getRowHrefProp;
 
@@ -740,7 +742,9 @@ export function DataGrid<TRow extends RowData>({
     overscan: 12,
     scrollMargin: effectiveHeaderHeight,
     scrollPaddingStart: effectiveHeaderHeight,
-    getItemKey: (index) => rows[index]?.id ?? String(index),
+    // The wrap flag in the key drops cached heights when soft-wrap toggles.
+    getItemKey: (index) =>
+      `${rows[index]?.id ?? String(index)}${wrapCells ? ":wrap" : ""}`,
   });
 
   // Keep the selected row visible when it changes from the outside. `rows`
@@ -1134,6 +1138,10 @@ export function DataGrid<TRow extends RowData>({
                 columnLayout={columnLayout}
                 href={getRowHref?.(row.original)}
                 onRowClick={handleRowClick}
+                measureRef={
+                  wrapCells ? rowVirtualizer.measureElement : undefined
+                }
+                dataIndex={virtualRow.index}
               />
             );
           })}
@@ -1161,6 +1169,9 @@ interface GridRowProps<TRow extends RowData> {
   columnLayout: ColumnLayout<TRow>;
   href?: string;
   onRowClick: (e: MouseEvent<HTMLElement>, rowId: string, row: TRow) => void;
+  /** Set when rows soft-wrap: the row grows to its content and is measured. */
+  measureRef?: (el: HTMLElement | null) => void;
+  dataIndex?: number;
 }
 
 function GridRowInner<TRow extends RowData>({
@@ -1173,10 +1184,12 @@ function GridRowInner<TRow extends RowData>({
   columnLayout,
   href,
   onRowClick,
+  measureRef,
+  dataIndex,
 }: GridRowProps<TRow>): ReactElement {
   const className = clsx(styles.row, isSelected && styles.rowSelected);
   const style = {
-    height: rowHeight,
+    ...(measureRef ? { minHeight: rowHeight } : { height: rowHeight }),
     width,
     transform: `translateY(${top}px)`,
   };
@@ -1224,6 +1237,8 @@ function GridRowInner<TRow extends RowData>({
       // <a> in here (invalid HTML, but the innermost link owns activation and
       // handleRowClick defers to it).
       <a
+        ref={measureRef}
+        data-index={dataIndex}
         className={className}
         style={style}
         href={href}
@@ -1246,6 +1261,8 @@ function GridRowInner<TRow extends RowData>({
     // handler; the row click is the mouse path onto the same action.
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
     <div
+      ref={measureRef}
+      data-index={dataIndex}
       className={className}
       style={style}
       onClick={handleClick}

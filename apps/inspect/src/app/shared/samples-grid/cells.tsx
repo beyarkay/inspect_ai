@@ -3,6 +3,8 @@ import { FC, ReactNode } from "react";
 
 import { RenderedText } from "@tsmono/inspect-components/content";
 
+import { useProPref } from "../../../pro-ux/prefs";
+
 import styles from "./gridCells.module.css";
 
 interface MarkdownCellDivProps {
@@ -21,6 +23,7 @@ export const MarkdownCellDiv: FC<MarkdownCellDivProps> = ({
   trimRenderedText,
   truncateAt = 250,
 }) => {
+  const wrapCells = useProPref("wrapCells");
   return (
     <div
       className={clsx(
@@ -32,7 +35,7 @@ export const MarkdownCellDiv: FC<MarkdownCellDivProps> = ({
     >
       <RenderedText
         markdown={text}
-        truncateAt={truncateAt}
+        truncateAt={wrapCells ? undefined : truncateAt}
         className={
           trimRenderedText
             ? clsx("no-last-para-padding", styles.noLeft)

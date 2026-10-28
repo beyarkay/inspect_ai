@@ -24,6 +24,18 @@ export const kPrefDefaults: ProPrefs = {
   smartScores: true,
 };
 
+export const kPrefKeys: (keyof ProPrefs)[] = [
+  "collapseEmptyColumns",
+  "wrapCells",
+  "hoverCard",
+  "scoreBadges",
+  "quantityUnderlines",
+  "printedKeys",
+  "detailedOutline",
+  "turnMarkers",
+  "smartScores",
+];
+
 export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
   collapseEmptyColumns: [
     "Collapse empty columns",

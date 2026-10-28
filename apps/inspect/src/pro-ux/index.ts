@@ -5,6 +5,7 @@ import "./dark.css";
 import { installCells } from "./cells";
 import { closeHelp, installHelp, toggleHelp } from "./help";
 import { announceSkin, installKeys, setKeyActions } from "./keys";
+import { getPrefs } from "./prefs";
 import { installSmallCaps } from "./smallCaps";
 import { installTip } from "./tip";
 
@@ -44,5 +45,5 @@ setKeyActions({
 
 installKeys();
 installHelp();
-installTip(isProUxEnabled);
+installTip(() => isProUxEnabled() && getPrefs().hoverCard);
 installCells();

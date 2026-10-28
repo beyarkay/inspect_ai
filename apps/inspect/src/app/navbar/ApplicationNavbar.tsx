@@ -7,6 +7,7 @@ import {
 import { LoadingBar } from "@tsmono/react/components";
 import { isVscode } from "@tsmono/util";
 
+import { ProSidebar } from "../../pro-ux/Sidebar";
 import { useSelectedLogLoading } from "../../state/selectedLogDetails";
 import { useStore } from "../../state/store";
 import { useUserSettings } from "../../state/userSettings";
@@ -84,6 +85,7 @@ export const ApplicationNavbar: FC<ApplicationNavbarProps> = ({
         />
       </Navbar>
       <LoadingBar loading={loading} />
+      {!isVscode() && <ProSidebar />}
     </div>
   );
 };

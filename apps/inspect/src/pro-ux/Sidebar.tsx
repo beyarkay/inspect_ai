@@ -1,0 +1,270 @@
+import { FC, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { Link } from "react-router";
+
+import { useCurrentSampleHandle } from "../app/routing/currentSelection";
+import { useSampleNavigationActions } from "../app/routing/sampleNavigation";
+import { sampleIdsEqual } from "../app/shared/sample";
+import type { SampleSummary } from "../client/api/types";
+import { useFilteredSamples } from "../state/hooks";
+import { useUserSettings } from "../state/userSettings";
+
+import { scaleTop } from "./cells";
+import { css, isDark, prgn } from "./colour";
+import {
+  getPrefs,
+  kPrefKeys,
+  kPrefLabels,
+  setPref,
+  subscribePrefs,
+} from "./prefs";
+import {
+  isSidebarPinned,
+  setSidebarPinned,
+  subscribeSidebar,
+} from "./sidebarState";
+
+const kCloseDelayMs = 250;
+
+const formatScore = (score: unknown): string =>
+  typeof score === "number" ||
+  typeof score === "string" ||
+  typeof score === "boolean"
+    ? String(score)
+    : JSON.stringify(score);
+
+const firstScore = (sample: SampleSummary): unknown => {
+  const scores = sample.scores ?? {};
+  const first = Object.values(scores)[0];
+  return first?.value;
+};
+
+const inputPreview = (sample: SampleSummary): string => {
+  const input = sample.input;
+  if (typeof input === "string") return input;
+  for (const message of input) {
+    if (message.role !== "user") continue;
+    const content = message.content;
+    if (typeof content === "string") return content;
+    for (const part of content) {
+      if (part.type === "text") return part.text;
+    }
+  }
+  return "";
+};
+
+const kPrefsOpenKey = "pro-ux-prefs-open";
+
+const PrefsPane: FC = () => {
+  const prefs = useSyncExternalStore(subscribePrefs, getPrefs);
+  const [open, setOpen] = useState(() => {
+    try {
+      return localStorage.getItem(kPrefsOpenKey) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const toggleOpen = () => {
+    setOpen(!open);
+    try {
+      localStorage.setItem(kPrefsOpenKey, open ? "0" : "1");
+    } catch {
+      // Storage unavailable: the section just won't remember.
+    }
+  };
+  const themePreference = useUserSettings((s) => s.themePreference);
+  const setThemePreference = useUserSettings((s) => s.setThemePreference);
+  const base = themePreference.replace(/^readable-/, "");
+  const readable = themePreference.startsWith("readable-");
+  const setBase = (next: string) => {
+    const value = `${readable ? "readable-" : ""}${next}`;
+    if (
+      value === "system" ||
+      value === "light" ||
+      value === "dark" ||
+      value === "readable-system" ||
+      value === "readable-light" ||
+      value === "readable-dark"
+    ) {
+      setThemePreference(value);
+    }
+  };
+  return (
+    <section className="pro-sb-prefs">
+      <button
+        type="button"
+        className="pro-sb-heading pro-sb-toggle"
+        aria-expanded={open}
+        onClick={toggleOpen}
+      >
+        {open ? "▾" : "▸"} Preferences
+      </button>
+      {open && (
+        <>
+          <div className="pro-seg">
+            <span>theme</span>
+            {["system", "light", "dark"].map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={base === option ? "on" : undefined}
+                onClick={() => setBase(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          {kPrefKeys.map((key) => {
+            const [label, hint] = kPrefLabels[key];
+            return (
+              <label key={key} className="pro-sb-pref" title={hint}>
+                <input
+                  type="checkbox"
+                  checked={prefs[key]}
+                  onChange={(e) => setPref(key, e.target.checked)}
+                />
+                <span>
+                  {label}
+                  <small>{hint}</small>
+                </span>
+              </label>
+            );
+          })}
+          <div className="pro-sb-foot">
+            <kbd>T</kbd> switches to upstream&rsquo;s look · <kbd>?</kbd>{" "}
+            shortcuts
+          </div>
+        </>
+      )}
+    </section>
+  );
+};
+
+/** A Claude-Code-style rail on the left edge: hover (or b) floats the panel
+ *  open; the pin docks it. Lists the current log's samples, then preferences. */
+export const ProSidebar: FC = () => {
+  const samples = useFilteredSamples();
+  const current = useCurrentSampleHandle();
+  const { getSampleUrl } = useSampleNavigationActions();
+  const [open, setOpen] = useState(false);
+  const pinned = useSyncExternalStore(subscribeSidebar, isSidebarPinned);
+  const [query, setQuery] = useState("");
+  const closeTimer = useRef<number | undefined>(undefined);
+
+  const top = useMemo(() => {
+    const numeric = samples
+      .map(firstScore)
+      .filter((v): v is number => typeof v === "number");
+    return scaleTop(numeric);
+  }, [samples]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return samples;
+    return samples.filter(
+      (s) =>
+        String(s.id).toLowerCase().includes(q) ||
+        inputPreview(s).toLowerCase().includes(q)
+    );
+  }, [samples, query]);
+
+  const show = open || pinned;
+  const cancelClose = () => window.clearTimeout(closeTimer.current);
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setOpen(false), kCloseDelayMs);
+  };
+
+  return (
+    <>
+      <div
+        className="pro-rail"
+        onMouseEnter={() => {
+          cancelClose();
+          setOpen(true);
+        }}
+        aria-hidden="true"
+      />
+      {show && (
+        <aside
+          className="pro-sidebar"
+          aria-label="Samples and preferences"
+          onMouseEnter={cancelClose}
+          onMouseLeave={() => {
+            if (!pinned) scheduleClose();
+          }}
+        >
+          <div className="pro-sb-head">
+            <span className="pro-sb-heading">
+              Samples <small>{samples.length || ""}</small>
+            </span>
+            <button
+              type="button"
+              className={pinned ? "pro-sb-pin on" : "pro-sb-pin"}
+              onClick={() => setSidebarPinned(!pinned)}
+              title="Pin the sidebar open (b)"
+            >
+              <kbd>b</kbd>
+              {pinned ? "unpin" : "pin"}
+            </button>
+          </div>
+          {samples.length > 0 ? (
+            <>
+              <input
+                className="pro-sb-filter"
+                placeholder="filter samples by id or input"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <nav className="pro-sb-list">
+                {visible.map((sample) => {
+                  const href = getSampleUrl(sample.id, sample.epoch);
+                  const on =
+                    sampleIdsEqual(sample.id, current?.id) &&
+                    sample.epoch === current?.epoch;
+                  const score = firstScore(sample);
+                  const rgb =
+                    typeof score === "number" && top !== null
+                      ? prgn(score / top)
+                      : null;
+                  return (
+                    <Link
+                      key={`${sample.id}-${sample.epoch}`}
+                      to={href?.replace(/^#/, "") ?? "."}
+                      className={on ? "pro-sb-row on" : "pro-sb-row"}
+                    >
+                      <span className="pro-sb-id">
+                        {String(sample.id)}
+                        <small> · {sample.epoch}</small>
+                      </span>
+                      {score !== undefined && (
+                        <span
+                          className="pro-sb-score"
+                          style={
+                            rgb
+                              ? {
+                                  background: css(rgb),
+                                  color: isDark(rgb) ? "#fff" : "#2a2a2e",
+                                }
+                              : undefined
+                          }
+                        >
+                          {formatScore(score)}
+                        </span>
+                      )}
+                      <span className="pro-sb-preview">
+                        {inputPreview(sample)}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </>
+          ) : (
+            <div className="pro-sb-empty">Open a log to list its samples.</div>
+          )}
+          <PrefsPane />
+        </aside>
+      )}
+    </>
+  );
+};
