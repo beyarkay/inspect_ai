@@ -50,10 +50,14 @@ export const css = ([r, g, b]: Rgb): string => `rgb(${r}, ${g}, ${b})`;
 export const isDark = ([r, g, b]: Rgb): boolean =>
   0.2126 * r + 0.7152 * g + 0.0722 * b < 140;
 
-/** Inferno clipped to [0.15, 0.85] so neither end vanishes on white or reads as text. */
-export const sequential = (t: number): Rgb => inferno(0.85 - 0.7 * t);
+/** Clipped inferno where more is stronger: darker on white, brighter on a dark page. */
+export const sequential = (t: number, onDark = false): Rgb =>
+  onDark ? inferno(0.3 + 0.62 * t) : inferno(0.85 - 0.7 * t);
 
-export const sequentialRampCss = (): string =>
+export const sequentialRampCss = (onDark = false): string =>
   `linear-gradient(90deg, ${[0, 0.25, 0.5, 0.75, 1]
-    .map((t) => css(sequential(t)))
+    .map((t) => css(sequential(t, onDark)))
     .join(", ")})`;
+
+export const pageIsDark = (): boolean =>
+  document.documentElement.getAttribute("data-bs-theme") === "dark";

@@ -1,4 +1,11 @@
-import { css, isDark, prgn, sequential, sequentialRampCss } from "./colour";
+import {
+  css,
+  isDark,
+  pageIsDark,
+  prgn,
+  sequential,
+  sequentialRampCss,
+} from "./colour";
 import { allVisible, onDomSettled } from "./dom";
 import {
   bodyRows,
@@ -82,7 +89,10 @@ const decorateGrid = (grid: HTMLElement): void => {
       kind === "quantity" || kind === "duration"
     );
     if (kind === "quantity" || kind === "duration") {
-      column.header.style.setProperty("--pro-ramp", sequentialRampCss());
+      column.header.style.setProperty(
+        "--pro-ramp",
+        sequentialRampCss(pageIsDark())
+      );
     }
     const cells = byColumn.get(index) ?? [];
     if (!kind || cells.length === 0) continue;
@@ -113,7 +123,7 @@ const decorateGrid = (grid: HTMLElement): void => {
       if (v === null || v === undefined || v <= 0) return;
       const t = hi > lo ? (Math.log(v) - lo) / (hi - lo) : 1;
       c.node.setAttribute("data-pro-q", "");
-      c.node.style.setProperty("--q", css(sequential(t)));
+      c.node.style.setProperty("--q", css(sequential(t, pageIsDark())));
     });
   }
 };
@@ -133,4 +143,8 @@ export const installCells = (): void => {
       passive: true,
     }
   );
+  new MutationObserver(decorateAll).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-bs-theme"],
+  });
 };

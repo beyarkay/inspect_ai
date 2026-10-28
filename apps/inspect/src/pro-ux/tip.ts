@@ -104,4 +104,5 @@ export const installTip = (enabled: () => boolean): void => {
   document.addEventListener("mousedown", hide, { capture: true });
   document.addEventListener("keydown", hide, { capture: true });
   window.addEventListener("blur", hide);
+  window.addEventListener("hashchange", hide);
 };

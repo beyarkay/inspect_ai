@@ -10,9 +10,13 @@
   --pro-soft: #e2e2e6;
   --pro-line: #d3d3d9;
   --pro-bg: #f4f4f6;
+  --pro-surface: #fff;
+  --pro-code: #fbfbfc;
   --pro-tint: #eef1f6;
   --pro-hover-line: #b9bec9;
   --pro-dark: #3a3a40;
+  --pro-on-dark: #fff;
+  --pro-on-dark-faint: #c8c8d0;
   --pro-bad: #b00020;
   --pro-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   --pro-font: "EB Garamond", Garamond, Georgia, serif;
@@ -119,13 +123,12 @@
 
 /* ── Links: black, underline on hover ── */
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) a:not(.nav-link):not(.btn) {
+:root[data-pro-ux] a:not(.nav-link):not(.btn) {
   color: var(--pro-fg);
   text-decoration: none;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"])
-  a:not(.nav-link):not(.btn):not([role="row"]):hover {
+:root[data-pro-ux] a:not(.nav-link):not(.btn):not([role="row"]):hover {
   text-decoration: underline 1px;
   text-underline-offset: 3px;
 }
@@ -137,24 +140,24 @@
   font-family: var(--pro-font);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-tools,
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-outline-secondary {
-  background: #fff;
+:root[data-pro-ux] .btn-tools,
+:root[data-pro-ux] .btn-outline-secondary {
+  background: var(--pro-surface);
   border: 1px solid var(--pro-line);
   color: var(--pro-fg);
   padding: 1px 10px;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-tools:hover,
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-outline-secondary:hover {
+:root[data-pro-ux] .btn-tools:hover,
+:root[data-pro-ux] .btn-outline-secondary:hover {
   background: var(--pro-tint);
   border-color: var(--pro-hover-line);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .btn-primary {
+:root[data-pro-ux] .btn-primary {
   background: var(--pro-dark);
   border-color: var(--pro-dark);
-  color: #fff;
+  color: var(--pro-on-dark);
 }
 
 /* ── Tabs: active is dark ── */
@@ -164,21 +167,21 @@
   font-weight: 400;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link {
+:root[data-pro-ux] .nav-link {
   color: var(--pro-sub);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link:hover {
+:root[data-pro-ux] .nav-link:hover {
   background: var(--pro-tint);
   color: var(--pro-fg);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-pills .nav-link.active,
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-link.active,
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .nav-tabs .nav-link.active {
+:root[data-pro-ux] .nav-pills .nav-link.active,
+:root[data-pro-ux] .nav-link.active,
+:root[data-pro-ux] .nav-tabs .nav-link.active {
   background: var(--pro-dark);
   border-color: var(--pro-dark);
-  color: #fff;
+  color: var(--pro-on-dark);
 }
 
 :root[data-pro-ux] .nav-link.text-size-smallest {
@@ -191,8 +194,8 @@
   font-size: 15px !important;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) nav[class*="_header_"] {
-  background: #fff;
+:root[data-pro-ux] nav[class*="_header_"] {
+  background: var(--pro-surface);
   border-bottom: 1px solid var(--pro-line);
 }
 
@@ -207,34 +210,30 @@
   font-size: 15px !important;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_row_"] {
+:root[data-pro-ux] [class*="_row_"] {
   border-bottom-color: var(--pro-soft);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_row_"]:hover,
-:root[data-pro-ux]:not([data-bs-theme="dark"])
-  [class*="_row_"]:hover
-  [class*="_cellPinned_"] {
+:root[data-pro-ux] [class*="_row_"]:hover,
+:root[data-pro-ux] [class*="_row_"]:hover [class*="_cellPinned_"] {
   background: var(--pro-tint);
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) [class*="_rowSelected_"],
-:root[data-pro-ux]:not([data-bs-theme="dark"])
-  [class*="_rowSelected_"]
-  [class*="_cellPinned_"] {
+:root[data-pro-ux] [class*="_rowSelected_"],
+:root[data-pro-ux] [class*="_rowSelected_"] [class*="_cellPinned_"] {
   background: var(--pro-tint) !important;
   box-shadow: inset 3px 0 0 var(--pro-dark);
 }
 
 /* ── Inputs ── */
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) input.form-control,
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .form-control {
+:root[data-pro-ux] input.form-control,
+:root[data-pro-ux] .form-control {
   border: 1px solid var(--pro-line);
   border-radius: 2px;
 }
 
-:root[data-pro-ux]:not([data-bs-theme="dark"]) .form-control:focus {
+:root[data-pro-ux] .form-control:focus {
   border-color: #8a8f9c;
   box-shadow: 0 0 0 2px var(--pro-tint);
 }
@@ -320,7 +319,7 @@
 }
 
 :root[data-pro-ux] .nav-link.active[data-pro-key]::before {
-  color: #c8c8d0;
+  color: var(--pro-on-dark-faint);
 }
 
 /* ── Toast ── */
@@ -333,8 +332,8 @@
   display: none;
   gap: 10px;
   align-items: center;
-  background: #3a3a40;
-  color: #fff;
+  background: var(--pro-dark);
+  color: var(--pro-on-dark);
   padding: 6px 12px;
   border-radius: 2px;
   font:
@@ -361,7 +360,7 @@
   padding: 0;
   border: 1px solid var(--pro-line);
   border-radius: 50%;
-  background: #fff;
+  background: var(--pro-surface);
   color: var(--pro-mute);
   font: 15px/1 var(--pro-font);
   cursor: pointer;
@@ -382,11 +381,11 @@
   width: 380px;
   max-height: calc(100vh - 120px);
   overflow: auto;
-  background: #fff;
-  color: #2a2a2e;
-  border: 1px solid #d3d3d9;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border: 1px solid var(--pro-line);
   border-radius: 2px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--pro-shadow);
   padding: 8px 12px 10px;
   font:
     15px/1.4 "EB Garamond",
@@ -399,7 +398,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: 1px solid #e2e2e6;
+  border-bottom: 1px solid var(--pro-soft);
   padding-bottom: 4px;
 }
 
@@ -409,13 +408,13 @@
 }
 
 .pro-help-head span {
-  color: #77777f;
+  color: var(--pro-mute);
   font-size: 13px;
 }
 
 .pro-help-group {
   margin-top: 8px;
-  color: #77777f;
+  color: var(--pro-mute);
   font-variant-caps: all-small-caps;
   letter-spacing: 0.04em;
 }
@@ -442,9 +441,9 @@
     Garamond,
     Georgia,
     serif;
-  color: #2a2a2e;
-  background: #fff;
-  border: 1px solid #d3d3d9;
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
   border-radius: 2px;
   padding: 0 4px;
 }
@@ -460,11 +459,11 @@
   max-height: calc(100vh - 80px);
   overflow: hidden;
   pointer-events: none;
-  background: #fff;
-  color: #2a2a2e;
-  border: 1px solid #d3d3d9;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  border: 1px solid var(--pro-line);
   border-radius: 2px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--pro-shadow);
   font:
     15px/1.4 "EB Garamond",
     Garamond,
@@ -484,7 +483,7 @@
 }
 
 .pro-tip-sub {
-  color: #77777f;
+  color: var(--pro-mute);
   font-size: 14px;
   margin-bottom: 4px;
 }
@@ -497,11 +496,11 @@
 .pro-tip td {
   vertical-align: top;
   padding: 1px 0;
-  border-top: 1px solid #e2e2e6;
+  border-top: 1px solid var(--pro-soft);
 }
 
 .pro-tip td:first-child {
-  color: #77777f;
+  color: var(--pro-mute);
   padding-right: 12px;
   white-space: nowrap;
   font-variant-caps: all-small-caps;
@@ -521,7 +520,7 @@
 .pro-tip-note {
   margin-top: 5px;
   font-size: 13px;
-  color: #77777f;
+  color: var(--pro-mute);
 }
 
 /* ── Scores: diverging badge, value over its scale ── */
@@ -569,7 +568,7 @@
 }
 
 .pro-tip td.pro-tip-long > div:first-child {
-  color: #77777f;
+  color: var(--pro-mute);
   font-variant-caps: all-small-caps;
   letter-spacing: 0.04em;
 }

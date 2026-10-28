@@ -1,0 +1,227 @@
+/* pro-UX dark palette. A designed dark theme, not an inverted light one:
+   near-black neutrals with a faint cool cast, light text that stops short of
+   white, and Okabe–Ito role colours lifted for a dark ground.
+
+   Standalone dark copies `--vscode-*` onto `--bs-*` on <body>
+   (base.css `body[class^="vscode-"]`), and those body values shadow anything
+   set on :root. So the `--vscode-*` sources are set on :root, and every
+   `--bs-*` / alias the bridge doesn't cover is set on body itself. */
+
+:root[data-pro-ux][data-bs-theme="dark"] {
+  --pro-fg: #d9d9de;
+  --pro-emph: #f0f0f3;
+  --pro-mute: #8c8c96;
+  --pro-faint: #66666f;
+  --pro-sub: #a6a6b0;
+  --pro-soft: #28282d;
+  --pro-line: #33333a;
+  --pro-bg: #141416;
+  --pro-surface: #1b1b1e;
+  --pro-raised: #222226;
+  --pro-code: #18181b;
+  --pro-tint: #232530;
+  --pro-select: #2d3340;
+  --pro-hover-line: #4a4d57;
+  --pro-dark: #d9d9de;
+  --pro-on-dark: #141416;
+  --pro-on-dark-faint: #55555c;
+  --pro-bad: #ff6b81;
+  --pro-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+
+  --pro-role-user: #56b4e9;
+  --pro-role-assistant: #e69f00;
+  --pro-role-system: #8c8c96;
+  --pro-role-tool: #34c79a;
+  --pro-role-reasoning: #d891bf;
+
+  --vscode-editor-background: var(--pro-bg);
+  --vscode-sideBar-background: var(--pro-surface);
+  --vscode-list-hoverBackground: var(--pro-tint);
+  --vscode-list-inactiveSelectionBackground: var(--pro-surface);
+  --vscode-editorHoverWidget-background: var(--pro-raised);
+  --vscode-peekViewTitle-background: var(--pro-surface);
+  --vscode-peekViewTitleDescription-foreground: var(--pro-sub);
+  --vscode-editorWidget-background: var(--pro-raised);
+  --vscode-editorWidget-foreground: var(--pro-fg);
+  --vscode-editorWidget-border: var(--pro-line);
+  --vscode-widget-border: var(--pro-line);
+  --vscode-input-background: var(--pro-surface);
+  --vscode-input-foreground: var(--pro-fg);
+  --vscode-input-border: var(--pro-line);
+  --vscode-notifications-background: var(--pro-dark);
+  --vscode-notifications-foreground: var(--pro-on-dark);
+  --vscode-editorGroup-border: var(--pro-line);
+  --vscode-sideBarSectionHeader-border: var(--pro-soft);
+  --vscode-editor-foreground: var(--pro-fg);
+  --vscode-foreground: var(--pro-fg);
+  --vscode-breadcrumb-foreground: var(--pro-mute);
+  --vscode-descriptionForeground: var(--pro-mute);
+  --vscode-textLink-foreground: var(--pro-fg);
+  --vscode-textLink-activeForeground: var(--pro-emph);
+  --vscode-notificationLink-foreground: var(--pro-sub);
+  --vscode-banner-iconForeground: var(--pro-fg);
+  --vscode-editorLink-activeForeground: var(--pro-emph);
+  --vscode-button-background: var(--pro-dark);
+  --vscode-button-foreground: var(--pro-on-dark);
+  --vscode-button-hoverBackground: var(--pro-emph);
+  --vscode-editor-selectionBackground: var(--pro-select);
+  --vscode-editor-inactiveSelectionBackground: #26282f;
+  --vscode-editor-selectionHighlightBackground: var(--pro-tint);
+  --vscode-editorInfo-foreground: var(--pro-fg);
+  --vscode-textCodeBlock-background: var(--pro-code);
+  --vscode-inputValidation-infoBackground: #1d2a36;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"],
+:root[data-pro-ux][data-bs-theme="dark"] body,
+:root[data-pro-ux][data-bs-theme="dark"] .modal {
+  --bs-body-bg: var(--pro-bg);
+  --bs-body-bg-rgb: 20, 20, 22;
+  --bs-body-color: var(--pro-fg);
+  --bs-body-color-rgb: 217, 217, 222;
+  --bs-emphasis-color: var(--pro-emph);
+  --bs-emphasis-color-rgb: 240, 240, 243;
+  --bs-secondary-color: var(--pro-mute);
+  --bs-tertiary-color: var(--pro-faint);
+  --bs-secondary: var(--pro-mute);
+  --bs-border-color: var(--pro-line);
+  --bs-border-color-translucent: var(--pro-soft);
+  --bs-light-border-subtle: var(--pro-soft);
+  --bs-light: var(--pro-surface);
+  --bs-light-bg-subtle: var(--pro-surface);
+  --bs-tertiary-bg: var(--pro-surface);
+  --bs-secondary-bg: var(--pro-surface);
+  --bs-primary: var(--pro-fg);
+  --bs-primary-rgb: 217, 217, 222;
+  --bs-primary-bg-subtle: var(--pro-tint);
+  --bs-primary-text-emphasis: var(--pro-emph);
+  --bs-link-color: var(--pro-fg);
+  --bs-link-color-rgb: 217, 217, 222;
+  --bs-link-hover-color: var(--pro-emph);
+  --bs-link-hover-color-rgb: 240, 240, 243;
+  --bs-code-color: var(--pro-fg);
+  --bs-danger: var(--pro-bad);
+
+  --inspect-hint-foreground: var(--pro-mute);
+  --inspect-focus-border-color: var(--pro-fg);
+  --inspect-focus-border-shadow: 0 0 0 2px var(--pro-select);
+  --inspect-jump-target-ring-color: var(--pro-mute);
+  --inspect-active-selection-background: var(--pro-select);
+  --inspect-inactive-selection-background: #26282f;
+
+  --inspect-tool-output-bg: var(--pro-code);
+  --inspect-tool-output-color: var(--pro-fg);
+  --inspect-tool-output-border: var(--pro-line);
+  --inspect-tool-description-color: var(--pro-mute);
+  --inspect-tool-block-header-bg: var(--pro-code);
+  --inspect-tool-block-input-bg: var(--pro-code);
+  --inspect-tool-block-output-bg: var(--pro-bg);
+  --inspect-tool-block-ink: var(--pro-mute);
+  --inspect-turn-prose-edge: 1px solid var(--pro-soft);
+
+  --inspect-msg-label-bg: var(--pro-surface);
+  --inspect-msg-label-bg-hover: var(--pro-tint);
+  --inspect-msg-label-border: var(--pro-line);
+  --inspect-msg-label-text: var(--pro-mute);
+
+  --inspect-readable-user-bg: transparent;
+  --inspect-readable-user-border: var(--pro-role-user);
+  --inspect-readable-assistant-bg: transparent;
+  --inspect-readable-assistant-border: var(--pro-role-assistant);
+  --inspect-readable-thinking-bg: transparent;
+  --inspect-readable-thinking-border: var(--pro-role-reasoning);
+  --inspect-readable-tool-call-bg: var(--pro-code);
+  --inspect-readable-tool-call-border: var(--pro-role-tool);
+  --inspect-readable-system-bg: transparent;
+  --inspect-readable-system-border: var(--pro-role-system);
+  --inspect-readable-body-color: var(--pro-fg);
+
+  --inspect-check-input-border: var(--pro-line);
+  --inspect-check-input-pill-bg: var(--pro-surface);
+  --inspect-check-result-border: var(--pro-line);
+  --inspect-check-result-pill-bg: var(--pro-surface);
+  --inspect-check-tree-guide: var(--pro-line);
+  --inspect-check-open-row-bg: var(--pro-tint);
+  --inspect-check-detail-before-bg: var(--pro-code);
+  --inspect-check-detail-after-bg: var(--pro-surface);
+  --inspect-check-chip-bg: var(--pro-surface);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"][data-theme-variant="readable"],
+:root[data-pro-ux][data-bs-theme="dark"][data-theme-variant="readable"] body {
+  --inspect-tool-block-edge: 3px solid var(--pro-role-tool);
+  --inspect-tool-block-header-bg: var(--pro-code);
+  --inspect-tool-block-input-bg: var(--pro-code);
+  --inspect-tool-block-output-bg: var(--pro-bg);
+  --inspect-tool-block-ink: var(--pro-role-tool);
+  --inspect-turn-prose-edge: 3px solid var(--pro-role-assistant);
+}
+
+/* ── Code blocks: replace upstream's brown prism-dark copy ── */
+
+:root[data-pro-ux][data-bs-theme="dark"] .vscode-dark pre[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] .vscode-dark code[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] pre[class*="language-"],
+:root[data-pro-ux][data-bs-theme="dark"] code[class*="language-"] {
+  background: var(--pro-code);
+  color: var(--pro-fg);
+  text-shadow: none;
+  font-family: var(--pro-mono);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.comment,
+:root[data-pro-ux][data-bs-theme="dark"] .token.prolog,
+:root[data-pro-ux][data-bs-theme="dark"] .token.doctype,
+:root[data-pro-ux][data-bs-theme="dark"] .token.cdata {
+  color: #6c6f80;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.punctuation,
+:root[data-pro-ux][data-bs-theme="dark"] .token.operator {
+  color: #8c8c96;
+  background: none;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.property,
+:root[data-pro-ux][data-bs-theme="dark"] .token.tag,
+:root[data-pro-ux][data-bs-theme="dark"] .token.attr-name {
+  color: #81c8be;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.string,
+:root[data-pro-ux][data-bs-theme="dark"] .token.char,
+:root[data-pro-ux][data-bs-theme="dark"] .token.attr-value,
+:root[data-pro-ux][data-bs-theme="dark"] .token.inserted {
+  color: #a6d189;
+  background: none;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.number,
+:root[data-pro-ux][data-bs-theme="dark"] .token.boolean,
+:root[data-pro-ux][data-bs-theme="dark"] .token.constant,
+:root[data-pro-ux][data-bs-theme="dark"] .token.symbol {
+  color: #e5c890;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.keyword,
+:root[data-pro-ux][data-bs-theme="dark"] .token.atrule,
+:root[data-pro-ux][data-bs-theme="dark"] .token.selector,
+:root[data-pro-ux][data-bs-theme="dark"] .token.builtin {
+  color: #c4a7e7;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.function,
+:root[data-pro-ux][data-bs-theme="dark"] .token.class-name {
+  color: #8caaee;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.deleted,
+:root[data-pro-ux][data-bs-theme="dark"] .token.important,
+:root[data-pro-ux][data-bs-theme="dark"] .token.regex {
+  color: #ef9f76;
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] .token.entity,
+:root[data-pro-ux][data-bs-theme="dark"] .token.url {
+  background: none;
+}
