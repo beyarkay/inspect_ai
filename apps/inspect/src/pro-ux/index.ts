@@ -1,7 +1,11 @@
 import "./fonts.css";
 import "./pro-ux.css";
 
+import { installCells } from "./cells";
+import { closeHelp, installHelp, toggleHelp } from "./help";
+import { announceSkin, installKeys, setKeyActions } from "./keys";
 import { installSmallCaps } from "./smallCaps";
+import { installTip } from "./tip";
 
 const kStorageKey = "pro-ux-enabled";
 
@@ -27,3 +31,17 @@ export const isProUxEnabled = (): boolean =>
 
 setProUxEnabled(readEnabled());
 installSmallCaps();
+
+setKeyActions({
+  toggleHelp,
+  closeHelp,
+  toggleSkin: () => {
+    setProUxEnabled(!isProUxEnabled());
+    announceSkin(isProUxEnabled());
+  },
+});
+
+installKeys();
+installHelp();
+installTip(isProUxEnabled);
+installCells();
