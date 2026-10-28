@@ -44,8 +44,8 @@ export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
   ],
   scoreBadges: ["Score badges", "Scores coloured on a purple–green scale"],
   quantityUnderlines: [
-    "Underline tokens and durations",
-    "Heat colour by value, log scale",
+    "Value bars on tokens and durations",
+    "Taller and darker for more, log scale",
   ],
   printedKeys: ["Print keys on controls", "e.g. 1 Transcript, [ previous"],
   detailedOutline: [

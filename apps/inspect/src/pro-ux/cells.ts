@@ -57,6 +57,7 @@ const clear = (node: HTMLElement): void => {
   node.style.removeProperty("--pro-badge-bg");
   node.style.removeProperty("--pro-badge-fg");
   node.style.removeProperty("--q");
+  node.style.removeProperty("--qt");
 };
 
 const badge = (node: HTMLElement, t: number, of: string): void => {
@@ -124,6 +125,7 @@ const decorateGrid = (grid: HTMLElement): void => {
       const t = hi > lo ? (Math.log(v) - lo) / (hi - lo) : 1;
       c.node.setAttribute("data-pro-q", "");
       c.node.style.setProperty("--q", css(sequential(t, pageIsDark())));
+      c.node.style.setProperty("--qt", t.toFixed(3));
     });
   }
 };

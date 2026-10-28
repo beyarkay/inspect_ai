@@ -471,19 +471,30 @@
   font-size: 0.85em;
 }
 
-/* ── Ranked quantities: sequential underline, with a key in the header ── */
+/* ── Ranked quantities: a bar after the number, taller and darker for more;
+   the header carries a wedge as the key ── */
 
-:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q] {
-  text-decoration: underline 2.5px var(--q);
-  text-underline-offset: 4px;
-  text-decoration-skip-ink: none;
+:root[data-pro-ux][data-pro-quantityunderlines] [data-pro-q]::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: calc(2px + var(--qt, 1) * (0.68em - 2px));
+  margin-left: 0.35em;
+  background: var(--q);
+  vertical-align: baseline;
 }
 
 :root[data-pro-ux][data-pro-quantityunderlines]
   [data-pro-ramp]
-  [class*="_headerText_"] {
-  border-bottom: 3px solid transparent;
-  border-image: var(--pro-ramp) 1;
+  [class*="_headerText_"]::after {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 0.68em;
+  margin-left: 0.4em;
+  background: var(--pro-ramp);
+  clip-path: polygon(0 calc(100% - 2px), 100% 0, 100% 100%, 0 100%);
+  vertical-align: baseline;
 }
 
 /* ── Model-call captions: what the model saw, where its tool calls went ── */
