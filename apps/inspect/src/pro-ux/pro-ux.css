@@ -969,3 +969,19 @@
   font-weight: 600;
   color: var(--pro-fg);
 }
+
+/* ── Swimlane expander: in the time-bar row, so expanding never moves it ── */
+
+:root[data-pro-ux] [class*="_swimlane_"]:has(> [class*="_collapseToggle_"]) {
+  padding-right: 24px;
+}
+
+:root[data-pro-ux] [class*="_collapseToggle_"] {
+  top: 3px;
+  bottom: auto;
+  left: auto;
+  right: 0;
+  transform: none;
+  width: 20px;
+  height: 18px;
+}
