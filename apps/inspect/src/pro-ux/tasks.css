@@ -64,12 +64,77 @@
   background: var(--pro-bg, #f4f4f6);
 }
 
-/* Score: value, then a fixed-size histogram on one y range for every row. */
+/* Score: a badge as wide as the column's widest, then a fixed-size
+   histogram on one y range, so histograms line up down the column. */
+.pro-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pro-score-value {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  width: calc(var(--pro-score-ch, 4) * 1ch + 12px);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux][data-pro-scorebadges] .pro-score-value > [data-pro-badge] {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
+
 .pro-hist {
   display: inline-flex;
   flex: none;
-  margin-left: 8px;
   line-height: 0;
+}
+
+/* Status: the icon alone, the header an icon with a hint. */
+[role="gridcell"]:has(> .pro-status-cell) {
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+}
+
+.pro-status-cell {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+[role="columnheader"]:has(.pro-status-head) {
+  padding-left: 0;
+}
+
+[class*="_headerContent_"]:has(.pro-status-head) {
+  justify-content: center;
+}
+
+.pro-status-head {
+  display: inline-flex;
+  color: var(--pro-mute, #77777f);
+}
+
+/* No room for the filter funnel beside the icon: it shows in the icon's
+   place on hover; the rest of the header still sorts. */
+[role="columnheader"]:has(.pro-status-head) [class*="_headerFilter_"] {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  pointer-events: none;
+}
+
+[role="columnheader"]:has(.pro-status-head) [class*="_headerFilter_"] > * {
+  pointer-events: auto;
+}
+
+[role="columnheader"]:has(.pro-status-head):hover .pro-status-head,
+[role="columnheader"]:has([class*="_headerFilterActive_"]) .pro-status-head {
+  visibility: hidden;
 }
 
 .pro-hist-axis {

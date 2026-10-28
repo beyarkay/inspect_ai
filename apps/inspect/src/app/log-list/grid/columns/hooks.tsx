@@ -13,7 +13,10 @@ import {
   type LogListingRow,
   type ScorerMap,
 } from "../../../../log_data";
-import { useProLogListColumns } from "../../../../pro-ux/TasksTable";
+import {
+  useProListingAccessors,
+  useProLogListColumns,
+} from "../../../../pro-ux/TasksTable";
 import { useStore } from "../../../../state/store";
 import { parseLogFileName } from "../../../../utils/evallog";
 import { formatDateTime, formatTime } from "../../../../utils/format";
@@ -877,15 +880,21 @@ export const useLogListColumns = (
   );
 
   const proColumns = useProLogListColumns(allColumns, mode);
+  const pro = useProListingAccessors(
+    mode,
+    getValue,
+    getComparator,
+    accessorsKey
+  );
 
   return {
     columns: proColumns,
     visibility,
     pickerColumns,
-    getValue,
-    getComparator,
+    getValue: pro.getValue,
+    getComparator: pro.getComparator,
     getFilterType,
-    accessorsKey,
+    accessorsKey: pro.accessorsKey,
     setColumnVisibility,
   };
 };

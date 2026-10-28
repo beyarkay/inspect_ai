@@ -1,13 +1,18 @@
 import "./tasks.css";
 
-import type { CellContext, HeaderContext } from "@tanstack/react-table";
+import type { CellContext, HeaderContext, Row } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 import { FC, MouseEvent, useMemo } from "react";
 
 import { useHtmlFlag } from "@tsmono/inspect-components/pro-ux";
-import { formatPrettyDecimal } from "@tsmono/util";
+import { Icon } from "@tsmono/react/icons";
 
 import { useLogDir } from "../app_config";
 import type { LogListRow } from "../app/log-list/grid/columns/types";
+import type {
+  ValueAccessor,
+  ValueComparator,
+} from "../app/log-list/listing/types";
 import { logSamplesUrl, type RoutePrefix } from "../app/routing/url";
 import type { ExtendedColumnDef } from "../app/shared/data-grid/columnTypes";
 import type { DataGridFeatures } from "../app/shared/data-grid/tableFeatures";
@@ -16,14 +21,22 @@ import { useSamplesListing, type SamplesListingRow } from "../log_data";
 import { scaleTop } from "./cells";
 import { css, isDark, prgn } from "./colour";
 import { commonIdPrefix } from "./sampleLabels";
+import {
+  buildIndex,
+  logKey,
+  moveAfter,
+  shownSampleCount,
+  shownScore,
+  tasksListingAccessors,
+  type SampleIndex,
+} from "./tasksIndex";
 import { openArgsRows, openSampleRows, useOpenRows } from "./tasksState";
 import {
   argsDetail,
   argsSummary,
+  badgeSlotCh,
   firstNumericScore,
-  formatOnScale,
-  maxBinShare,
-  scoreStats,
+  scoreLabel,
   statsHint,
   type ScoreStats,
 } from "./taskStats";
@@ -31,31 +44,9 @@ import {
 type Column = ExtendedColumnDef<LogListRow>;
 type CellCtx = CellContext<DataGridFeatures, LogListRow, unknown>;
 type HeaderCtx = HeaderContext<DataGridFeatures, LogListRow, unknown>;
-
-interface SampleIndex {
-  byLog: Map<string, SamplesListingRow[]>;
-  stats: Map<string, ScoreStats | null>;
-  maxShare: number;
-}
+type GridRow = Row<DataGridFeatures, LogListRow>;
 
 const kNoRows: SamplesListingRow[] = [];
-
-const buildIndex = (rows: SamplesListingRow[]): SampleIndex => {
-  const byLog = new Map<string, SamplesListingRow[]>();
-  for (const row of rows) {
-    const list = byLog.get(row.logFile) ?? [];
-    list.push(row);
-    byLog.set(row.logFile, list);
-  }
-  const stats = new Map<string, ScoreStats | null>();
-  for (const [file, list] of byLog) {
-    const values = list
-      .map((r) => firstNumericScore(r.derived.scores))
-      .filter((v): v is number => v !== null);
-    stats.set(file, scoreStats(values));
-  }
-  return { byLog, stats, maxShare: maxBinShare(stats.values()) };
-};
 
 const indexCache = new WeakMap<SamplesListingRow[], SampleIndex>();
 
@@ -73,8 +64,6 @@ const useSampleIndex = (): SampleIndex => {
   }
   return index;
 };
-
-const logKey = (row: LogListRow): string => row.log?.name ?? "";
 
 const sampleUrl = (
   parentUrl: string | undefined,
@@ -167,7 +156,7 @@ const own = (e: MouseEvent) => {
 const isSubRow = (row: LogListRow): boolean => sampleRefs.has(row);
 
 const sampleCount = (row: LogListRow, index: SampleIndex): number =>
-  row.totalSamples ?? index.byLog.get(logKey(row))?.length ?? 0;
+  shownSampleCount(row, index) ?? 0;
 
 const TaskCell: FC<{ row: LogListRow; name: string }> = ({ row, name }) => {
   const index = useSampleIndex();
@@ -198,7 +187,9 @@ const TaskCell: FC<{ row: LogListRow; name: string }> = ({ row, name }) => {
       >
         <span className="pro-task-caret-gap" />
         <span className="pro-task-name">{name}</span>
-        <small className="pro-task-what">1 sample →</small>
+        <small className="pro-task-what" aria-hidden="true">
+          →
+        </small>
       </div>
     );
   }
@@ -222,7 +213,6 @@ const TaskCell: FC<{ row: LogListRow; name: string }> = ({ row, name }) => {
         {open ? "▾" : "▸"}
       </button>
       <span className="pro-task-name">{name}</span>
-      <small className="pro-task-what">{n} samples</small>
     </div>
   );
 };
@@ -266,44 +256,73 @@ const Histogram: FC<{ stats: ScoreStats; maxShare: number }> = ({
   );
 };
 
-/** A score badge on this row's own scale, so a 0–10 log never reads /100.
- *  `data-pro-own` keeps the column-wide badge pass off it. */
+/** A score badge on this row's own scale, so a 0–10 log never reads /100. */
 const Badge: FC<{ value: number; top: number | null }> = ({ value, top }) => {
-  if (top === null)
-    return <span data-pro-own="">{formatPrettyDecimal(value)}</span>;
+  const label = scoreLabel(value, top);
+  if (top === null) return <span>{label.value}</span>;
   const rgb = prgn(value / top);
   const style: Record<string, string> = {
     "--pro-badge-bg": css(rgb),
     "--pro-badge-fg": isDark(rgb) ? "#fff" : "#2a2a2e",
   };
   return (
-    <span
-      data-pro-own=""
-      data-pro-badge=""
-      data-pro-of={top === 1 ? "" : `/${top}`}
-      style={style}
-    >
-      {formatOnScale(value, top)}
+    <span data-pro-badge="" data-pro-of={label.of} style={style}>
+      {label.value}
     </span>
   );
 };
 
-const ScoreCell: FC<{ row: LogListRow }> = ({ row }) => {
-  const index = useSampleIndex();
+/** The score a row shows, on the scale its badge uses. */
+const rowScore = (
+  row: LogListRow,
+  index: SampleIndex
+): { value: number; top: number | null } | null => {
   const sample = sampleRefs.get(row);
   if (sample) {
-    return row.score === undefined ? (
-      <div>-</div>
-    ) : (
-      <Badge value={row.score} top={sample.top ?? scaleTop([row.score])} />
-    );
+    return row.score === undefined
+      ? null
+      : { value: row.score, top: sample.top ?? scaleTop([row.score]) };
   }
-  const stats = index.stats.get(logKey(row)) ?? null;
-  const value = row.score ?? stats?.mean;
-  if (value === undefined) return <div>-</div>;
+  const value = shownScore(row, index);
+  if (value === undefined) return null;
+  return {
+    value,
+    top: index.stats.get(logKey(row))?.top ?? scaleTop([value]),
+  };
+};
+
+const slotCache = new WeakMap<GridRow[], { index: SampleIndex; ch: number }>();
+
+/** The badge width every row of the table shares. */
+const scoreSlotCh = (rows: GridRow[], index: SampleIndex): number => {
+  const hit = slotCache.get(rows);
+  if (hit && hit.index === index) return hit.ch;
+  const ch = badgeSlotCh(
+    rows.flatMap((r) => {
+      const score = rowScore(r.original, index);
+      return score ? [scoreLabel(score.value, score.top)] : [];
+    })
+  );
+  slotCache.set(rows, { index, ch });
+  return ch;
+};
+
+/** Badge in a slot as wide as the table's widest, then the histogram, so
+ *  histograms line up down the column. `data-pro-own` keeps the
+ *  column-wide badge pass off it. */
+const ScoreCell: FC<{ row: LogListRow; rows: GridRow[] }> = ({ row, rows }) => {
+  const index = useSampleIndex();
+  const score = rowScore(row, index);
+  if (score === null) return <div>-</div>;
+  const stats = isSubRow(row) ? null : (index.stats.get(logKey(row)) ?? null);
+  const style: Record<string, string> = {
+    "--pro-score-ch": String(scoreSlotCh(rows, index)),
+  };
   return (
-    <>
-      <Badge value={value} top={stats?.top ?? scaleTop([value])} />
+    <div className="pro-score" data-pro-own="" style={style}>
+      <span className="pro-score-value">
+        <Badge value={score.value} top={score.top} />
+      </span>
       {stats && stats.top !== null && (
         <span
           className="pro-hist"
@@ -312,9 +331,16 @@ const ScoreCell: FC<{ row: LogListRow }> = ({ row }) => {
           <Histogram stats={stats} maxShare={index.maxShare} />
         </span>
       )}
-    </>
+    </div>
   );
 };
+
+/** A status icon needs no label: the header is an icon, with a hint. */
+const StatusHeader: FC = () => (
+  <span className="pro-status-head" aria-label="Status">
+    <Icon name="success" />
+  </span>
+);
 
 const ArgsCell: FC<{ row: LogListRow }> = ({ row }) => {
   const open = useOpenRows(openArgsRows).has(row.id);
@@ -399,8 +425,9 @@ const taskName = (ctx: CellCtx): string => {
   return typeof value === "string" ? value : ctx.row.original.name;
 };
 
-/** Pro-ux cells for the Tasks table: a sample caret in Task, readable Task
- *  args, and a score with its histogram. Upstream's columns otherwise. */
+/** Pro-ux cells for the Tasks table: an icon-wide Status, a sample caret in
+ *  Task, readable Task args, a score with its histogram, then Samples.
+ *  Upstream's columns otherwise. */
 export const useProLogListColumns = (
   columns: Column[],
   mode: string
@@ -411,8 +438,23 @@ export const useProLogListColumns = (
     if (!pro || mode !== "tasks") return columns;
     // Object.assign, not a spread: a spread of the column-def union loses
     // which variant (accessor function or key) each column is.
-    return columns.map((c): Column => {
+    const mapped = columns.map((c): Column => {
       switch (c.id) {
+        case "status":
+          return Object.assign({}, c, {
+            size: 30,
+            minSize: 30,
+            maxSize: 80,
+            header: () => <StatusHeader />,
+            headerTitle: "Status",
+            cell: (ctx: CellCtx) => (
+              <div className="pro-status-cell">{flexRender(c.cell, ctx)}</div>
+            ),
+          });
+        case "totalSamples":
+          return Object.assign({}, c, {
+            accessorFn: (row: LogListRow) => shownSampleCount(row, index),
+          });
         case "task":
           return Object.assign({}, c, {
             cell: (ctx: CellCtx) => (
@@ -432,17 +474,47 @@ export const useProLogListColumns = (
           // The accessor falls back to the sample mean so the column no
           // longer reads as empty when logs carry no headline metric.
           return Object.assign({}, c, {
-            size: 150,
+            size: 170,
             maxSize: 220,
             headerTitle:
               "Headline metric, or the mean of sample scores when the log has none; histogram of sample scores",
-            accessorFn: (row: LogListRow) =>
-              row.score ?? index.stats.get(logKey(row))?.mean,
-            cell: (ctx: CellCtx) => <ScoreCell row={ctx.row.original} />,
+            accessorFn: (row: LogListRow) => shownScore(row, index),
+            cell: (ctx: CellCtx) => (
+              <ScoreCell
+                row={ctx.row.original}
+                rows={ctx.table.getCoreRowModel().rows}
+              />
+            ),
           });
         default:
           return c;
       }
     });
+    return moveAfter(mapped, "totalSamples", "score");
   }, [pro, mode, columns, index]);
+};
+
+/** The listing query's accessors, reading Score and Samples as the Tasks
+ *  table shows them. The key changes with the sample index, so the query
+ *  re-sorts as sample scores load. */
+export const useProListingAccessors = (
+  mode: string,
+  getValue: ValueAccessor<LogListRow>,
+  getComparator: (columnId: string) => ValueComparator | undefined,
+  accessorsKey: string
+): {
+  getValue: ValueAccessor<LogListRow>;
+  getComparator: (columnId: string) => ValueComparator | undefined;
+  accessorsKey: string;
+} => {
+  const pro = useHtmlFlag("data-pro-ux");
+  const index = useSampleIndex();
+  return useMemo(() => {
+    if (!pro || mode !== "tasks")
+      return { getValue, getComparator, accessorsKey };
+    return {
+      ...tasksListingAccessors({ getValue, getComparator }, index),
+      accessorsKey: `${accessorsKey}|pro-tasks:${index.signature}`,
+    };
+  }, [pro, mode, getValue, getComparator, accessorsKey, index]);
 };

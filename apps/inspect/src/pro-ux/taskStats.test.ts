@@ -3,10 +3,12 @@ import { describe, expect, it } from "vitest";
 import {
   argsDetail,
   argsSummary,
+  badgeSlotCh,
   firstNumericScore,
   formatOnScale,
   maxBinShare,
   numericScore,
+  scoreLabel,
   scoreStats,
 } from "./taskStats";
 
@@ -72,6 +74,25 @@ describe("formatOnScale", () => {
     expect(formatOnScale(3.254, 10)).toBe("3.25");
     expect(formatOnScale(0.12345, 1)).toBe("0.123");
     expect(formatOnScale(87, 100)).toBe("87");
+  });
+});
+
+describe("score badge width", () => {
+  it("labels a score with its scale", () => {
+    expect(scoreLabel(72.06, 100)).toEqual({ value: "72.1", of: "/100" });
+    expect(scoreLabel(0.5, 1)).toEqual({ value: "0.500", of: "" });
+    expect(scoreLabel(150, null)).toEqual({ value: "150.0", of: "" });
+  });
+
+  it("fits the widest label, the scale counted at 0.85", () => {
+    expect(
+      badgeSlotCh([
+        scoreLabel(27, 100),
+        scoreLabel(72.06, 100),
+        scoreLabel(6.5, 10),
+      ])
+    ).toBe(7.4);
+    expect(badgeSlotCh([])).toBe(0);
   });
 });
 

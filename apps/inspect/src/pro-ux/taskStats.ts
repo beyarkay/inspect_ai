@@ -1,3 +1,5 @@
+import { formatPrettyDecimal } from "@tsmono/util";
+
 import { scaleTop } from "./cells";
 
 const kLetterScores: Record<string, number> = { C: 1, P: 0.5, I: 0, N: 0 };
@@ -143,4 +145,24 @@ export const formatOnScale = (value: number, top: number | null): string => {
   if (Number.isInteger(value)) return String(value);
   const digits = top === 100 ? 1 : top === 10 ? 2 : 3;
   return value.toFixed(digits);
+};
+
+/** A score as its badge reads: the value, then the scale ("/100"). */
+export const scoreLabel = (
+  value: number,
+  top: number | null
+): { value: string; of: string } =>
+  top === null
+    ? { value: formatPrettyDecimal(value), of: "" }
+    : { value: formatOnScale(value, top), of: top === 1 ? "" : `/${top}` };
+
+/** Width in `ch` of the widest label, the scale being set at 0.85em: one
+ *  badge width for the whole column, so every histogram starts at one x. */
+export const badgeSlotCh = (
+  labels: Iterable<{ value: string; of: string }>
+): number => {
+  let max = 0;
+  for (const label of labels)
+    max = Math.max(max, label.value.length + 0.85 * label.of.length);
+  return Math.max(0, Math.ceil(max * 10 - 1e-9) / 10);
 };
