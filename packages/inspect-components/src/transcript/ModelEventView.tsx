@@ -16,8 +16,13 @@ import { usePrismHighlight, useProperty } from "@tsmono/react/hooks";
 import { Icon } from "@tsmono/react/icons";
 import { formatTime } from "@tsmono/util";
 
+import { hasVisibleContent } from "../chat/rowsModel";
 import { GeneratingIndicator } from "../indicators/GeneratingIndicator";
 import { isLivePlaceholderMessage } from "../indicators/livePlaceholder";
+import {
+  ModelContextCaption,
+  ModelOutputCaption,
+} from "../pro-ux/ModelTurnCaption";
 
 import { attemptDurationSec } from "./event/attemptDuration";
 import { EventPanel } from "./event/EventPanel";
@@ -121,8 +126,17 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       ? [...event.input, ...outputs]
       : [...userMessages, ...outputs];
     const toolEventIds = context?.toolEventIds;
+    // A tool-call-only reply is empty once its calls move to their Tool
+    // events; drop it rather than render a bare "assistant" header.
     return toolEventIds
-      ? messages.map((m) => withoutToolCallsIn(m, toolEventIds))
+      ? messages
+          .map((m) => withoutToolCallsIn(m, toolEventIds))
+          .filter(
+            (m) =>
+              m.role !== "assistant" ||
+              hasVisibleContent(m) ||
+              (m.tool_calls?.length ?? 0) > 0
+          )
       : messages;
   }, [
     showAllMessages,
@@ -218,6 +232,12 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
               </button>
             </div>
           )}
+        {!showAllMessages && (
+          <ModelContextCaption
+            shown={userMessages.length}
+            total={event.input.length}
+          />
+        )}
         <ChatView
           id={`${eventNode.id}-model-output`}
           messages={summaryMessages}
@@ -227,6 +247,13 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
             collapseToolMessages: collapseSummaryToolMessages,
           }}
           labels={summaryLabels}
+        />
+        <ModelOutputCaption
+          calls={outputMessages.flatMap((m) =>
+            (m.tool_calls ?? [])
+              .filter((c) => context?.toolEventIds?.has(c.id))
+              .map((c) => c.function)
+          )}
         />
         {isCancelled ? (
           <div className={styles.cancelled}>

@@ -67,6 +67,7 @@ export const kContentCollapsibleEventTypes: string[] = [
   "model",
   "state",
   "store",
+  "score",
 ];
 
 export type EventType =

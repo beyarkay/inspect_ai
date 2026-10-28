@@ -8,16 +8,23 @@ import { formatDateTime } from "@tsmono/util";
 import { EventPanel } from "./event/EventPanel";
 import styles from "./ScoreEventView.module.css";
 import { ScoreValue } from "./ScoreValue";
-import { EventNode } from "./types";
+import { EventNode, EventPanelCallbacks } from "./types";
 
 interface ScoreEventViewProps {
   eventNode: EventNode<ScoreEvent>;
   className?: string;
+  eventCallbacks?: EventPanelCallbacks;
 }
+
+const scoreSummary = (value: unknown): string =>
+  value !== null && typeof value === "object"
+    ? JSON.stringify(value)
+    : String(value);
 
 export const ScoreEventView: FC<ScoreEventViewProps> = ({
   eventNode,
   className,
+  eventCallbacks,
 }) => {
   const event = eventNode.event;
   const resolvedTarget = event.target
@@ -35,6 +42,9 @@ export const ScoreEventView: FC<ScoreEventViewProps> = ({
         event.timestamp ? formatDateTime(new Date(event.timestamp)) : undefined
       }
       icon="scorer"
+      text={`score ${scoreSummary(event.score.value)}`}
+      collapsibleContent={true}
+      eventCallbacks={eventCallbacks}
     >
       <div data-name="Explanation" className={clsx(styles.explanation)}>
         {event.target ? (

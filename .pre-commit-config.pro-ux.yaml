@@ -1,25 +1,38 @@
 # Hooks for the pro-ux branch: install with
 #   pre-commit install -c .pre-commit-config.pro-ux.yaml
 # Upstream's .pre-commit-config.yaml lints the whole monorepo; this one covers
-# the pro-ux layer and runs the full inspect app test suite (~20s).
+# the pro-ux layers and runs the inspect app and inspect-components test
+# suites (~35s) under en_US, which their time-format assertions assume.
 repos:
   - repo: local
     hooks:
       - id: pro-ux-prettier
         name: prettier --write (pro-ux)
-        entry: pnpm -C apps/inspect exec prettier --write src/pro-ux src/main.tsx
+        entry: pnpm -C apps/inspect exec prettier --write src/pro-ux src/main.tsx ../../packages/inspect-components/src/pro-ux
         language: system
         pass_filenames: false
         always_run: true
       - id: pro-ux-eslint
-        name: eslint --fix (pro-ux)
+        name: eslint --fix (app pro-ux)
         entry: env TSMONO_TYPED_LINT=1 pnpm -C apps/inspect exec eslint --fix --max-warnings 0 src/pro-ux src/main.tsx
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: pro-ux-eslint-components
+        name: eslint --fix (inspect-components pro-ux)
+        entry: env TSMONO_TYPED_LINT=1 pnpm -C packages/inspect-components exec eslint --fix --max-warnings 0 src/pro-ux
         language: system
         pass_filenames: false
         always_run: true
       - id: inspect-vitest
         name: vitest (apps/inspect, all tests)
-        entry: pnpm -C apps/inspect exec vitest run
+        entry: env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 pnpm -C apps/inspect exec vitest run
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: components-vitest
+        name: vitest (packages/inspect-components, all tests)
+        entry: env LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 pnpm -C packages/inspect-components exec vitest run
         language: system
         pass_filenames: false
         always_run: true

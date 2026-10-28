@@ -137,6 +137,7 @@ const RenderedEventNodeInner: FC<RenderedEventNodeProps> = ({
         <ScoreEventView
           eventNode={eventNodeOf(node, "score")}
           className={className}
+          eventCallbacks={eventCallbacks}
         />
       );
 
