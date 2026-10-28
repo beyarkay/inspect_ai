@@ -15,7 +15,11 @@ import {
 } from "react";
 
 import { StickyScroll } from "@tsmono/react/components";
+import { useEventListener } from "@tsmono/react/hooks";
 import { Icon } from "@tsmono/react/icons";
+
+import { OutlineDockBar, useOutlinePeek } from "../pro-ux/outlineDock";
+import { useHtmlFlag } from "../pro-ux/useHtmlFlag";
 
 import { TranscriptOutline } from "./outline/TranscriptOutline";
 import {
@@ -107,17 +111,39 @@ export const OutlineSidebar: FC<OutlineSidebarProps> = ({
     [collapseState]
   );
 
+  const pro = useHtmlFlag("data-pro-ux");
+  const peek = useOutlinePeek();
+  useEventListener(pro ? outlineScrollEl : null, "mouseenter", peek.hold);
+  useEventListener(pro ? outlineScrollEl : null, "mouseleave", peek.leave);
+  const peeking = pro && isCollapsed && peek.open && hasNodes;
+
   return (
     <>
       <StickyScroll
         ref={handleOutlineScrollRef}
         scrollRef={scrollRef}
-        className={clsx(styles.outline, !isCollapsed && styles.expanded)}
+        className={clsx(
+          styles.outline,
+          (!isCollapsed || peeking) && styles.expanded,
+          peeking && "pro-outline-peek"
+        )}
         offsetTop={offsetTop}
       >
-        {!isCollapsed ? (
+        {pro && (
+          <OutlineDockBar
+            docked={!isCollapsed}
+            disabled={outline.toggleDisabled === true || !hasNodes}
+            title={outline.title}
+            onToggle={() => {
+              peek.enter();
+              outline.onCollapsedChange(!isCollapsed);
+            }}
+            onPeek={peek.enter}
+          />
+        )}
+        {!isCollapsed || peeking ? (
           <>
-            {outline.title && (
+            {!pro && outline.title && (
               <div className={styles.sidebarHeader}>
                 <span
                   className={clsx(
@@ -129,7 +155,7 @@ export const OutlineSidebar: FC<OutlineSidebarProps> = ({
                 </span>
               </div>
             )}
-            <div className={styles.sidebarHeaderCloseAnchor}>
+            <div className={styles.sidebarHeaderCloseAnchor} hidden={pro}>
               <button
                 type="button"
                 className={styles.sidebarHeaderClose}
@@ -159,7 +185,7 @@ export const OutlineSidebar: FC<OutlineSidebarProps> = ({
               onHasNodesChange={onHasNodesChange}
             />
           </>
-        ) : (
+        ) : pro ? null : (
           <button
             type="button"
             className={styles.outlineToggle}

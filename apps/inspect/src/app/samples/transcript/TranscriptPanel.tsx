@@ -35,6 +35,7 @@ import { isHostedEnvironment } from "@tsmono/util";
 
 import { Events } from "../../../@types/extraInspect";
 import { useLogDir } from "../../../app_config";
+import { isProUxEnabled } from "../../../pro-ux";
 import { useStore } from "../../../state/store";
 import { useCurrentLogFile } from "../../routing/currentSelection";
 import {
@@ -320,7 +321,7 @@ export const TranscriptPanel: FC<TranscriptPanelProps> = memo((props) => {
     },
     [setPropertyValue, outlineKey]
   );
-  const outlineCollapsed = outlineCollapsedRaw ?? false;
+  const outlineCollapsed = outlineCollapsedRaw ?? isProUxEnabled();
 
   const selectedOutlineId = useStore((state) => state.sample.selectedOutlineId);
   const setSelectedOutlineId = useStore(

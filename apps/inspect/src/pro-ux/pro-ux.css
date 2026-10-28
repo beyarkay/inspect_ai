@@ -920,3 +920,66 @@
   line-clamp: unset !important;
   max-height: none !important;
 }
+
+/* ── Transcript outline: one button in one place; hover floats the outline
+   over the transcript, click docks it, click again floats it ── */
+
+.pro-outline-bar {
+  display: none;
+}
+
+:root[data-pro-ux] .pro-outline-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  height: 26px;
+  margin-left: -0.6rem;
+  background: var(--pro-bg);
+}
+
+:root[data-pro-ux] .pro-outline-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-outline-button:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-outline-button[aria-pressed="true"] {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-outline-button[aria-disabled="true"] {
+  opacity: 0.4;
+}
+
+:root[data-pro-ux] .pro-outline-label {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--pro-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-pro-ux] .pro-outline-peek {
+  width: var(--outline-width, 300px);
+  z-index: 600 !important;
+  background: var(--pro-bg);
+  border-right: 1px solid var(--pro-line);
+  box-shadow: var(--pro-shadow);
+}
