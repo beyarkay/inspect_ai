@@ -382,15 +382,6 @@ export function DataGrid<TRow extends RowData>({
   // otherwise the grid manages it internally so resizing still works.
   const [internalSizing, setInternalSizing] = useState<ColumnSizingState>({});
   const effectiveSizing = columnSizing ?? internalSizing;
-  const handleColumnSizingChange: OnChangeFn<ColumnSizingState> = useCallback(
-    (updater) => {
-      const next =
-        typeof updater === "function" ? updater(effectiveSizing) : updater;
-      if (onColumnSizingChange) onColumnSizingChange(next);
-      else setInternalSizing(next);
-    },
-    [effectiveSizing, onColumnSizingChange]
-  );
 
   // Column order: controlled when `onColumnOrderChange` is provided (log
   // list persists per scope), else internal. The stored order is reconciled
@@ -593,6 +584,18 @@ export function DataGrid<TRow extends RowData>({
     trailingPad,
     effectiveSizing,
   ]);
+
+  // Pin every visible column at its rendered width before applying a
+  // resize, so dragging one column never re-fits the others.
+  const handleColumnSizingChange: OnChangeFn<ColumnSizingState> = useCallback(
+    (updater) => {
+      const base = { ...effectiveSizing, ...resolvedSizing };
+      const next = typeof updater === "function" ? updater(base) : updater;
+      if (onColumnSizingChange) onColumnSizingChange(next);
+      else setInternalSizing(next);
+    },
+    [effectiveSizing, resolvedSizing, onColumnSizingChange]
+  );
 
   // Double-click on a resize handle auto-sizes the column to its content
   // (the AG grid's built-in divider double-click). Only rendered cells are

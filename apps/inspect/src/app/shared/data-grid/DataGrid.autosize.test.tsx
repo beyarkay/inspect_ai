@@ -52,7 +52,9 @@ describe("DataGrid double-click auto-size", () => {
       />
     );
     fireEvent.doubleClick(screen.getByLabelText("Resize name"));
-    expect(onColumnSizingChange).toHaveBeenCalledWith({ name: 120 });
+    // The other visible column is pinned at its rendered width, so the
+    // resize can't re-fit it.
+    expect(onColumnSizingChange).toHaveBeenCalledWith({ name: 120, note: 150 });
   });
 
   test("uncontrolled: the header shrinks to the auto-sized width", () => {
