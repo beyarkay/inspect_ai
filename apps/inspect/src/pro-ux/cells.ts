@@ -76,6 +76,8 @@ const decorateGrid = (grid: HTMLElement): void => {
     for (const cell of cellsOf(row)) {
       const index = cell.getAttribute("aria-colindex") ?? "";
       const node = target(cell);
+      // Cells that draw their own badge (e.g. per-row scales) are left alone.
+      if (node.hasAttribute("data-pro-own")) continue;
       clear(node);
       const list = byColumn.get(index) ?? [];
       list.push({ node, text: cellText(cell) });

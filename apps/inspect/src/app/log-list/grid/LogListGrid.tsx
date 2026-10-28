@@ -20,6 +20,7 @@ import type {
 import { FindBandUI, useFindBandShortcut } from "@tsmono/react/components";
 import { useProperty } from "@tsmono/react/hooks";
 
+import { useProSampleRows } from "../../../pro-ux/TasksTable";
 import { useLogsListing } from "../../../state/hooks";
 import { toFullUrlMaybe } from "../../routing/url";
 import { DataGrid } from "../../shared/data-grid/DataGrid";
@@ -107,6 +108,7 @@ export const LogListGrid: FC<LogListGridProps> = ({
     getFilterType,
     accessorsKey,
   } = useLogListColumns(mode, scopeDir, scoresViewMode);
+  const displayRows = useProSampleRows(rows, mode);
 
   const handleRowActivate = useCallback(
     (row: LogListRow) => {
@@ -360,7 +362,7 @@ export const LogListGrid: FC<LogListGridProps> = ({
       )}
       <div className={clsx(gridStyles.gridContainer)}>
         <DataGrid<LogListRow>
-          data={rows}
+          data={displayRows}
           columns={columns}
           columnVisibility={visibility}
           sorting={sorting}

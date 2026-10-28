@@ -1,0 +1,186 @@
+/* ── Tasks table: sample caret, readable task args, score histogram ── */
+
+.pro-task-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pro-task-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pro-task-cell small {
+  flex: none;
+  color: var(--pro-mute, #77777f);
+  font-size: 0.9em;
+}
+
+.pro-task-what {
+  margin-left: auto;
+  padding-left: 6px;
+}
+
+.pro-task-caret,
+.pro-task-caret-gap {
+  flex: none;
+  width: 16px;
+}
+
+.pro-task-caret {
+  all: unset;
+  display: inline-block;
+  flex: none;
+  width: 16px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--pro-mute, #77777f);
+  border-radius: 2px;
+}
+
+.pro-task-caret:hover {
+  color: var(--pro-fg, #2a2a2e);
+  background: var(--pro-tint, #eef1f6);
+}
+
+.pro-task-caret:focus-visible {
+  outline: 1px solid var(--pro-dark, #3a3a40);
+}
+
+.pro-task-sub {
+  padding-left: 21px;
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-task-sub .pro-task-name {
+  color: var(--pro-fg, #2a2a2e);
+}
+
+[role="row"]:has(.pro-task-sub) {
+  background: var(--pro-bg, #f4f4f6);
+}
+
+/* Score: value, then a fixed-size histogram on one y range for every row. */
+.pro-hist {
+  display: inline-flex;
+  flex: none;
+  margin-left: 8px;
+  line-height: 0;
+}
+
+.pro-hist-axis {
+  stroke: var(--pro-line, #d3d3d9);
+  stroke-width: 1;
+}
+
+/* Task args: one line until opened; the caret sits at the same spot either way. */
+[role="gridcell"]:has(> .pro-args) {
+  align-items: flex-start;
+}
+
+.pro-args {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  padding-top: 3px;
+  cursor: pointer;
+}
+
+.pro-args-caret {
+  flex: none;
+  width: 12px;
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-args:hover .pro-args-caret {
+  color: var(--pro-fg, #2a2a2e);
+}
+
+.pro-args-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.pro-args-key {
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-args-line .pro-args-value {
+  font-weight: 600;
+}
+
+.pro-args-sep {
+  color: var(--pro-faint, #a0a0a8);
+}
+
+.pro-args-full {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 10px;
+  row-gap: 2px;
+  min-width: 0;
+  padding-bottom: 4px;
+  cursor: text;
+  user-select: text;
+}
+
+.pro-args-row {
+  display: contents;
+}
+
+pre.pro-args-value {
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+[role="row"]:has(.pro-args.open) {
+  align-items: stretch;
+}
+
+[role="row"]:has(.pro-args.open) [role="gridcell"] {
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.pro-args-head {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pro-args-all {
+  all: unset;
+  display: inline-block;
+  flex: none;
+  width: 3.4em;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  color: var(--pro-mute, #77777f);
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 0 3px;
+}
+
+.pro-args-all:hover {
+  color: var(--pro-fg, #2a2a2e);
+  background: var(--pro-tint, #eef1f6);
+}
+
+/* Opening task args turns on row measuring for the grid. Rows without open
+   args keep their fixed height (min-height wins over height: 0), so nothing
+   above an opened row moves. */
+:root:not([data-pro-wrapcells])
+  [role="row"][style*="min-height"]:not(:has(.pro-args.open)) {
+  height: 0;
+}

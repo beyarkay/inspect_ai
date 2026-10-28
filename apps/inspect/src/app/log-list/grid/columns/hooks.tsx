@@ -13,6 +13,7 @@ import {
   type LogListingRow,
   type ScorerMap,
 } from "../../../../log_data";
+import { useProLogListColumns } from "../../../../pro-ux/TasksTable";
 import { useStore } from "../../../../state/store";
 import { parseLogFileName } from "../../../../utils/evallog";
 import { formatDateTime, formatTime } from "../../../../utils/format";
@@ -875,8 +876,10 @@ export const useLogListColumns = (
     [scorerMap]
   );
 
+  const proColumns = useProLogListColumns(allColumns, mode);
+
   return {
-    columns: allColumns,
+    columns: proColumns,
     visibility,
     pickerColumns,
     getValue,

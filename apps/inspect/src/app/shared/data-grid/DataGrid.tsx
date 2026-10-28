@@ -43,7 +43,7 @@ import {
   moveToEnd,
   useCollapsedEmptyColumns,
 } from "../../../pro-ux/emptyColumns";
-import { useProPref } from "../../../pro-ux/prefs";
+import { useRowsGrow } from "../../../pro-ux/tasksState";
 import { useStableValue } from "../useStableValue";
 
 import { computeAutoSizeWidth } from "./autoSize";
@@ -319,7 +319,7 @@ export function DataGrid<TRow extends RowData>({
   ariaLabel,
 }: DataGridProps<TRow>): ReactElement {
   const { columns, emptyIds } = useCollapsedEmptyColumns(rawColumns, data);
-  const wrapCells = useProPref("wrapCells");
+  const wrapCells = useRowsGrow();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const getRowHref = isVscode() ? undefined : getRowHrefProp;
 
