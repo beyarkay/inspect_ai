@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import { parsePackageName } from "@tsmono/util";
 
+import { outlineLabel } from "../../pro-ux/outline";
 import { EventNode } from "../types";
 
 import { iconForNode } from "./OutlineRow";
@@ -10,6 +11,7 @@ import outlineStyles from "./TranscriptOutline.module.css";
 
 const kMinWidth = 120;
 const kMaxWidth = 600;
+const kDetailedMaxWidth = 320;
 
 // ---------------------------------------------------------------------------
 // Hidden DOM container for natural-width measurement
@@ -96,7 +98,8 @@ export function useOutlineWidth(
 
       label.appendChild(
         document.createTextNode(
-          parsePackageName(labelForOutlineNode(node)).module
+          outlineLabel(node) ??
+            parsePackageName(labelForOutlineNode(node)).module
         )
       );
       row.appendChild(label);
@@ -105,8 +108,11 @@ export function useOutlineWidth(
     }
 
     const width = root.getBoundingClientRect().width;
+    const max = outlineNodes.some((n) => outlineLabel(n) !== undefined)
+      ? kDetailedMaxWidth
+      : kMaxWidth;
 
-    return Math.min(kMaxWidth, Math.max(kMinWidth, Math.ceil(width)));
+    return Math.min(max, Math.max(kMinWidth, Math.ceil(width)));
   }, [outlineNodes, agentName]);
 }
 

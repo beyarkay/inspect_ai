@@ -11,6 +11,7 @@ import {
   parsePackageName,
 } from "@tsmono/util";
 
+import { outlineLabel } from "../../pro-ux/outline";
 import { kSandboxSignalName } from "../transform/fixups";
 import { EventNode } from "../types";
 
@@ -49,7 +50,9 @@ export const OutlineRow: FC<OutlineRowProps> = ({
   // Generate URL for deep linking to this event
   const eventUrl = getEventUrl?.(node.id);
 
-  const labelText = parsePackageName(labelForNode(node)).module;
+  const detailedLabel = outlineLabel(node);
+  const labelText =
+    detailedLabel ?? parsePackageName(labelForNode(node)).module;
 
   const activate = () => {
     onSelect?.(node.id);
@@ -105,7 +108,7 @@ export const OutlineRow: FC<OutlineRowProps> = ({
         <div
           className={clsx(styles.label)}
           data-depth={node.depth}
-          title={tooltipForNode(node)}
+          title={tooltipForNode(node) ?? detailedLabel}
         >
           {icon && (
             <span className={styles.iconSlot}>

@@ -4,6 +4,8 @@
 
 import { useMemo } from "react";
 
+import { expandTurns, isHtmlFlagOn } from "../../pro-ux/outline";
+import { useHtmlFlag } from "../../pro-ux/useHtmlFlag";
 import { flatTree } from "../transform/flatten";
 import { EventNode } from "../types";
 
@@ -44,14 +46,18 @@ export const resolveOutlineSelection = (
  */
 export const buildOutlineNodeList = (
   eventNodes: EventNode[],
-  collapsedIds: Record<string, boolean>
+  collapsedIds: Record<string, boolean>,
+  detailed = isHtmlFlagOn("data-pro-detailedoutline")
 ): EventNode[] => {
   const nodeList = flatTree(eventNodes, collapsedIds, [
     ...outlineFilterVisitors(),
     noScorerChildren(),
   ]);
 
-  return collapseScoring(collapseTurns(makeTurns(nodeList)));
+  const turns = makeTurns(nodeList);
+  return collapseScoring(
+    detailed ? expandTurns(turns, collapsedIds) : collapseTurns(turns)
+  );
 };
 
 export interface OutlineNodes {
@@ -65,9 +71,10 @@ export const useOutlineNodes = (
   eventNodes: EventNode[],
   collapsedIds: Record<string, boolean>
 ): OutlineNodes => {
+  const detailed = useHtmlFlag("data-pro-detailedoutline");
   const outlineNodeList = useMemo(
-    () => buildOutlineNodeList(eventNodes, collapsedIds),
-    [eventNodes, collapsedIds]
+    () => buildOutlineNodeList(eventNodes, collapsedIds, detailed),
+    [eventNodes, collapsedIds, detailed]
   );
 
   const allNodesList = useMemo(() => {
