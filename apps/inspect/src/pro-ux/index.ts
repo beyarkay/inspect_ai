@@ -2,6 +2,7 @@ import "./fonts.css";
 import "./pro-ux.css";
 import "./dark.css";
 import "./content.css";
+import "./trajectory.css";
 import "./search.css";
 
 import { installCells } from "./cells";

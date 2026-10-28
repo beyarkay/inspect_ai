@@ -9,6 +9,7 @@ export interface ProPrefs {
   detailedOutline: boolean;
   turnMarkers: boolean;
   smartScores: boolean;
+  trajectoryColumn: boolean;
 }
 
 export const kPrefDefaults: ProPrefs = {
@@ -20,6 +21,7 @@ export const kPrefDefaults: ProPrefs = {
   detailedOutline: true,
   turnMarkers: true,
   smartScores: true,
+  trajectoryColumn: true,
 };
 
 export const kPrefKeys: (keyof ProPrefs)[] = [
@@ -31,6 +33,7 @@ export const kPrefKeys: (keyof ProPrefs)[] = [
   "detailedOutline",
   "turnMarkers",
   "smartScores",
+  "trajectoryColumn",
 ];
 
 export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
@@ -56,6 +59,10 @@ export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
   smartScores: [
     "Structured score text",
     "JSON and XML shown as collapsible trees",
+  ],
+  trajectoryColumn: [
+    "Trajectory column in sample tables",
+    "Each sample's conversation as coloured spans; a shared input shown once",
   ],
 };
 

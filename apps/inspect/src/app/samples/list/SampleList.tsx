@@ -10,6 +10,10 @@ import type {
 import { formatNoDecimal } from "@tsmono/util";
 
 import { MessageBand } from "../../../components/MessageBand";
+import {
+  TrajectoryBar,
+  useTrajectoryColumns,
+} from "../../../pro-ux/TrajectoryColumn";
 import { highlightSample, setDocumentTitle } from "../../../state/actions";
 import { useSelectedLogDetails } from "../../../state/hooks";
 import { useStore } from "../../../state/store";
@@ -82,6 +86,7 @@ export const SampleList: FC<SampleListProps> = memo((props) => {
     hideColumnFilters,
   } = props;
 
+  const grid = useTrajectoryColumns(columns, items, multiline);
   const sampleNavigation = useSampleNavigationActions();
   const { sampleId: routeSampleId, epoch: routeEpoch } = useLogRouteParams();
   const highlightedSample = useStore((state) => state.log.highlightedSample);
@@ -184,15 +189,16 @@ export const SampleList: FC<SampleListProps> = memo((props) => {
           key={`sample-warning-message-${warning.type}-${warning.msg}`}
         />
       ))}
+      <TrajectoryBar items={items} />
       <SamplesGrid
         rowData={items}
-        columnDefs={columns}
+        columnDefs={grid.columns}
         columnVisibility={columnVisibility}
         sorting={sorting}
         onSortingChange={onSortingChange}
         columnSizing={columnSizing}
         onColumnSizingChange={onColumnSizingChange}
-        multiline={multiline}
+        multiline={grid.multiline}
         getRowId={getRowId}
         selectedRowId={selectedRowId}
         onRowSelect={handleRowSelect}

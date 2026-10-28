@@ -1,0 +1,129 @@
+:root[data-pro-ux] .pro-traj {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 1.4em;
+}
+
+:root[data-pro-ux] .pro-traj-strip {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 10px;
+  shape-rendering: crispEdges;
+}
+
+:root[data-pro-ux] .pro-traj-base {
+  fill: var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-traj-span {
+  stroke: var(--pro-surface);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+:root[data-pro-ux] .pro-traj-loading::before {
+  content: "";
+  flex: 1 1 auto;
+  border-top: 1px dashed var(--pro-line);
+}
+
+:root[data-pro-ux] .pro-traj-total {
+  flex: 0 0 44px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--pro-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-traj-error {
+  flex: 0 0 4px;
+  height: 10px;
+}
+
+:root[data-pro-ux] .pro-traj-note {
+  color: var(--pro-faint);
+  font-size: 13px;
+}
+
+:root[data-pro-ux] .pro-traj-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+:root[data-pro-ux] .pro-traj-head .pro-traj-swatch:first-of-type {
+  margin-left: 5px;
+}
+
+:root[data-pro-ux] .pro-traj-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+}
+
+:root[data-pro-ux] .pro-traj-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--pro-soft);
+  background: var(--pro-surface);
+  font-size: 14px;
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-traj-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+:root[data-pro-ux] .pro-traj-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-traj-label {
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-traj-seg {
+  margin: 0;
+  font-size: 13px;
+}
+
+:root[data-pro-ux] .pro-traj-input {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-traj-input.open {
+  display: block;
+  white-space: pre-wrap;
+}
+
+:root[data-pro-ux] .pro-traj-input:hover .pro-traj-caret {
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-traj-caret {
+  display: inline-block;
+  width: 1em;
+  color: var(--pro-mute);
+}
