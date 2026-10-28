@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { FC, Fragment, ReactNode, useMemo, useRef } from "react";
 import { Link } from "react-router";
 
+import { useHtmlFlag } from "@tsmono/inspect-components/pro-ux";
 import { useBreadcrumbTruncation } from "@tsmono/react/hooks";
 import { Icon } from "@tsmono/react/icons";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@tsmono/util";
 
 import { useLogDir } from "../../app_config";
+import { ProBreadcrumbs } from "../../pro-ux/Breadcrumbs";
 
 import styles from "./Navbar.module.css";
 
@@ -49,6 +51,7 @@ export const Navbar: FC<NavbarProps> = ({
   const baseLogDir = dirname(displayDir);
   const baseLogName = basename(displayDir);
   const pathContainerRef = useRef<HTMLDivElement>(null);
+  const proCrumbs = useHtmlFlag("data-pro-ux");
 
   const backUrl =
     backUrlOverride ??
@@ -107,7 +110,14 @@ export const Navbar: FC<NavbarProps> = ({
         </Link>
         {breadcrumbsEnabled !== false && (
           <div className={clsx(styles.pathContainer)} ref={pathContainerRef}>
-            {logDir ? (
+            {logDir && proCrumbs ? (
+              <ProBreadcrumbs
+                segments={segments}
+                currentPath={currentPath}
+                logDir={logDir}
+                fnNavigationUrl={fnNavigationUrl}
+              />
+            ) : logDir ? (
               <ol className={clsx("breadcrumb", styles.breadcrumbs)}>
                 {visibleSegments.map((segment, index) => {
                   const isLast = index === visibleSegments.length - 1;

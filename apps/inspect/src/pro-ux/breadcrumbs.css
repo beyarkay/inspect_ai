@@ -1,0 +1,242 @@
+/* Navbar breadcrumb: the last segment whole, earlier ones shrink, and each
+   separator opens the folder it stands for. */
+
+:root[data-pro-ux] nav[class*="_header_"] [class*="_pathContainer_"] {
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumbs-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumbs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0 0.5em;
+  list-style: none;
+  border-left: 1px solid var(--pro-line);
+  font-family: var(--pro-font);
+}
+
+:root[data-pro-ux] .pro-crumb-item,
+:root[data-pro-ux] .pro-crumb-more-item {
+  display: flex;
+  align-items: baseline;
+  flex: 0 1 auto;
+  min-width: 3.5em;
+}
+
+:root[data-pro-ux] .pro-crumb-more-item {
+  flex: none;
+  min-width: 0;
+}
+
+:root[data-pro-ux] .pro-crumb {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--pro-sub);
+}
+
+:root[data-pro-ux] .pro-crumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:root[data-pro-ux] .pro-crumb a:hover {
+  color: var(--pro-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The log dir's parent keeps its tail: "…/starter_kit". */
+:root[data-pro-ux] .pro-crumb-item:has(.pro-crumb-root) {
+  flex-shrink: 6;
+  min-width: 2.5em;
+}
+
+:root[data-pro-ux] .pro-crumb-root {
+  direction: rtl;
+  text-align: left;
+  color: var(--pro-mute);
+}
+
+:root[data-pro-ux] .pro-crumb-item:has(.pro-crumb-log) {
+  flex-shrink: 0.25;
+}
+
+:root[data-pro-ux] .pro-crumbs .pro-crumb-item-last {
+  flex: none;
+  min-width: 0;
+}
+
+/* No room for the whole last segment even with the rest folded: wrap it
+   rather than clip it. */
+:root[data-pro-ux] .pro-crumbs-tight .pro-crumb-item-last {
+  flex: 0 1 auto;
+}
+
+:root[data-pro-ux] .pro-crumb-last {
+  color: var(--pro-fg);
+  font-weight: 500;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
+/* A hidden full-length copy: if it overflows, the middle collapses to "…". */
+:root[data-pro-ux] .pro-crumbs-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+:root[data-pro-ux] .pro-crumbs-measure .pro-crumb-item-last {
+  flex: none;
+}
+
+:root[data-pro-ux] .pro-crumbs-measure .pro-crumb-last {
+  white-space: nowrap;
+}
+
+/* Takes only the room left over, so it never squeezes a crumb. */
+:root[data-pro-ux] .pro-crumb-info {
+  flex: 1 1 0;
+  min-width: 0;
+  text-indent: 0.75em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--pro-mute);
+  font-size: 14px;
+}
+
+:root[data-pro-ux] .pro-crumb-btn,
+:root[data-pro-ux] .pro-crumb-sep-plain {
+  flex: none;
+  margin: 0 0.15em;
+  padding: 0 0.35em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  color: var(--pro-faint);
+  font: inherit;
+  line-height: 1.25;
+}
+
+:root[data-pro-ux] .pro-crumb-btn {
+  cursor: pointer;
+}
+
+:root[data-pro-ux] .pro-crumb-btn:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-crumb-btn[aria-expanded="true"] {
+  background: var(--pro-dark);
+  border-color: var(--pro-dark);
+  color: var(--pro-on-dark);
+}
+
+/* ── Menus ── */
+
+:root[data-pro-ux] .pro-crumb-menu {
+  position: fixed;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  max-height: min(70vh, 640px);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+  color: var(--pro-fg);
+  font: 15px/1.35 var(--pro-font);
+}
+
+:root[data-pro-ux] .pro-crumb-menu:focus {
+  outline: none;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-head {
+  padding: 6px 10px 4px;
+  color: var(--pro-mute);
+  font-size: 13px;
+  border-bottom: 1px solid var(--pro-soft);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-filter {
+  margin: 6px 8px 2px;
+  padding: 1px 8px;
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  background: var(--pro-surface);
+  color: var(--pro-fg);
+  font: inherit;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-filter:focus {
+  outline: none;
+  border-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-focus {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-list {
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-item {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 10px 3px 8px;
+  border-left: 2px solid transparent;
+  color: var(--pro-fg);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-active {
+  background: var(--pro-tint);
+  color: var(--pro-fg);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-current {
+  border-left-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-crumb-menu-current .pro-crumb-menu-primary {
+  font-weight: 600;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-static {
+  cursor: default;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-secondary {
+  color: var(--pro-mute);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-crumb-menu-empty {
+  padding: 4px 10px;
+  color: var(--pro-mute);
+  font-style: italic;
+}

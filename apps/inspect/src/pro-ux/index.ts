@@ -3,6 +3,7 @@ import "./pro-ux.css";
 import "./dark.css";
 import "./content.css";
 import "./timeline.css";
+import "./breadcrumbs.css";
 import "./trajectory.css";
 import "./search.css";
 
