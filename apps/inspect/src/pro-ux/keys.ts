@@ -239,7 +239,10 @@ const lookup = (key: string): Binding | undefined => {
 
 const onKeyDown = (e: KeyboardEvent): void => {
   if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
-  const editing = isEditable(document.activeElement);
+  const origin = e.composedPath()[0];
+  const editing =
+    isEditable(document.activeElement) ||
+    (origin instanceof Element && isEditable(origin));
   if (editing && e.key !== "Escape") return;
 
   if (/^[1-9]$/.test(e.key) && !overlayOpen()) {

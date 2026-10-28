@@ -1,11 +1,16 @@
+/** Pierces shadow roots: focus inside <vscode-textarea> reports the host. */
 export const isEditable = (el: Element | null): boolean => {
-  if (!(el instanceof HTMLElement)) return false;
-  if (el.isContentEditable) return true;
+  let active = el;
+  while (active?.shadowRoot?.activeElement) {
+    active = active.shadowRoot.activeElement;
+  }
+  if (!(active instanceof HTMLElement)) return false;
+  if (active.isContentEditable) return true;
   return (
-    el.tagName === "INPUT" ||
-    el.tagName === "TEXTAREA" ||
-    el.tagName === "SELECT" ||
-    el.closest(".cm-editor") !== null
+    active.tagName === "INPUT" ||
+    active.tagName === "TEXTAREA" ||
+    active.tagName === "SELECT" ||
+    active.closest(".cm-editor") !== null
   );
 };
 
