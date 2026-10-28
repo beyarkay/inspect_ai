@@ -1,0 +1,163 @@
+/* ── Transcript time bar: one coloured span per stretch, with a key ── */
+
+:root[data-pro-ux] .pro-kind-span {
+  position: absolute;
+  top: 50%;
+  height: 8px;
+  min-width: 3px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  transform: translateY(-50%);
+  box-shadow: inset -1px 0 0 var(--pro-surface);
+  cursor: pointer;
+  z-index: 3;
+}
+
+:root[data-pro-ux] .pro-kind-span:hover {
+  height: 14px;
+  z-index: 4;
+  box-shadow: 0 0 0 1px var(--pro-dark);
+}
+
+:root[data-pro-ux] .pro-kind-key {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px 10px;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-right: 8px;
+  padding-left: 12px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--pro-sub);
+}
+
+/* The key sits inside the minimap row, so let that row take the free width. */
+:root[data-pro-ux] [class*="_container_"]:has(> .pro-kind-key) {
+  max-width: none;
+}
+
+:root[data-pro-ux] .pro-kind-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] .pro-kind-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+}
+
+:root[data-pro-ux] .pro-kind-key-axis {
+  color: var(--pro-mute);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] [class*="_stableLabel_"],
+:root[data-pro-ux] [class*="_sectionTimePill_"] {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pro-mute);
+  opacity: 1;
+}
+
+/* ── Activity tab: the pro-ux type scale on a chart laid out for 9px ── */
+
+:root[data-pro-ux] [class*="_container_"]:has(> [class*="_pickerRow_"]),
+:root[data-pro-ux] [class*="_container_"]:has(> [class*="_filterRow_"]) {
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] [class*="_pickerRow_"],
+:root[data-pro-ux] [class*="_pickerRow_"] [class*="_bandChip_"],
+:root[data-pro-ux] [class*="_filterRow_"] [class*="_filterPill_"] {
+  font-size: 14px;
+}
+
+:root[data-pro-ux] [class*="_pickerRow_"] [class*="_caption_"],
+:root[data-pro-ux] [class*="_filterRow_"] [class*="_caption_"] {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+:root[data-pro-ux] [class*="_chart_"] svg text {
+  font-family: var(--pro-font);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_bandLabel_"] {
+  font-size: 15.5px;
+  font-variant-caps: all-small-caps;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_bandHeadline_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_axisLabel_"] {
+  font-size: 13px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_yTickLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_legendName_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterName_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterExpand_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_stallLabel"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_compactionLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_retryBadge_"] {
+  font-size: 12px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterModel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_burstLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_ghostLabel_"],
+:root[data-pro-ux] [class*="_chart_"] [class*="_blockedLabel_"] {
+  font-size: 10.5px;
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterModel_"] {
+  transform: translateY(2px);
+}
+
+:root[data-pro-ux] [class*="_chart_"] [class*="_gutterName_"] {
+  fill: var(--bs-body-color);
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_headerRow_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_kindPill_"] {
+  font-size: 15px;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_time_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_mono_"] {
+  font-family: var(--pro-font);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_event_"] {
+  font-size: 15px;
+}
+
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_openEvent_"],
+:root[data-pro-ux]
+  [class*="_container_"]:has(> [class*="_filterRow_"])
+  [class*="_by_"] {
+  font-size: 14px;
+}
