@@ -4,7 +4,8 @@ import { FC, useCallback, useRef, useState } from "react";
 import { useProperty } from "@tsmono/react/hooks";
 import { formatDuration, formatDurationShort, formatTime } from "@tsmono/util";
 
-import { TurnMarkers } from "../../../pro-ux/turnMarkers";
+import { TurnKey, TurnMarkers } from "../../../pro-ux/turnMarkers";
+import { useHtmlFlag } from "../../../pro-ux/useHtmlFlag";
 import type { TimelineSpan } from "../core";
 import { computeBarPosition, formatTokenCount } from "../swimlaneLayout";
 import type { MinimapSelection } from "../timelineEventNodes";
@@ -187,10 +188,14 @@ export const TimelineMinimap: FC<TimelineMinimapProps> = ({
       ? formatDurationShort(selection.startTime, selection.endTime)
       : formatDuration(selection.startTime, selection.endTime);
   };
-  const sectionLabel = computeSectionLabel();
+  // A selection covering the whole bar would repeat the right-edge total.
+  const wholeBar =
+    useHtmlFlag("data-pro-ux") && !!bar && bar.left <= 0.5 && bar.width >= 99;
+  const sectionLabel = wholeBar ? "" : computeSectionLabel();
 
   return (
     <div className={styles.container}>
+      <TurnKey root={root} mapping={mapping} />
       {/* Mode label — the toggle control for time/tokens. Both values are
           rendered so the cell sizes to the wider one. */}
       <button

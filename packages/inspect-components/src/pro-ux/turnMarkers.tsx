@@ -3,95 +3,130 @@ import { createContext, FC, useContext, useMemo } from "react";
 import type { TimelineSpan } from "../transcript/timeline/core";
 import { computeBarPosition } from "../transcript/timeline/swimlaneLayout";
 import type { TimeMapping } from "../transcript/timeline/timeMapping";
-import { flatTree } from "../transcript/transform/flatten";
 import { EventNode } from "../transcript/types";
 
+import { kKindColour, kKindLabel, kKindOrder } from "./kinds";
+import {
+  buildKindSpans,
+  formatElapsed,
+  layoutKindSpans,
+  type SpanLayout,
+} from "./kindSpans";
 import { useHtmlFlag } from "./useHtmlFlag";
 
-export interface TurnMark {
-  id: string;
-  time: Date;
-  label: string;
-}
-
 interface TurnMarkersValue {
-  turns: TurnMark[];
+  turns: EventNode[];
   onSelect: (eventId: string) => void;
 }
 
 export const TurnMarkersContext = createContext<TurnMarkersValue | null>(null);
 
-/** One mark per model call, in transcript order. */
-export const useTurnMarks = (eventNodes: EventNode[]): TurnMark[] =>
-  useMemo(() => {
-    const marks: TurnMark[] = [];
-    for (const node of flatTree(eventNodes, null)) {
-      if (node.event.event !== "model" || !node.event.timestamp) continue;
-      marks.push({
-        id: node.id,
-        time: new Date(node.event.timestamp),
-        label: `turn ${marks.length + 1} · ${node.event.model}`,
-      });
-    }
-    return marks;
-  }, [eventNodes]);
+/** The transcript events the time bar draws. Spans are built beside the bar,
+ *  where the timeline says when scoring began. */
+export const useTurnMarks = (eventNodes: EventNode[]): EventNode[] =>
+  eventNodes;
 
 interface TurnMarkersProps {
   root: TimelineSpan;
   mapping?: TimeMapping;
 }
 
-/** Below this spread (in % of the bar) time positions are indistinguishable. */
-const kMinSpread = 2;
+/** Start of the scorers span; the event tree has already dropped it. */
+const scoringStart = (span: TimelineSpan): number | undefined => {
+  let start: number | undefined;
+  for (const item of span.content) {
+    if (item.type !== "span") continue;
+    const found =
+      item.spanType === "scorers"
+        ? item.startTime().getTime()
+        : scoringStart(item);
+    if (found !== undefined) start = Math.min(start ?? found, found);
+  }
+  return start;
+};
 
-/** Ticks on the minimap track, one per model call; click scrolls there.
- *  When every turn lands within kMinSpread of the bar (e.g. a replay), the
- *  ticks are spaced by order instead, drawn dashed, and say so. */
-export const TurnMarkers: FC<TurnMarkersProps> = ({ root, mapping }) => {
+const useKindLayout = (
+  root: TimelineSpan,
+  mapping?: TimeMapping
+): { layout: SpanLayout; onSelect: (id: string) => void } | null => {
   const value = useContext(TurnMarkersContext);
   const enabled = useHtmlFlag("data-pro-turnmarkers");
-  if (!value || !enabled || value.turns.length === 0) return null;
-  const byTime = value.turns.map((turn) =>
-    Math.min(
-      100,
-      Math.max(
-        0,
-        mapping
-          ? mapping.toPercent(turn.time)
-          : computeBarPosition(
-              turn.time,
-              turn.time,
-              root.startTime(),
-              root.endTime()
-            ).left
-      )
-    )
-  );
-  const spread = Math.max(...byTime) - Math.min(...byTime);
-  const byOrder = value.turns.length > 1 && spread < kMinSpread;
-  const first = value.turns[0]?.time.getTime() ?? 0;
-  const last = value.turns[value.turns.length - 1]?.time.getTime() ?? 0;
-  const note = byOrder
-    ? ` (all turns started within ${last - first} ms; ticks spaced by order, not time)`
-    : "";
+  const nodes = value?.turns;
+  const layout = useMemo(() => {
+    if (!nodes) return null;
+    const spans = buildKindSpans(nodes, scoringStart(root));
+    if (spans.length === 0) return null;
+    const toPercent = (ms: number): number => {
+      const at = new Date(ms);
+      return mapping
+        ? mapping.toPercent(at)
+        : computeBarPosition(at, at, root.startTime(), root.endTime()).left;
+    };
+    return layoutKindSpans(spans, toPercent);
+  }, [nodes, mapping, root]);
+  if (!value || !enabled || !layout) return null;
+  return { layout, onSelect: value.onSelect };
+};
+
+/** Coloured spans on the minimap track, one per stretch of the transcript;
+ *  click scrolls there. */
+export const TurnMarkers: FC<TurnMarkersProps> = ({ root, mapping }) => {
+  const placed = useKindLayout(root, mapping);
+  if (!placed) return null;
+  const { layout, onSelect } = placed;
+  const where =
+    layout.axis === "order" ? " (placed by order, width by text length)" : "";
   return (
     <>
-      {value.turns.map((turn, i) => (
+      {layout.spans.map((span, i) => (
         <button
-          key={turn.id}
+          key={`${span.id}-${span.kind}-${i}`}
           type="button"
-          className={
-            byOrder ? "pro-turn-mark pro-turn-mark-order" : "pro-turn-mark"
-          }
+          className={`pro-kind-span pro-kind-${span.kind}`}
           style={{
-            left: `${byOrder ? ((i + 0.5) / value.turns.length) * 100 : byTime[i]}%`,
+            left: `${span.left}%`,
+            width: `${span.width}%`,
+            background: kKindColour[span.kind],
           }}
-          title={turn.label + note}
-          aria-label={`Jump to ${turn.label}`}
+          title={span.label + where}
+          aria-label={`Jump to ${span.label}`}
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={() => value.onSelect(turn.id)}
+          onClick={() => onSelect(span.id)}
         />
       ))}
     </>
+  );
+};
+
+/** Swatch key for the kinds on the bar, and which axis places them. */
+export const TurnKey: FC<TurnMarkersProps> = ({ root, mapping }) => {
+  const placed = useKindLayout(root, mapping);
+  if (!placed) return null;
+  const { layout } = placed;
+  const present = new Set(layout.spans.map((s) => s.kind));
+  const [axis, why] =
+    layout.axis === "time"
+      ? ["by time", "Spans placed by wall-clock time"]
+      : [
+          "by order · width ∝ text length",
+          `Every agent turn started within ${formatElapsed(layout.agentSpreadMs)} (a replay, or a scorer that dwarfs the run), so time would stack them in one sliver. Spans are placed in transcript order instead, each as wide as its text.`,
+        ];
+  return (
+    <div className="pro-kind-key" aria-label="Time bar key">
+      {kKindOrder
+        .filter((kind) => present.has(kind))
+        .map((kind) => (
+          <span key={kind} className="pro-kind-key-item">
+            <span
+              className="pro-kind-swatch"
+              style={{ background: kKindColour[kind] }}
+            />
+            {kKindLabel[kind]}
+          </span>
+        ))}
+      <span className="pro-kind-key-axis" title={why}>
+        {axis}
+      </span>
+    </div>
   );
 };

@@ -55,7 +55,10 @@ export const kPrefLabels: Record<keyof ProPrefs, [string, string]> = {
     "Detailed transcript outline",
     "One row per model call and tool call",
   ],
-  turnMarkers: ["Turn markers on the timeline", "A tick per model call"],
+  turnMarkers: [
+    "Coloured spans on the time bar",
+    "Prompts, reasoning, responses and tool calls",
+  ],
   smartScores: [
     "Structured score text",
     "JSON and XML shown as collapsible trees",
