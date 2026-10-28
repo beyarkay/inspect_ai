@@ -22,6 +22,7 @@ import { EventNode } from "../types";
 import {
   buildLoneSentinelStep,
   buildSentinelStep,
+  buildSentinelSteps,
   formatSuspicion,
   pairToolSentinels,
   topScore,
@@ -521,6 +522,64 @@ describe("buildSentinelStep", () => {
     ]);
     expect(step.audit).toBe(true);
   });
+
+  it("builds a large step with work linear in its checks", () => {
+    // Each rule reports, is superseded, then reports again. The work is the
+    // number of event fields the builder reads: the old builder rescanned
+    // the step per superseded record and per check, so doubling the rules
+    // quadrupled it.
+    const build = (count: number) => {
+      let reads = 0;
+      const counted = (
+        id: string,
+        overrides: Partial<SentinelEvent>
+      ): SentinelNode => {
+        const event = new Proxy(testSentinelEvent(overrides), {
+          get(target, field: keyof SentinelEvent) {
+            reads += 1;
+            return target[field];
+          },
+        });
+        return new EventNode(id, event, 0);
+      };
+      const nodes: SentinelNode[] = [];
+      for (let i = 0; i < count; i++) {
+        const path = `guard/r${i}`;
+        const rule = { path, function: "decide", kind: "decision" } as const;
+        nodes.push(
+          counted(`r${i}`, { ...rule, action: "reject" }),
+          counted(`r${i}:superseded`, {
+            ...rule,
+            action: "reject",
+            status: "superseded",
+          }),
+          counted(`r${i}:final`, { ...rule, action: "proceed" })
+        );
+      }
+      nodes.push(
+        counted("guard", { path: "guard", kind: "decision", action: "reject" }),
+        counted("root", { path: "", kind: "decision", action: "reject" })
+      );
+      reads = 0;
+      return { step: buildSentinelStep(nodes), reads };
+    };
+
+    const small = build(2_000);
+    const large = build(4_000);
+
+    expect(large.step.rows).toHaveLength(2 + 2 * 4_000);
+    expect(
+      large.step.rows.slice(0, 4).map((row) => [row.node.id, row.depth])
+    ).toEqual([
+      ["root", 0],
+      ["guard", 1],
+      ["r0:superseded", 2],
+      ["r0:final", 2],
+    ]);
+    expect(large.step.rows.at(-1)?.node.id).toBe("r3999:final");
+    expect(large.step.effective?.id).toBe("guard");
+    expect(large.reads / small.reads).toBeLessThan(2.5);
+  });
 });
 
 describe("topScore", () => {
@@ -933,5 +992,86 @@ describe("pairToolSentinels on a sub-agent run as a tool", () => {
     expect(result.sentinelScrollRedirects.get("sen-outer-result")).toBe(
       "tool-outer"
     );
+  });
+});
+
+describe("buildSentinelSteps", () => {
+  it("groups a flat list by sentinel span, else by stage and step id, keyed by first event", () => {
+    const events: Event[] = [
+      testSpanBeginEvent({ id: "s1", type: "sentinel", name: "sentinel" }),
+      testSentinelEvent({
+        uuid: "a",
+        span_id: "s1",
+        step_id: "call_1",
+        path: "rule",
+      }),
+      testSentinelEvent({
+        uuid: "b",
+        span_id: "s1",
+        step_id: "call_1",
+        action: "reject",
+      }),
+      testSentinelEvent({
+        step_id: "call_2",
+        stage: "tool_call",
+        action: "reject",
+      }),
+      testSentinelEvent({ step_id: "call_2", stage: "tool_result" }),
+    ];
+    const byFirst = buildSentinelSteps(events);
+    const steps = [...byFirst.values()];
+
+    expect([...byFirst.keys()]).toEqual([events[1], events[3], events[4]]);
+    expect(steps.map((step) => step.rows.map((row) => row.node.id))).toEqual([
+      ["b", "a"],
+      ["evt:3"],
+      ["evt:4"],
+    ]);
+    expect(steps.map((step) => step.verdict)).toEqual([
+      "reject",
+      "reject",
+      "proceed",
+    ]);
+  });
+
+  it("splits spanless steps on a shared id by conversation and occurrence", () => {
+    const report = (
+      uuid: string,
+      conversation: string,
+      path: string,
+      overrides: Partial<SentinelEvent> = {}
+    ) =>
+      testSentinelEvent({
+        uuid,
+        step_id: "call_1",
+        conversation,
+        path,
+        action: "reject",
+        ...overrides,
+      });
+    const events: Event[] = [
+      report("a1", "agent-a", "rule"),
+      report("b1", "agent-b", "", { action: "proceed" }),
+      report("a2", "agent-a", ""),
+      // Names a1's decision, after the root reported: still that step.
+      report("a3", "agent-a", "rule", { status: "superseded" }),
+      // The id again, in a later turn of agent-a.
+      report("a4", "agent-a", "", { action: "proceed" }),
+    ];
+    const byFirst = buildSentinelSteps(events);
+    const steps = [...byFirst.values()];
+
+    expect([...byFirst.keys()]).toEqual([events[0], events[1], events[4]]);
+    // a3 stands in for the decision it supersedes, a1.
+    expect(steps.map((step) => step.rows.map((row) => row.node.id))).toEqual([
+      ["a2", "a3"],
+      ["b1"],
+      ["a4"],
+    ]);
+    expect(steps.map((step) => step.verdict)).toEqual([
+      "reject",
+      "proceed",
+      "proceed",
+    ]);
   });
 });
