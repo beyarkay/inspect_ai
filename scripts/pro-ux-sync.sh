@@ -27,6 +27,9 @@ done
 if [ "$(git -C "$ROOT" log -1 --format=%s)" = "$BUILD_SUBJECT" ]; then
   git -C "$ROOT" reset --hard -q HEAD~1
 fi
+buried=$(git -C "$ROOT" log --format=%h --fixed-strings --grep="$BUILD_SUBJECT" upstream/main..HEAD)
+[ -z "$buried" ] ||
+  die "build commit $buried is not the tip; move later commits below it (or drop it) first"
 git -C "$VIEW" switch -q pro-ux
 
 if [ "${1:-}" != "--build-only" ]; then
