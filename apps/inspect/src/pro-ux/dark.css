@@ -28,11 +28,11 @@
   --pro-bad: #ff6b81;
   --pro-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
 
-  --pro-role-user: #56b4e9;
-  --pro-role-assistant: #e69f00;
-  --pro-role-system: #8c8c96;
-  --pro-role-tool: #34c79a;
-  --pro-role-reasoning: #d891bf;
+  --pro-role-user: #0072b2;
+  --pro-role-assistant: #009e73;
+  --pro-role-system: #56b4e9;
+  --pro-role-tool: #e69f00;
+  --pro-role-reasoning: #cc79a7;
 
   --vscode-editor-background: var(--pro-bg);
   --vscode-sideBar-background: var(--pro-surface);
@@ -153,7 +153,7 @@
   --inspect-tool-block-header-bg: var(--pro-code);
   --inspect-tool-block-input-bg: var(--pro-code);
   --inspect-tool-block-output-bg: var(--pro-bg);
-  --inspect-tool-block-ink: var(--pro-role-tool);
+  --inspect-tool-block-ink: var(--pro-fg);
   --inspect-turn-prose-edge: 3px solid var(--pro-role-assistant);
 }
 

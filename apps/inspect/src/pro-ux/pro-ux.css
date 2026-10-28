@@ -22,10 +22,11 @@
   --pro-font: "EB Garamond", Garamond, Georgia, serif;
   --pro-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
+  /* Same hues as kKindColour in inspect-components pro-ux/kinds.ts. */
   --pro-role-user: #0072b2;
-  --pro-role-assistant: #d55e00;
-  --pro-role-system: #77777f;
-  --pro-role-tool: #009e73;
+  --pro-role-assistant: #009e73;
+  --pro-role-system: #56b4e9;
+  --pro-role-tool: #e69f00;
   --pro-role-reasoning: #cc79a7;
 
   --bs-body-font-family: var(--pro-font);
@@ -995,4 +996,16 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   user-select: text;
+}
+
+/* ── Role colours mark edges and labels; tool text stays the text colour,
+   since orange text on white is too faint to read ── */
+
+:root[data-pro-ux][data-theme-variant="readable"],
+:root[data-pro-ux][data-theme-variant="readable"] body {
+  --inspect-tool-block-ink: var(--pro-fg);
+}
+
+:root[data-pro-ux][data-bs-theme="dark"] [data-message-role] .text-style-label {
+  filter: brightness(1.45);
 }
