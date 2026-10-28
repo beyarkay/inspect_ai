@@ -1,0 +1,62 @@
+/* Cmd-F find band: a floating panel under the top bar, not a borderless box
+   pasted over the breadcrumbs. */
+:root[data-pro-ux] .findBand {
+  position: fixed;
+  top: 38px;
+  right: 16px;
+  margin: 0;
+  padding: 4px 6px;
+  column-gap: 6px;
+  align-items: center;
+  font: 15px/1.4 var(--pro-font);
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+  box-shadow: var(--pro-shadow);
+}
+
+:root[data-pro-ux] .findBand input {
+  width: 18em;
+  height: auto;
+  margin: 0;
+  padding: 1px 6px;
+  font: inherit;
+  color: var(--pro-fg);
+  background: var(--pro-surface);
+  border: 1px solid var(--pro-line);
+  border-radius: 2px;
+}
+
+:root[data-pro-ux] .findBand input:focus {
+  border-color: var(--pro-dark);
+}
+
+:root[data-pro-ux] .findBand [data-testid="find-band-match-count"] {
+  min-width: 5.5em;
+  margin: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pro-mute);
+  opacity: 1;
+}
+
+:root[data-pro-ux] .findBand .btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  color: var(--pro-fg);
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+:root[data-pro-ux] .findBand .btn:hover {
+  background: var(--pro-tint);
+  border-color: var(--pro-hover-line);
+}
+
+:root[data-pro-ux] .findBand .btn[title="Close"]:hover {
+  color: var(--pro-bad);
+}
