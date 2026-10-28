@@ -111,6 +111,8 @@ export interface TranscriptViewNodesHandle {
   getFlattenedNodes: () => EventNode[];
   /** Read-only accessor for the virtual list's currently-rendered visible range. */
   getVisibleRange: () => { startIndex: number; endIndex: number };
+  /** The event is already in view: a `?event=` change to it must not scroll. */
+  markNavigated?: (eventId: string) => void;
 }
 
 // =============================================================================
@@ -402,6 +404,9 @@ export const TranscriptViewNodes = forwardRef<
       scrollToEvent,
       getFlattenedNodes: () => flattenedNodesLatest.current,
       getVisibleRange: () => visibleRangeRef.current,
+      markNavigated: (eventId) => {
+        lastScrolledKeyRef.current = `${eventId}:`;
+      },
     }),
     [scrollToEvent, flattenedNodesLatest]
   );
