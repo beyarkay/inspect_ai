@@ -31,17 +31,29 @@ export const modelTabHints = ({
         : ` The reply's tool calls (${toolCalls.join(", ")}) appear as the Tool events that follow.`
       : "";
   return {
-    Summary: input + calls,
-    Info: "Token usage, timing, stop reason, generation settings and provider request IDs for this call.",
-    Messages: `The exact list of ${plural(total, "message", "messages")} the model received as input, in the order sent, then its reply.`,
+    Summary: `${input}${calls} Token usage and settings follow the reply.`,
+    Messages: `Full input: the exact ${plural(total, "message", "messages")} the model received, in the order sent, then its reply.`,
     Tools: `The ${plural(tools, "tool", "tools")} offered to the model on this call, with their descriptions, and the tool-choice setting.`,
-    API: "The raw JSON request sent to the provider's API, and the raw response it returned.",
+    API: "Raw API: the JSON request sent to the provider, and the JSON response it returned.",
   };
 };
 
+/** Tab labels for a model call, keyed by tab name (the tab's id). */
+export const modelTabLabels = ({
+  total,
+  tools,
+}: {
+  total: number;
+  tools: number;
+}): Record<string, string> => ({
+  Messages: `Full input (${total})`,
+  Tools: `Tools (${tools})`,
+  API: "Raw API",
+});
+
 /** Appended to a model call header's hover text. */
 export const modelHeaderHint = (total: number): string =>
-  `One call to the model. It received the ${plural(total, "message", "messages")} listed under Messages and replied. Tool calls in its reply run as the Tool events that follow, and each result is input to the model's next call.`;
+  `One call to the model. It received the ${plural(total, "message", "messages")} listed under Full input and replied. Tool calls in its reply run as the Tool events that follow, and each result is input to the model's next call.`;
 
 /** Appended to a tool event header's hover text. */
 export const kToolHeaderHint =

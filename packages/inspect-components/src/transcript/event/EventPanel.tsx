@@ -23,6 +23,7 @@ import { Icon, IconName } from "@tsmono/react/icons";
 import { MessageLabel } from "../../chat/MessageLabel";
 import { useCardExpand } from "../../pro-ux/cardExpand";
 import { unstickBeforeCollapse } from "../../pro-ux/keepInPlace";
+import { isShownTab } from "../../pro-ux/shownTab";
 import {
   RowSelectCheckbox,
   useSelectableRow,
@@ -70,6 +71,8 @@ interface EventPanelProps {
 interface ChildProps {
   "data-name"?: string;
   "data-hint"?: string;
+  /** Shown on the tab in place of `data-name`, which stays the tab's id. */
+  "data-label"?: string;
 }
 
 /**
@@ -136,7 +139,7 @@ export const EventPanel: FC<EventPanelProps> = ({
 
   const filteredArrChildren = (
     Array.isArray(children) ? children : [children]
-  ).filter(Boolean);
+  ).filter(isShownTab);
 
   const defaultPill = filteredArrChildren.findIndex(
     (node) => hasDataDefault(node) && node.props["data-default"]
@@ -168,7 +171,7 @@ export const EventPanel: FC<EventPanelProps> = ({
   const tabNames = useMemo(
     () =>
       (Array.isArray(children) ? children : [children])
-        .filter(Boolean)
+        .filter(isShownTab)
         .map((child, index) =>
           isValidElement<ChildProps>(child)
             ? (child.props["data-name"] ?? `Tab ${index}`)
@@ -385,7 +388,9 @@ export const EventPanel: FC<EventPanelProps> = ({
                 const defaultTitle = `Tab ${index}`;
                 const title =
                   child && isValidElement<ChildProps>(child)
-                    ? child.props["data-name"] || defaultTitle
+                    ? child.props["data-label"] ||
+                      child.props["data-name"] ||
+                      defaultTitle
                     : defaultTitle;
                 return {
                   id: `eventpanel-${eventNodeId}-${index}`,

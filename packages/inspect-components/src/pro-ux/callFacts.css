@@ -1,0 +1,40 @@
+:root[data-pro-ux] .pro-call-facts {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--pro-soft);
+  font: 14px/1.45 var(--pro-font);
+  color: var(--pro-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-pro-ux] .pro-call-fact {
+  white-space: nowrap;
+}
+
+:root[data-pro-ux] .pro-call-fact + .pro-call-fact::before {
+  content: "·";
+  margin: 0 0.45em;
+  color: var(--pro-faint);
+}
+
+:root[data-pro-ux] .pro-call-fact b {
+  font-weight: 600;
+  color: var(--pro-sub);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-call-fact code {
+  font: 13px var(--pro-mono);
+  color: var(--pro-sub);
+  background: none;
+  overflow-wrap: anywhere;
+}
+
+:root[data-pro-ux] .pro-call-fact-status {
+  margin-left: 0.35em;
+}
+
+:root[data-pro-ux] .pro-call-fact-failed {
+  color: var(--pro-bad);
+}

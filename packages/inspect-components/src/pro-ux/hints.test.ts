@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { modelTabHints, withHint } from "./hints";
+import { modelTabHints, modelTabLabels, withHint } from "./hints";
 
 describe("modelTabHints", () => {
   it("says how much of the input the summary shows", () => {
@@ -11,9 +11,9 @@ describe("modelTabHints", () => {
       tools: 3,
     });
     expect(hints.Summary).toBe(
-      "The newest 1 of the 11 input messages (the rest appear earlier in this transcript), then the model's reply. The reply's tool call (bash_session) appears as the Tool event that follows."
+      "The newest 1 of the 11 input messages (the rest appear earlier in this transcript), then the model's reply. The reply's tool call (bash_session) appears as the Tool event that follows. Token usage and settings follow the reply."
     );
-    expect(hints.Messages).toContain("exact list of 11 messages");
+    expect(hints.Messages).toContain("exact 11 messages");
     expect(hints.Tools).toContain("3 tools");
   });
 
@@ -25,7 +25,7 @@ describe("modelTabHints", () => {
       tools: 1,
     });
     expect(hints.Summary).toBe(
-      "Only the model's reply: its 5 input messages appear earlier in this transcript."
+      "Only the model's reply: its 5 input messages appear earlier in this transcript. Token usage and settings follow the reply."
     );
   });
 
@@ -36,8 +36,20 @@ describe("modelTabHints", () => {
       toolCalls: [],
       tools: 1,
     });
-    expect(hints.Summary).toBe("All 1 input message, then the model's reply.");
-    expect(hints.Messages).toContain("exact list of 1 message ");
+    expect(hints.Summary).toBe(
+      "All 1 input message, then the model's reply. Token usage and settings follow the reply."
+    );
+    expect(hints.Messages).toContain("exact 1 message ");
+  });
+});
+
+describe("modelTabLabels", () => {
+  it("names each tab by what it holds, with counts", () => {
+    expect(modelTabLabels({ total: 7, tools: 4 })).toEqual({
+      Messages: "Full input (7)",
+      Tools: "Tools (4)",
+      API: "Raw API",
+    });
   });
 });
 

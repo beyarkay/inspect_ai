@@ -19,7 +19,13 @@ import { formatTime } from "@tsmono/util";
 import { hasVisibleContent } from "../chat/rowsModel";
 import { GeneratingIndicator } from "../indicators/GeneratingIndicator";
 import { isLivePlaceholderMessage } from "../indicators/livePlaceholder";
-import { modelHeaderHint, modelTabHints, withHint } from "../pro-ux/hints";
+import { CallFacts } from "../pro-ux/CallFacts";
+import {
+  modelHeaderHint,
+  modelTabHints,
+  modelTabLabels,
+  withHint,
+} from "../pro-ux/hints";
 import { useHtmlFlag } from "../pro-ux/useHtmlFlag";
 
 import { attemptDurationSec } from "./event/attemptDuration";
@@ -164,6 +170,9 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
         tools: event.tools.length,
       })
     : undefined;
+  const labels = proHints
+    ? modelTabLabels({ total: event.input.length, tools: event.tools.length })
+    : undefined;
 
   const summaryLabels = useMemo(() => {
     const map = context?.messageLabels;
@@ -273,10 +282,11 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
             <GeneratingIndicator />
           </div>
         ) : undefined}
+        {proHints && <CallFacts event={event} />}
       </div>
       <div
         data-name="Info"
-        data-hint={hints?.Info}
+        data-hidden={proHints || undefined}
         className={styles.container}
       >
         <div className={styles.all}>
@@ -313,6 +323,7 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
 
       <div
         data-name="Messages"
+        data-label={labels?.Messages}
         data-hint={hints?.Messages}
         className={styles.container}
       >
@@ -331,6 +342,7 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       {event.tools.length > 1 && (
         <div
           data-name="Tools"
+          data-label={labels?.Tools}
           data-hint={hints?.Tools}
           className={styles.container}
         >
@@ -341,6 +353,7 @@ export const ModelEventView: FC<ModelEventViewProps> = ({
       {event.call ? (
         <APIView
           data-name="API"
+          data-label={labels?.API}
           data-hint={hints?.API}
           call={event.call}
           className={styles.container}
