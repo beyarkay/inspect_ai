@@ -26,6 +26,7 @@ import {
 } from "@tsmono/react/components";
 import { useElementHeight } from "@tsmono/react/hooks";
 
+import { useBarJump } from "../pro-ux/barJump";
 import { TurnMarkersContext, useTurnMarks } from "../pro-ux/turnMarkers";
 import type { RowSelection } from "../selection/rowSelection";
 
@@ -659,13 +660,15 @@ export const TranscriptLayout: FC<TranscriptLayoutProps> = ({
   const scrollerHeight = useElementHeight(scrollRef);
 
   const turnMarks = useTurnMarks(eventNodes);
-  const turnMarkers = {
+  const turnMarkers = useBarJump({
     turns: turnMarks,
-    onSelect: (eventId: string) => {
-      eventsListRef?.current?.scrollToEvent(eventId);
-      onNavigatedToEvent?.(eventId);
-    },
-  };
+    eventsListRef,
+    scrollRef,
+    urlEventId: initialEventId,
+    onNavigatedToEvent,
+    onHeadroomSetHidden,
+    onHeadroomResetAnchor,
+  });
 
   // ---------------------------------------------------------------------------
   // Render

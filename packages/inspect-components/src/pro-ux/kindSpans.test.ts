@@ -23,6 +23,7 @@ const model = (
     calls?: string[];
     reasoningTokens?: number;
     outputTokens?: number;
+    messageId?: string;
   } = {}
 ) =>
   node(id, {
@@ -40,6 +41,7 @@ const model = (
       choices: [
         {
           message: {
+            id: opts.messageId,
             role: "assistant",
             content: opts.content ?? "ok",
             tool_calls: opts.calls?.map((fn) => ({
@@ -94,6 +96,31 @@ describe("buildKindSpans", () => {
     expect(reasoning?.end).toBe(new Date(at(750)).getTime());
     expect(answer?.start).toBe(reasoning?.end);
     expect(answer?.label).toContain("calls bash");
+  });
+
+  it("points each model-call span at its own message and part", () => {
+    const user = { role: "user", content: "hello", id: "u" };
+    const unnamed = { role: "user", content: "no id" };
+    const spans = buildKindSpans([
+      model("m1", 0, 1000, {
+        input: [user, unnamed],
+        content: [
+          { type: "reasoning", reasoning: "think" },
+          { type: "text", text: "done" },
+        ],
+        messageId: "out",
+      }),
+      tool("t1", 1000, 1500),
+      model("m2", 1500, 2000),
+    ]);
+    expect(spans.map((s) => [s.kind, s.id, s.target])).toEqual([
+      ["user", "m1", { messageId: "u" }],
+      ["user", "m1", undefined],
+      ["reasoning", "m1", { messageId: "out", part: "reasoning" }],
+      ["assistant", "m1", { messageId: "out", part: "response" }],
+      ["tool", "t1", undefined],
+      ["assistant", "m2", undefined],
+    ]);
   });
 
   it("marks everything under a scorer span as scoring and failed tools as errors", () => {

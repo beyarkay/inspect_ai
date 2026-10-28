@@ -5,10 +5,18 @@ import { EventNode } from "../transcript/types";
 import type { SpanKind } from "./kinds";
 import { argumentPreview } from "./outline";
 
+/** Where in its event a span lands: a message, and which part of it. */
+export interface SpanTarget {
+  messageId?: string;
+  part?: "reasoning" | "response";
+}
+
 /** One stretch of a transcript, in transcript order. */
 export interface KindSpan {
   /** Event node to scroll to on click. */
   id: string;
+  /** The message inside the event the span stands for. */
+  target?: SpanTarget;
   kind: SpanKind;
   /** Epoch milliseconds. */
   start: number;
@@ -148,6 +156,7 @@ export const buildKindSpans = (
           push(
             {
               id: node.id,
+              ...(input.id ? { target: { messageId: input.id } } : {}),
               kind: input.role,
               start,
               end: start,
@@ -169,9 +178,12 @@ export const buildKindSpans = (
                 ? reasoningTokens / outputTokens
                 : reasoning / (reasoning + answer);
         const split = start + (end - start) * reasoningShare;
+        const inOutput = (part: "reasoning" | "response") =>
+          message?.id ? { target: { messageId: message.id, part } } : {};
         if (reasoningShare > 0) {
           const span = {
             id: node.id,
+            ...inOutput("reasoning"),
             kind: "reasoning" as const,
             start,
             end: split,
@@ -186,6 +198,7 @@ export const buildKindSpans = (
         if (reasoningShare < 1) {
           const span = {
             id: node.id,
+            ...inOutput("response"),
             kind: "assistant" as const,
             start: split,
             end,

@@ -11,12 +11,13 @@ import {
   formatElapsed,
   layoutKindSpans,
   type SpanLayout,
+  type SpanTarget,
 } from "./kindSpans";
 import { useHtmlFlag } from "./useHtmlFlag";
 
 interface TurnMarkersValue {
   turns: EventNode[];
-  onSelect: (eventId: string) => void;
+  onSelect: (eventId: string, target?: SpanTarget) => void;
 }
 
 export const TurnMarkersContext = createContext<TurnMarkersValue | null>(null);
@@ -48,7 +49,10 @@ const scoringStart = (span: TimelineSpan): number | undefined => {
 const useKindLayout = (
   root: TimelineSpan,
   mapping?: TimeMapping
-): { layout: SpanLayout; onSelect: (id: string) => void } | null => {
+): {
+  layout: SpanLayout;
+  onSelect: TurnMarkersValue["onSelect"];
+} | null => {
   const value = useContext(TurnMarkersContext);
   const enabled = useHtmlFlag("data-pro-turnmarkers");
   const nodes = value?.turns;
@@ -91,7 +95,7 @@ export const TurnMarkers: FC<TurnMarkersProps> = ({ root, mapping }) => {
           title={span.label + where}
           aria-label={`Jump to ${span.label}`}
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={() => onSelect(span.id)}
+          onClick={() => onSelect(span.id, span.target)}
         />
       ))}
     </>
