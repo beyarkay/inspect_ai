@@ -64,6 +64,27 @@
   background: var(--pro-bg, #f4f4f6);
 }
 
+/* Sorted by Score: a header row opens each scale's block. */
+.pro-score-group {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  color: var(--pro-mute, #77777f);
+}
+
+.pro-score-group .pro-task-name {
+  color: var(--pro-fg, #2a2a2e);
+  font-weight: 600;
+}
+
+[role="row"]:has(.pro-score-group) {
+  background: var(--pro-bg, #f4f4f6);
+  box-shadow: inset 0 1px 0 var(--pro-line, #d3d3d9);
+}
+
+[role="gridcell"]:has(> .pro-score-group) {
+  overflow: visible;
+}
+
 /* Score: a badge as wide as the column's widest, then a fixed-size
    histogram on one y range, so histograms line up down the column. */
 .pro-score {

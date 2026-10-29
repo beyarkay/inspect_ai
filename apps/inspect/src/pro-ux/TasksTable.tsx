@@ -1,6 +1,11 @@
 import "./tasks.css";
 
-import type { CellContext, HeaderContext, Row } from "@tanstack/react-table";
+import type {
+  CellContext,
+  HeaderContext,
+  Row,
+  SortingState,
+} from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { FC, MouseEvent, useMemo } from "react";
 
@@ -23,12 +28,17 @@ import { css, isDark, prgn } from "./colour";
 import { commonIdPrefix } from "./sampleLabels";
 import {
   buildIndex,
+  groupByScale,
   logKey,
   moveAfter,
+  scaleGroup,
+  scaleGroupLabel,
   shownSampleCount,
+  shownScale,
   shownScore,
   tasksListingAccessors,
   type SampleIndex,
+  type ScaleGroup,
 } from "./tasksIndex";
 import { openArgsRows, openSampleRows, useOpenRows } from "./tasksState";
 import {
@@ -124,27 +134,65 @@ export const sampleSubRows = (
     });
 };
 
-/** Sample rows inserted beneath each opened log row (tasks view only). */
+/** Header rows that open each scale group; every other cell is blank. */
+const groupHeads = new WeakMap<
+  LogListRow,
+  { group: ScaleGroup; count: number }
+>();
+
+const headRow = (group: ScaleGroup, count: number): LogListRow => {
+  const row: LogListRow = {
+    id: `pro-score-group:${String(group)}`,
+    name: "",
+    type: "file",
+  };
+  groupHeads.set(row, { group, count });
+  return row;
+};
+
+/** Score-sorted rows split into one block per scale, each under a header,
+ *  when more than one scale is present. */
+export const withScaleGroups = (
+  rows: LogListRow[],
+  index: SampleIndex
+): LogListRow[] => {
+  const groups = groupByScale(rows, (row) => scaleGroup(row, index));
+  if (groups.length < 2) return rows;
+  return groups.flatMap((g) => [headRow(g.group, g.rows.length), ...g.rows]);
+};
+
+/** Tasks view only: scale groups while sorted by Score, and sample rows
+ *  beneath each opened log row. */
 export const useProSampleRows = (
   rows: LogListRow[],
-  mode: string
+  mode: string,
+  sorting: SortingState
 ): LogListRow[] => {
   const pro = useHtmlFlag("data-pro-ux");
   const open = useOpenRows(openSampleRows);
-  const { byLog, stats } = useSampleIndex();
+  const index = useSampleIndex();
+  const byScore = sorting[0]?.id === "score";
   return useMemo(() => {
-    if (!pro || mode !== "tasks" || open.size === 0) return rows;
+    if (!pro || mode !== "tasks") return rows;
+    const grouped = byScore ? withScaleGroups(rows, index) : rows;
+    if (open.size === 0) return grouped;
     const out: LogListRow[] = [];
-    for (const row of rows) {
+    for (const row of grouped) {
       out.push(row);
-      const samples = open.has(row.id) ? byLog.get(logKey(row)) : undefined;
+      const samples = open.has(row.id)
+        ? index.byLog.get(logKey(row))
+        : undefined;
       if (samples && samples.length > 1)
         out.push(
-          ...sampleSubRows(row, samples, stats.get(logKey(row))?.top ?? null)
+          ...sampleSubRows(
+            row,
+            samples,
+            index.stats.get(logKey(row))?.top ?? null
+          )
         );
     }
     return out;
-  }, [pro, mode, open, byLog, stats, rows]);
+  }, [pro, mode, open, index, byScore, rows]);
 };
 
 /** Keep a click inside a row from opening the row (rows are links). */
@@ -285,10 +333,7 @@ const rowScore = (
   }
   const value = shownScore(row, index);
   if (value === undefined) return null;
-  return {
-    value,
-    top: index.stats.get(logKey(row))?.top ?? scaleTop([value]),
-  };
+  return { value, top: shownScale(row, index) };
 };
 
 const slotCache = new WeakMap<GridRow[], { index: SampleIndex; ch: number }>();
@@ -334,6 +379,29 @@ const ScoreCell: FC<{ row: LogListRow; rows: GridRow[] }> = ({ row, rows }) => {
     </div>
   );
 };
+
+const kGroupHint =
+  "Sorted by score within each scale, never across scales. Logs don't record a score's range, so each log's scale is guessed from its largest sample score: up to 1, 10 or 100.";
+
+const GroupHead: FC<{ group: ScaleGroup; count: number }> = ({
+  group,
+  count,
+}) => (
+  <div className="pro-task-cell pro-score-group" title={kGroupHint}>
+    <span className="pro-task-caret-gap" />
+    <span className="pro-task-name">{scaleGroupLabel(group)}</span>
+    <small>
+      · {count} {count === 1 ? "log" : "logs"}
+    </small>
+  </div>
+);
+
+/** A cell that stays empty on scale-group header rows. */
+const blankOnGroupHeads = (c: Column): Column =>
+  Object.assign({}, c, {
+    cell: (ctx: CellCtx) =>
+      groupHeads.has(ctx.row.original) ? null : flexRender(c.cell, ctx),
+  });
 
 /** A status icon needs no label: the header is an icon, with a hint. */
 const StatusHeader: FC = () => (
@@ -457,9 +525,14 @@ export const useProLogListColumns = (
           });
         case "task":
           return Object.assign({}, c, {
-            cell: (ctx: CellCtx) => (
-              <TaskCell row={ctx.row.original} name={taskName(ctx)} />
-            ),
+            cell: (ctx: CellCtx) => {
+              const head = groupHeads.get(ctx.row.original);
+              return head ? (
+                <GroupHead {...head} />
+              ) : (
+                <TaskCell row={ctx.row.original} name={taskName(ctx)} />
+              );
+            },
           });
         case "taskArgs":
           return Object.assign({}, c, {
@@ -490,7 +563,11 @@ export const useProLogListColumns = (
           return c;
       }
     });
-    return moveAfter(mapped, "totalSamples", "score");
+    return moveAfter(
+      mapped.map((c) => (c.id === "task" ? c : blankOnGroupHeads(c))),
+      "totalSamples",
+      "score"
+    );
   }, [pro, mode, columns, index]);
 };
 

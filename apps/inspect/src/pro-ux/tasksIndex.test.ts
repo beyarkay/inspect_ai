@@ -8,9 +8,13 @@ import type { SamplesListingRow } from "../log_data";
 
 import {
   buildIndex,
+  groupByScale,
   missingLastCompare,
   moveAfter,
+  scaleGroup,
+  scaleGroupLabel,
   shownSampleCount,
+  shownScale,
   shownScore,
   tasksListingAccessors,
 } from "./tasksIndex";
@@ -99,6 +103,54 @@ describe("sorting the Tasks table by Score", () => {
   it("leaves other columns to the base accessors", () => {
     expect(getValue(row("x", { task: "t" }), "task")).toBe("t");
     expect(getComparator("task")).toBeUndefined();
+  });
+});
+
+describe("scale groups", () => {
+  const scaled = buildIndex([
+    sample("tens", 6.5),
+    sample("tens", 9),
+    sample("hundreds", 14.3),
+    sample("hundreds", 70),
+    sample("unit", 0.4),
+    sample("negative", -3),
+  ]);
+  const groupOf = (r: LogListRow) => scaleGroup(r, scaled);
+
+  it("guesses each log's scale from its largest sample score", () => {
+    expect(shownScale(row("tens"), scaled)).toBe(10);
+    expect(shownScale(row("hundreds"), scaled)).toBe(100);
+    expect(shownScale(row("unit"), scaled)).toBe(1);
+    expect(shownScale(row("negative"), scaled)).toBeNull();
+    expect(shownScale(row("headline", { score: 0.8 }), scaled)).toBe(1);
+  });
+
+  it("puts rows with no score, or no fitting scale, in their own groups", () => {
+    expect(groupOf(row("negative"))).toBe("other");
+    expect(groupOf(row("none"))).toBe("none");
+  });
+
+  it("never interleaves scales, and keeps each group's order", () => {
+    const sortedByRawValue = [
+      "negative",
+      "unit",
+      "tens",
+      "hundreds",
+      "none",
+    ].map((id) => row(id));
+    const groups = groupByScale(sortedByRawValue, groupOf);
+    expect(groups.map((g) => [g.group, g.rows.map((r) => r.id)])).toEqual([
+      [1, ["unit"]],
+      [10, ["tens"]],
+      [100, ["hundreds"]],
+      ["other", ["negative"]],
+      ["none", ["none"]],
+    ]);
+  });
+
+  it("labels each group by its range", () => {
+    expect(scaleGroupLabel(10)).toBe("scores 0–10");
+    expect(scaleGroupLabel("none")).toBe("no score");
   });
 });
 

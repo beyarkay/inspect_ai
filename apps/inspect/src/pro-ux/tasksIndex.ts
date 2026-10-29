@@ -5,6 +5,7 @@ import type {
 } from "../app/log-list/listing/types";
 import type { SamplesListingRow } from "../log_data";
 
+import { scaleTop } from "./cells";
 import {
   firstNumericScore,
   maxBinShare,
@@ -69,6 +70,58 @@ export const shownScore = (
   row: LogListRow,
   index: SampleIndex
 ): number | undefined => row.score ?? index.stats.get(logKey(row))?.mean;
+
+/** The top of the scale a log row's badge uses (1, 10 or 100). Logs don't
+ *  record a score's range, so it is guessed from the largest sample score,
+ *  else from the shown value; null when no scale fits. */
+export const shownScale = (
+  row: LogListRow,
+  index: SampleIndex
+): number | null => {
+  const value = shownScore(row, index);
+  if (value === undefined) return null;
+  return index.stats.get(logKey(row))?.top ?? scaleTop([value]);
+};
+
+export type ScaleGroup = number | "other" | "none";
+
+export const scaleGroup = (row: LogListRow, index: SampleIndex): ScaleGroup =>
+  shownScore(row, index) === undefined
+    ? "none"
+    : (shownScale(row, index) ?? "other");
+
+const groupRank = (group: ScaleGroup): number =>
+  typeof group === "number"
+    ? group
+    : group === "other"
+      ? Number.MAX_VALUE
+      : Infinity;
+
+/** Rows already sorted by score, split by scale so a 0–10 log never sorts
+ *  among 0–100 ones: 0–1, 0–10, 0–100, other scales, then no score. Each
+ *  group keeps the order it had. */
+export const groupByScale = <T>(
+  rows: readonly T[],
+  groupOf: (row: T) => ScaleGroup
+): { group: ScaleGroup; rows: T[] }[] => {
+  const groups = new Map<ScaleGroup, T[]>();
+  for (const row of rows) {
+    const group = groupOf(row);
+    const list = groups.get(group) ?? [];
+    list.push(row);
+    groups.set(group, list);
+  }
+  return [...groups]
+    .map(([group, list]) => ({ group, rows: list }))
+    .sort((a, b) => groupRank(a.group) - groupRank(b.group));
+};
+
+export const scaleGroupLabel = (group: ScaleGroup): string =>
+  typeof group === "number"
+    ? `scores 0–${group}`
+    : group === "other"
+      ? "scores below 0 or above 100"
+      : "no score";
 
 /** A log row's sample count, from the samples themselves when the log's
  *  results don't carry it. */

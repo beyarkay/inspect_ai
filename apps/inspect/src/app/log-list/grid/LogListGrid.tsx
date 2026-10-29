@@ -108,7 +108,7 @@ export const LogListGrid: FC<LogListGridProps> = ({
     getFilterType,
     accessorsKey,
   } = useLogListColumns(mode, scopeDir, scoresViewMode);
-  const displayRows = useProSampleRows(rows, mode);
+  const displayRows = useProSampleRows(rows, mode, sorting);
 
   const handleRowActivate = useCallback(
     (row: LogListRow) => {
@@ -258,8 +258,10 @@ export const LogListGrid: FC<LogListGridProps> = ({
       ...(fileMatches.ids ?? []),
       ...(overlayIndex ? findMatches(overlayIndex, findTerm) : []),
     ]);
-    return rows.filter((row) => matchSet.has(row.id)).map((row) => row.id);
-  }, [findTerm, fileMatches.ids, overlayIndex, rows]);
+    return displayRows
+      .filter((row) => matchSet.has(row.id))
+      .map((row) => row.id);
+  }, [findTerm, fileMatches.ids, overlayIndex, displayRows]);
 
   const handleFindTermChange = useCallback(() => {
     setFindTerm(findInputRef.current?.value ?? "");
