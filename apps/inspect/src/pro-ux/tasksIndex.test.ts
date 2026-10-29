@@ -154,6 +154,39 @@ describe("scale groups", () => {
   });
 });
 
+describe("scale pooled across runs", () => {
+  const run = (
+    logFile: string,
+    task: string,
+    scorer: string,
+    value: number
+  ) => {
+    const s = sample(logFile, value);
+    return {
+      ...s,
+      derived: { ...s.derived, scores: { [scorer]: value } },
+      log: { task },
+    };
+  };
+  const pooled = buildIndex([
+    run("all-ones", "report", "judgment", 1),
+    run("all-ones", "report", "judgment", 1),
+    run("spread", "report", "judgment", 74),
+    run("other-task", "quiz", "judgment", 1),
+    run("other-scorer", "report", "match", 1),
+  ]);
+
+  it("reads a run as 0–100 when another run of its task and scorer is", () => {
+    expect(pooled.stats.get("all-ones")?.top).toBe(100);
+    expect(pooled.stats.get("all-ones")?.bins[0]).toBe(2);
+  });
+
+  it("keeps other tasks and other scorers apart", () => {
+    expect(pooled.stats.get("other-task")?.top).toBe(1);
+    expect(pooled.stats.get("other-scorer")?.top).toBe(1);
+  });
+});
+
 describe("buildIndex signature", () => {
   it("follows each log's mean and sample count, not sample order", () => {
     const same = buildIndex([sample("a", 40), sample("a", 20)]);

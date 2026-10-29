@@ -381,7 +381,7 @@ const ScoreCell: FC<{ row: LogListRow; rows: GridRow[] }> = ({ row, rows }) => {
 };
 
 const kGroupHint =
-  "Sorted by score within each scale, never across scales. Logs don't record a score's range, so each log's scale is guessed from its largest sample score: up to 1, 10 or 100.";
+  "Sorted by score within each scale, never across scales. Logs don't record a score's range, so the scale is guessed from the largest sample score that the task's scorer gave in any log: up to 1, 10 or 100.";
 
 const GroupHead: FC<{ group: ScaleGroup; count: number }> = ({
   group,

@@ -7,7 +7,8 @@ import type { SamplesListingRow } from "../log_data";
 
 import { scaleTop } from "./cells";
 import {
-  firstNumericScore,
+  firstScorerScore,
+  kHistogramBins,
   maxBinShare,
   scoreStats,
   type ScoreStats,
@@ -33,19 +34,52 @@ const fnv1a = (text: string): string => {
   return (hash >>> 0).toString(36);
 };
 
+/** One task's scorer keeps one scale across runs. */
+const scaleKey = (row: SamplesListingRow, scorer: string): string =>
+  `${row.log.task ?? row.logFile}\t${scorer}`;
+
+/** The scale fitting every scorer a log uses; null if any has none. */
+const sharedTop = (tops: (number | null)[]): number | null => {
+  const known = tops.filter((t): t is number => t !== null);
+  return known.length > 0 && known.length === tops.length
+    ? Math.max(...known)
+    : null;
+};
+
+/** Scales are guessed per task and scorer from every log's samples, so a run
+ *  whose samples all scored 1 reads 1/100 when another run reached 74. */
 export const buildIndex = (rows: SamplesListingRow[]): SampleIndex => {
   const byLog = new Map<string, SamplesListingRow[]>();
+  const scored = new Map<string, { key: string; value: number }[]>();
+  const pooled = new Map<string, number[]>();
   for (const row of rows) {
     const list = byLog.get(row.logFile) ?? [];
     list.push(row);
     byLog.set(row.logFile, list);
+    const score = firstScorerScore(row.derived.scores);
+    if (!score) continue;
+    const key = scaleKey(row, score.scorer);
+    const values = pooled.get(key) ?? [];
+    values.push(score.value);
+    pooled.set(key, values);
+    const entries = scored.get(row.logFile) ?? [];
+    entries.push({ key, value: score.value });
+    scored.set(row.logFile, entries);
   }
+  const tops = new Map<string, number | null>();
+  for (const [key, values] of pooled) tops.set(key, scaleTop(values));
   const stats = new Map<string, ScoreStats | null>();
-  for (const [file, list] of byLog) {
-    const values = list
-      .map((r) => firstNumericScore(r.derived.scores))
-      .filter((v): v is number => v !== null);
-    stats.set(file, scoreStats(values));
+  for (const file of byLog.keys()) {
+    const entries = scored.get(file) ?? [];
+    const keys = [...new Set(entries.map((e) => e.key))];
+    stats.set(
+      file,
+      scoreStats(
+        entries.map((e) => e.value),
+        kHistogramBins,
+        sharedTop(keys.map((k) => tops.get(k) ?? null))
+      )
+    );
   }
   const signature = fnv1a(
     [...byLog.keys()]
@@ -72,8 +106,9 @@ export const shownScore = (
 ): number | undefined => row.score ?? index.stats.get(logKey(row))?.mean;
 
 /** The top of the scale a log row's badge uses (1, 10 or 100). Logs don't
- *  record a score's range, so it is guessed from the largest sample score,
- *  else from the shown value; null when no scale fits. */
+ *  record a score's range, so it is guessed from the largest sample score of
+ *  the log's task and scorer, else from the shown value; null when no scale
+ *  fits. */
 export const shownScale = (
   row: LogListRow,
   index: SampleIndex

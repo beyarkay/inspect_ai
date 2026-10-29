@@ -17,16 +17,21 @@ export const numericScore = (value: unknown): number | null => {
   return null;
 };
 
-/** The first score in a sample's score map that reads as a number. */
-export const firstNumericScore = (
+/** The first score in a sample's score map that reads as a number, with the
+ *  scorer that gave it. */
+export const firstScorerScore = (
   scores: Record<string, unknown> | undefined
-): number | null => {
-  for (const value of Object.values(scores ?? {})) {
-    const n = numericScore(value);
-    if (n !== null) return n;
+): { scorer: string; value: number } | null => {
+  for (const [scorer, raw] of Object.entries(scores ?? {})) {
+    const value = numericScore(raw);
+    if (value !== null) return { scorer, value };
   }
   return null;
 };
+
+export const firstNumericScore = (
+  scores: Record<string, unknown> | undefined
+): number | null => firstScorerScore(scores)?.value ?? null;
 
 export interface ScoreStats {
   n: number;
@@ -41,10 +46,10 @@ export const kHistogramBins = 10;
 
 export const scoreStats = (
   values: number[],
-  binCount = kHistogramBins
+  binCount = kHistogramBins,
+  top = scaleTop(values)
 ): ScoreStats | null => {
   if (values.length === 0) return null;
-  const top = scaleTop(values);
   const bins = new Array<number>(binCount).fill(0);
   if (top !== null) {
     for (const v of values) {
