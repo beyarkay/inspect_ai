@@ -64,8 +64,11 @@ inspect view`).
   resizing one column leaves the rest alone; empty columns go last at 28px;
   columns never cut their header label short; optional soft-wrap.
 - **Tasks table:** score badge plus an aligned histogram per task (mean of
-  sample scores when the scorer has no metric), sortable; Samples next to
-  Score; a caret lists a log's samples; Task args as key/value pairs.
+  sample scores when the scorer has no metric); Samples next to Score; a
+  caret lists a log's samples; Task args as key/value pairs. Sorting by
+  Score splits the logs into one block per scale (0–1, 0–10, 0–100), since
+  logs never record a score's range. The scale is guessed from every
+  sample of the same task and scorer.
 - **Sample table:** a trajectory strip per sample (tokens or seconds); an
   input every sample shares is shown once above the table.
 - **Tabs:** sample tabs Transcript, Conversation, Scoring, Activity, Usage &
