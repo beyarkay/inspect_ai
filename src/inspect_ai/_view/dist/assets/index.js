@@ -89219,16 +89219,20 @@ var kLetterScores = {
 	}
 	return null;
 };
-/** The first score in a sample's score map that reads as a number. */ var firstNumericScore = (scores) => {
-	for (const value of Object.values(scores ?? {})) {
-		const n = numericScore(value);
-		if (n !== null) return n;
+/** The first score in a sample's score map that reads as a number, with the
+*  scorer that gave it. */ var firstScorerScore = (scores) => {
+	for (const [scorer, raw] of Object.entries(scores ?? {})) {
+		const value = numericScore(raw);
+		if (value !== null) return {
+			scorer,
+			value
+		};
 	}
 	return null;
 };
-var scoreStats = (values, binCount = 10) => {
+var firstNumericScore = (scores) => firstScorerScore(scores)?.value ?? null;
+var scoreStats = (values, binCount = 10, top = scaleTop(values)) => {
 	if (values.length === 0) return null;
-	const top = scaleTop(values);
 	const bins = new Array(binCount).fill(0);
 	if (top !== null) for (const v of values) {
 		const i = Math.min(binCount - 1, Math.max(0, Math.floor(v / top * binCount)));
@@ -89325,17 +89329,40 @@ var fnv1a = (text) => {
 	}
 	return (hash >>> 0).toString(36);
 };
-var buildIndex = (rows) => {
+/** One task's scorer keeps one scale across runs. */ var scaleKey = (row, scorer) => `${row.log.task ?? row.logFile}\t${scorer}`;
+/** The scale fitting every scorer a log uses; null if any has none. */ var sharedTop = (tops) => {
+	const known = tops.filter((t) => t !== null);
+	return known.length > 0 && known.length === tops.length ? Math.max(...known) : null;
+};
+/** Scales are guessed per task and scorer from every log's samples, so a run
+*  whose samples all scored 1 reads 1/100 when another run reached 74. */ var buildIndex = (rows) => {
 	const byLog = /* @__PURE__ */ new Map();
+	const scored = /* @__PURE__ */ new Map();
+	const pooled = /* @__PURE__ */ new Map();
 	for (const row of rows) {
 		const list = byLog.get(row.logFile) ?? [];
 		list.push(row);
 		byLog.set(row.logFile, list);
+		const score = firstScorerScore(row.derived.scores);
+		if (!score) continue;
+		const key = scaleKey(row, score.scorer);
+		const values = pooled.get(key) ?? [];
+		values.push(score.value);
+		pooled.set(key, values);
+		const entries = scored.get(row.logFile) ?? [];
+		entries.push({
+			key,
+			value: score.value
+		});
+		scored.set(row.logFile, entries);
 	}
+	const tops = /* @__PURE__ */ new Map();
+	for (const [key, values] of pooled) tops.set(key, scaleTop(values));
 	const stats = /* @__PURE__ */ new Map();
-	for (const [file, list] of byLog) {
-		const values = list.map((r) => firstNumericScore(r.derived.scores)).filter((v) => v !== null);
-		stats.set(file, scoreStats(values));
+	for (const file of byLog.keys()) {
+		const entries = scored.get(file) ?? [];
+		const keys = [...new Set(entries.map((e) => e.key))];
+		stats.set(file, scoreStats(entries.map((e) => e.value), 10, sharedTop(keys.map((k) => tops.get(k) ?? null))));
 	}
 	const signature = fnv1a([...byLog.keys()].sort().map((file) => `${file}\t${byLog.get(file)?.length}\t${stats.get(file)?.mean}`).join("\n"));
 	return {
@@ -89347,6 +89374,32 @@ var buildIndex = (rows) => {
 };
 /** A log row's score as its badge shows it: the headline metric, else the
 *  mean of its sample scores. */ var shownScore = (row, index) => row.score ?? index.stats.get(logKey(row))?.mean;
+/** The top of the scale a log row's badge uses (1, 10 or 100). Logs don't
+*  record a score's range, so it is guessed from the largest sample score of
+*  the log's task and scorer, else from the shown value; null when no scale
+*  fits. */ var shownScale = (row, index) => {
+	const value = shownScore(row, index);
+	if (value === void 0) return null;
+	return index.stats.get(logKey(row))?.top ?? scaleTop([value]);
+};
+var scaleGroup = (row, index) => shownScore(row, index) === void 0 ? "none" : shownScale(row, index) ?? "other";
+var groupRank = (group) => typeof group === "number" ? group : group === "other" ? Number.MAX_VALUE : Infinity;
+/** Rows already sorted by score, split by scale so a 0–10 log never sorts
+*  among 0–100 ones: 0–1, 0–10, 0–100, other scales, then no score. Each
+*  group keeps the order it had. */ var groupByScale = (rows, groupOf) => {
+	const groups = /* @__PURE__ */ new Map();
+	for (const row of rows) {
+		const group = groupOf(row);
+		const list = groups.get(group) ?? [];
+		list.push(row);
+		groups.set(group, list);
+	}
+	return [...groups].map(([group, list]) => ({
+		group,
+		rows: list
+	})).sort((a, b) => groupRank(a.group) - groupRank(b.group));
+};
+var scaleGroupLabel = (group) => typeof group === "number" ? `scores 0–${group}` : group === "other" ? "scores below 0 or above 100" : "no score";
 /** A log row's sample count, from the samples themselves when the log's
 *  results don't carry it. */ var shownSampleCount = (row, index) => row.totalSamples ?? index.byLog.get(logKey(row))?.length;
 var isMissing = (v) => v === null || v === void 0 || v === "" || typeof v === "number" && Number.isNaN(v);
@@ -89503,33 +89556,60 @@ var sampleSubRows = (parent, samples, top) => {
 		return row;
 	});
 };
-/** Sample rows inserted beneath each opened log row (tasks view only). */ var useProSampleRows = (rows, mode) => {
-	const $ = (0, import_compiler_runtime.c)(5);
+/** Header rows that open each scale group; every other cell is blank. */ var groupHeads = /* @__PURE__ */ new WeakMap();
+var headRow = (group, count) => {
+	const row = {
+		id: `pro-score-group:${String(group)}`,
+		name: "",
+		type: "file"
+	};
+	groupHeads.set(row, {
+		group,
+		count
+	});
+	return row;
+};
+/** Score-sorted rows split into one block per scale, each under a header,
+*  when more than one scale is present. */ var withScaleGroups = (rows, index) => {
+	const groups = groupByScale(rows, (row) => scaleGroup(row, index));
+	if (groups.length < 2) return rows;
+	return groups.flatMap((g) => [headRow(g.group, g.rows.length), ...g.rows]);
+};
+/** Tasks view only: scale groups while sorted by Score, and sample rows
+*  beneath each opened log row. */ var useProSampleRows = (rows, mode, sorting) => {
+	const $ = (0, import_compiler_runtime.c)(7);
 	const pro = useHtmlFlag("data-pro-ux");
 	const open = useOpenRows(openSampleRows);
-	const { byLog, stats } = useSampleIndex();
+	const index = useSampleIndex();
+	const byScore = sorting[0]?.id === "score";
 	let t0;
-	bb0: {
-		if (!pro || mode !== "tasks" || open.size === 0) {
-			t0 = rows;
-			break bb0;
-		}
-		let out;
-		if ($[0] !== byLog || $[1] !== open || $[2] !== rows || $[3] !== stats) {
-			out = [];
-			for (const row of rows) {
-				out.push(row);
-				const samples = open.has(row.id) ? byLog.get(logKey(row)) : void 0;
-				if (samples && samples.length > 1) out.push(...sampleSubRows(row, samples, stats.get(logKey(row))?.top ?? null));
+	if ($[0] !== byScore || $[1] !== index || $[2] !== mode || $[3] !== open || $[4] !== pro || $[5] !== rows) {
+		bb0: {
+			if (!pro || mode !== "tasks") {
+				t0 = rows;
+				break bb0;
 			}
-			$[0] = byLog;
-			$[1] = open;
-			$[2] = rows;
-			$[3] = stats;
-			$[4] = out;
-		} else out = $[4];
-		t0 = out;
-	}
+			const grouped = byScore ? withScaleGroups(rows, index) : rows;
+			if (open.size === 0) {
+				t0 = grouped;
+				break bb0;
+			}
+			const out = [];
+			for (const row of grouped) {
+				out.push(row);
+				const samples = open.has(row.id) ? index.byLog.get(logKey(row)) : void 0;
+				if (samples && samples.length > 1) out.push(...sampleSubRows(row, samples, index.stats.get(logKey(row))?.top ?? null));
+			}
+			t0 = out;
+		}
+		$[0] = byScore;
+		$[1] = index;
+		$[2] = mode;
+		$[3] = open;
+		$[4] = pro;
+		$[5] = rows;
+		$[6] = t0;
+	} else t0 = $[6];
 	return t0;
 };
 /** Keep a click inside a row from opening the row (rows are links). */ var own = (e) => {
@@ -89835,7 +89915,7 @@ var Histogram = (t0) => {
 	if (value === void 0) return null;
 	return {
 		value,
-		top: index.stats.get(logKey(row))?.top ?? scaleTop([value])
+		top: shownScale(row, index)
 	};
 };
 var slotCache = /* @__PURE__ */ new WeakMap();
@@ -89927,6 +90007,61 @@ var slotCache = /* @__PURE__ */ new WeakMap();
 	} else t2 = $[9];
 	return t2;
 };
+var kGroupHint = "Sorted by score within each scale, never across scales. Logs don't record a score's range, so the scale is guessed from the largest sample score that the task's scorer gave in any log: up to 1, 10 or 100.";
+var GroupHead = (t0) => {
+	const $ = (0, import_compiler_runtime.c)(11);
+	const { group, count } = t0;
+	let t1;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t1 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", { className: "pro-task-caret-gap" });
+		$[0] = t1;
+	} else t1 = $[0];
+	let t2;
+	if ($[1] !== group) {
+		t2 = scaleGroupLabel(group);
+		$[1] = group;
+		$[2] = t2;
+	} else t2 = $[2];
+	let t3;
+	if ($[3] !== t2) {
+		t3 = /*#__PURE__*/ (0, import_jsx_runtime.jsx)("span", {
+			className: "pro-task-name",
+			children: t2
+		});
+		$[3] = t2;
+		$[4] = t3;
+	} else t3 = $[4];
+	const t4 = count === 1 ? "log" : "logs";
+	let t5;
+	if ($[5] !== count || $[6] !== t4) {
+		t5 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("small", { children: [
+			"· ",
+			count,
+			" ",
+			t4
+		] });
+		$[5] = count;
+		$[6] = t4;
+		$[7] = t5;
+	} else t5 = $[7];
+	let t6;
+	if ($[8] !== t3 || $[9] !== t5) {
+		t6 = /*#__PURE__*/ (0, import_jsx_runtime.jsxs)("div", {
+			className: "pro-task-cell pro-score-group",
+			title: kGroupHint,
+			children: [
+				t1,
+				t3,
+				t5
+			]
+		});
+		$[8] = t3;
+		$[9] = t5;
+		$[10] = t6;
+	} else t6 = $[10];
+	return t6;
+};
+/** A cell that stays empty on scale-group header rows. */ var blankOnGroupHeads = (c) => Object.assign({}, c, { cell: (ctx) => groupHeads.has(ctx.row.original) ? null : flexRender(c.cell, ctx) });
 /** A status icon needs no label: the header is an icon, with a hint. */ var StatusHeader = () => {
 	const $ = (0, import_compiler_runtime.c)(1);
 	let t0;
@@ -90123,7 +90258,7 @@ var taskName = (ctx) => {
 				$[3] = index;
 				$[4] = t2;
 			} else t2 = $[4];
-			t1 = moveAfter(columns.map(t2), "totalSamples", "score");
+			t1 = moveAfter(columns.map(t2).map(_temp13$2), "totalSamples", "score");
 			$[0] = columns;
 			$[1] = index;
 			$[2] = t1;
@@ -90229,7 +90364,8 @@ function _temp7$7() {
 	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(StatusHeader, {});
 }
 function _temp8$5(ctx_2) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TaskCell, {
+	const head = groupHeads.get(ctx_2.row.original);
+	return head ? /*#__PURE__*/ (0, import_jsx_runtime.jsx)(GroupHead, { ...head }) : /*#__PURE__*/ (0, import_jsx_runtime.jsx)(TaskCell, {
 		row: ctx_2.row.original,
 		name: taskName(ctx_2)
 	});
@@ -90246,6 +90382,9 @@ function _temp12$2(ctx) {
 		row: ctx.row.original,
 		rows: ctx.table.getCoreRowModel().rows
 	});
+}
+function _temp13$2(c_0) {
+	return c_0.id === "task" ? c_0 : blankOnGroupHeads(c_0);
 }
 //#endregion
 //#region src/utils/evallog.ts
@@ -94009,7 +94148,7 @@ var LogListGrid = (t0) => {
 	} else t2 = $[0];
 	const [scoresViewMode] = useProperty("log-list-scores-view", "mode", t2);
 	const { columns, visibility, getValue, getComparator, getFilterType, accessorsKey } = useLogListColumns(mode, scopeDir, scoresViewMode);
-	const displayRows = useProSampleRows(rows, mode);
+	const displayRows = useProSampleRows(rows, mode, sorting);
 	let t3;
 	if ($[1] !== navigate) {
 		t3 = (row) => {
@@ -94192,16 +94331,16 @@ var LogListGrid = (t0) => {
 		} else t17 = $[52];
 		const matchSet = t17;
 		let t18;
-		if ($[53] !== matchSet || $[54] !== rows) {
+		if ($[53] !== displayRows || $[54] !== matchSet) {
 			let t19;
 			if ($[56] !== matchSet) {
 				t19 = (row_5) => matchSet.has(row_5.id);
 				$[56] = matchSet;
 				$[57] = t19;
 			} else t19 = $[57];
-			t18 = rows.filter(t19).map(_temp5$15);
-			$[53] = matchSet;
-			$[54] = rows;
+			t18 = displayRows.filter(t19).map(_temp5$15);
+			$[53] = displayRows;
+			$[54] = matchSet;
 			$[55] = t18;
 		} else t18 = $[55];
 		t15 = t18;
