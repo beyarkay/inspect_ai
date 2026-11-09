@@ -29,6 +29,7 @@ git_describe_command = [
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["inspect_ai*"]
+exclude = ["inspect_ai._view.ts-mono*"]
 
 # Keep the ts-mono TS source out of the wheel: the git-tracked files are
 # pruned in MANIFEST.in (include-package-data pulls the manifest into the
