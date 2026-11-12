@@ -84,7 +84,9 @@ inspect view`).
   - a click outlines the card or message and puts it in the address bar;
   - a copy button on each message;
   - grep is the default search, runs as you type, and jumps to the match;
-  - Cmd-F highlights every match and steps through them, off-screen too.
+  - Cmd-F highlights every match and steps through them, off-screen too;
+  - while a sample runs, the event in view keeps its place as events arrive
+    above it (a Petri audit adds auditor events above the target's turns).
 - **Scores:** JSON and XML as trees, fully open, with a depth control.
 - **Colours:** user blue, assistant green, reasoning pink, tool orange,
   system sky, everywhere (`packages/inspect-components/src/pro-ux/kinds.ts`).
