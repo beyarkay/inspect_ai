@@ -62948,6 +62948,53 @@ var isRenderableImageDocument = (source, declaredMimeType) => {
 	return isRasterImageMimeType(normalizedSource) && normalizedSource === normalizedDeclared;
 };
 //#endregion
+//#region ../../packages/react/src/pro-ux/liveAnchor.ts
+/** How long the anchor outlasts a live list, so the final batch of events
+*  loaded when a sample finishes lands without moving the reader. */ var kSettleMs = 3e3;
+/** Keys a virtual list's rows by identity instead of position, so measured
+*  sizes follow their row. While live, the row at the top of the view also
+*  keeps its place when rows are inserted above it: TanStack's "end" anchor
+*  re-finds that row by key after every change in row count. */ var useLiveAnchor = (data, itemKey, live) => {
+	const $ = (0, import_compiler_runtime.c)(7);
+	const isLive = !!live;
+	const [wasLive, setWasLive] = (0, import_react.useState)(isLive);
+	const [settling, setSettling] = (0, import_react.useState)(false);
+	const ending = wasLive && !isLive;
+	if (wasLive !== isLive) {
+		setWasLive(isLive);
+		setSettling(ending);
+	}
+	let t0;
+	if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+		t0 = () => setSettling(false);
+		$[0] = t0;
+	} else t0 = $[0];
+	useTimeout(t0, settling ? kSettleMs : null);
+	let t1;
+	if ($[1] !== data || $[2] !== itemKey) {
+		t1 = itemKey && ((index) => {
+			const item = data[index];
+			return item === void 0 ? index : itemKey(item);
+		});
+		$[1] = data;
+		$[2] = itemKey;
+		$[3] = t1;
+	} else t1 = $[3];
+	const getItemKey = t1;
+	const t2 = itemKey && (isLive || ending || settling) ? "end" : "start";
+	let t3;
+	if ($[4] !== getItemKey || $[5] !== t2) {
+		t3 = {
+			getItemKey,
+			anchorTo: t2
+		};
+		$[4] = getItemKey;
+		$[5] = t2;
+		$[6] = t3;
+	} else t3 = $[6];
+	return t3;
+};
+//#endregion
 //#region ../../node_modules/.pnpm/@tanstack+virtual-core@3.19.6/node_modules/@tanstack/virtual-core/dist/esm/lazy-measurements.js
 function getMeasurementKey(item) {
 	return typeof item === "object" ? item.key : item;
@@ -64597,6 +64644,8 @@ function useScaledVirtualizer(opts) {
 		useFlushSync: opts.useFlushSync,
 		scrollPaddingStart: opts.scrollPaddingStart ?? 0,
 		scrollMargin: opts.scrollMargin ?? 0,
+		getItemKey: opts.getItemKey,
+		anchorTo: opts.anchorTo,
 		observeElementOffset: scaledObserveElementOffset,
 		scrollToFn: scaledScrollToFn
 	});
@@ -64701,7 +64750,7 @@ var countMatchesInTexts = (lowerTextsByItem, lowerTerm) => {
 	}
 	return total;
 };
-function VirtualList({ persistenceKey, persistScroll = true, ref, id, className, scrollRef: externalScroll, data, renderRow, estimatedItemHeight = DEFAULT_ITEM_HEIGHT_PX, overscan, useFlushSync, embedded = false, resetScrollOnMount: resetScrollOnMountProp, live, navOwned, followRequested, showProgress, initialIndex, initialScrollOffset, scrollPaddingStart, components, smoothScroll = true, itemSearchText, findScope = "local", scrollToTopOnFinish = false, onVisibleRangeChange }) {
+function VirtualList({ persistenceKey, persistScroll = true, ref, id, className, scrollRef: externalScroll, data, itemKey, renderRow, estimatedItemHeight = DEFAULT_ITEM_HEIGHT_PX, overscan, useFlushSync, embedded = false, resetScrollOnMount: resetScrollOnMountProp, live, navOwned, followRequested, showProgress, initialIndex, initialScrollOffset, scrollPaddingStart, components, smoothScroll = true, itemSearchText, findScope = "local", scrollToTopOnFinish = false, onVisibleRangeChange }) {
 	const resetScrollOnMount = resetScrollOnMountProp ?? !embedded;
 	const externalScrollRef = externalScroll instanceof HTMLElement ? null : externalScroll ?? null;
 	const externalScrollEl = externalScroll instanceof HTMLElement ? externalScroll : null;
@@ -64748,7 +64797,8 @@ function VirtualList({ persistenceKey, persistScroll = true, ref, id, className,
 		overscan,
 		useFlushSync,
 		scrollPaddingStart: scrollPaddingStart ?? 0,
-		scrollMargin
+		scrollMargin,
+		...useLiveAnchor(data, itemKey, live)
 	});
 	const { getRestoreSnapshot, recordSnapshot } = useVirtualListState(persistenceKey, persistScroll);
 	const [storedFollow, setFollowOutput] = useProperty(persistenceKey, "follow", { defaultValue: null });
@@ -114886,6 +114936,7 @@ var kFocusExcludedEvents = /* @__PURE__ */ new Set([
 			persistenceKey: id,
 			scrollRef,
 			data: eventNodes,
+			itemKey: eventNodeId,
 			initialIndex: initialEventIndex,
 			navOwned,
 			followRequested,
@@ -114943,6 +114994,7 @@ var kFocusExcludedEvents = /* @__PURE__ */ new Set([
 	} else t15 = $[59];
 	return t15;
 };
+var eventNodeId = (node) => node.id;
 var TranscriptVirtualList = /*#__PURE__*/ (0, import_react.memo)(TranscriptVirtualListComponent);
 TranscriptVirtualList.displayName = "TranscriptVirtualList";
 var renderTranscriptFooter = ({ backfilling, toolsRunning }) => {
