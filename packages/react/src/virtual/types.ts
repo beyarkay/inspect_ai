@@ -51,6 +51,9 @@ export interface VirtualListProps<T> {
    *  self-scrolling list. */
   scrollRef?: RefObject<HTMLElement | null> | HTMLElement | null;
   data: T[];
+  /** A row's identity; while live, the row in view keeps its place when rows
+   *  are inserted above it. */
+  itemKey?: (item: T) => string;
   renderRow: (index: number, item: T) => ReactNode;
   /** Estimated row height (px) used for rows not yet measured. */
   estimatedItemHeight?: number;

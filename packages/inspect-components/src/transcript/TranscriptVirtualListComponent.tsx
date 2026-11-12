@@ -300,6 +300,7 @@ export const TranscriptVirtualListComponent: FC<
       persistenceKey={id}
       scrollRef={scrollRef}
       data={eventNodes}
+      itemKey={eventNodeId}
       initialIndex={initialEventIndex}
       navOwned={navOwned}
       followRequested={followRequested}
@@ -332,6 +333,8 @@ export const TranscriptVirtualListComponent: FC<
     </RowToggleContext.Provider>
   );
 };
+
+const eventNodeId = (node: EventNode): string => node.id;
 
 // Memoized here (not in TranscriptVirtualList.tsx, which re-exports it) to avoid a circular import via RenderedEventNode.
 export const TranscriptVirtualList = memo(TranscriptVirtualListComponent);

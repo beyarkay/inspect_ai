@@ -24,6 +24,8 @@ export type ScaledVirtualizerOptions = {
    *  it; getTotalSize() does not. NOT scale-aware — an embedded list large
    *  enough to engage scaling (>~16M px) is unsupported. */
   scrollMargin?: number;
+  getItemKey?: (index: number) => string | number;
+  anchorTo?: "start" | "end";
 };
 
 export type ScaledVirtualizerResult = {
@@ -101,6 +103,8 @@ export function useScaledVirtualizer(
     useFlushSync: opts.useFlushSync,
     scrollPaddingStart: opts.scrollPaddingStart ?? 0,
     scrollMargin: opts.scrollMargin ?? 0,
+    getItemKey: opts.getItemKey,
+    anchorTo: opts.anchorTo,
     observeElementOffset: scaledObserveElementOffset,
     scrollToFn: scaledScrollToFn,
   });

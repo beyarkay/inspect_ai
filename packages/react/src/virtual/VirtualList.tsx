@@ -23,6 +23,7 @@ import { usePreviousValue } from "../hooks/usePreviousValue";
 import { useProperty } from "../hooks/useProperty";
 import { useRafThrottle } from "../hooks/useRafThrottle";
 import { useUnmount } from "../hooks/useUnmount";
+import { useLiveAnchor } from "../pro-ux/liveAnchor";
 
 import type {
   VirtualListHandle,
@@ -87,6 +88,7 @@ export function VirtualList<T>({
   className,
   scrollRef: externalScroll,
   data,
+  itemKey,
   renderRow,
   estimatedItemHeight = DEFAULT_ITEM_HEIGHT_PX,
   overscan,
@@ -209,6 +211,7 @@ export function VirtualList<T>({
       // so tanstack's reconcile re-applies it instead of erasing it on far jumps.
       scrollPaddingStart: scrollPaddingStart ?? 0,
       scrollMargin,
+      ...useLiveAnchor(data, itemKey, live),
     });
 
   const { getRestoreSnapshot, recordSnapshot } = useVirtualListState(
